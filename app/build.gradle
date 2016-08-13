@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.android.databinding'
 apply plugin: 'kotlin-android'
 
 android {
@@ -26,10 +27,14 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    kapt 'com.android.databinding:compiler:1.0-rc5'
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.android.support:support-v4:23.1.1'
-    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+kapt {
+    generateStubs = true
 }
 repositories {
     mavenCentral()

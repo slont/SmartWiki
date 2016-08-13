@@ -17,8 +17,8 @@ class AddGenreActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_genre)
 
-        val cancelButton = findViewById(R.id.cancelButton) as Button
-        val createButton = findViewById(R.id.createBbutton) as Button
+        val cancelButton = findViewById(R.id.cancel_button) as Button
+        val createButton = findViewById(R.id.create_button) as Button
         cancelButton.setOnClickListener(OnClickCancelButton())
         createButton.setOnClickListener(OnClickCreateButton())
     }
@@ -32,7 +32,7 @@ class AddGenreActivity : AppCompatActivity() {
 
     private inner class OnClickCreateButton : View.OnClickListener {
         override fun onClick(v: View) {
-            val genreName = findViewById(R.id.genreNameEditText) as EditText
+            val genreName = findViewById(R.id.genre_name_edit) as EditText
             val intent = Intent()
             intent.putExtra("genreName", genreName.text.toString())
             setResult(RESULT_OK, intent)

@@ -1,25 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@android:id/text1"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <data>
+        <import type="net.maytry.www.smartwiki.model.Genre" />
+        <import type="net.maytry.www.smartwiki.fragment.GenreListFragment" />
+        <import type="android.view.View.OnClickListener" />
+        <variable name="genre" type="Genre" />
+        <variable name="testListener" type="android.view.View.OnClickListener" />
+    </data>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:id="@+id/nameTextView"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:descendantFocusability="blocksDescendants">
 
-    <ToggleButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/favoriteToggleButton"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
-</RelativeLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:padding="10dp"
+            android:gravity="center_vertical"
+            android:text="@{genre.name}"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ToggleButton
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:textOn=""
+            android:textOff=""
+            android:layout_alignParentRight="true"
+            android:background="@drawable/favorite_selector_star"
+            app:onClickListener="@{testListener}"/>
+    </RelativeLayout>
+</layout>

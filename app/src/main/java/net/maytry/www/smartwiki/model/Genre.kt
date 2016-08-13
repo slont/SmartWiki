@@ -1,15 +1,12 @@
 package net.maytry.www.smartwiki.model
 
+import java.io.Serializable
 import java.util.Date
 
 /**
  * Created by slont on 8/6/16.
  */
-class Genre(genreName: String, isFavorite: Boolean) {
-    /**
-     * Index
-     */
-    var index: Long = -1L
+class Genre(genreName: String, isFavorite: Boolean) : Serializable {
 
     /**
      * ジャンルの名前
@@ -20,7 +17,6 @@ class Genre(genreName: String, isFavorite: Boolean) {
      * お気に入りかどうか
      */
     var favorite: Boolean
-        private set
 
     /**
      * 作成日時
