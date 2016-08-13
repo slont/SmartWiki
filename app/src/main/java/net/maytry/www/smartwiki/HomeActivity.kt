@@ -3,7 +3,6 @@ package net.maytry.www.smartwiki
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.view.View
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
@@ -13,29 +12,29 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
+import android.view.View
 import android.widget.ListView
-
+import net.maytry.www.smartwiki.fragment.GenreListFragment
 import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.viewmodel.GenreAdapter
-
-import java.util.ArrayList
+import java.io.Serializable
 
 /**
  * Created by slont on 8/6/16.
  */
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreListFragment.OnFragmentInteractionListener {
 
-    private var adapter: ArrayAdapter<Genre>? = null
+    private val mGenreList: MutableList<Genre> = mutableListOf()
+    private val genreList: List<Genre> = mGenreList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.side_nav)
+        setContentView(R.layout.activity_home)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener(OnAddGenreButton())
+        val fab = findViewById(R.id.add_genre_fab) as FloatingActionButton
+        fab.setOnClickListener(OnClickFloatingActionButton())
 
         val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
         val toggle = ActionBarDrawerToggle(
@@ -45,11 +44,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         val navigationView = findViewById(R.id.nav_view) as NavigationView
         navigationView.setNavigationItemSelectedListener(this)
+        Log.d("onAct", "4")
 
-        // ジャンルリスト
-        adapter = GenreAdapter(this, R.layout.genre_list_item)
-        val otherGenreList = findViewById(R.id.otherGenreListView) as ListView
-        otherGenreList.adapter = adapter
+        mGenreList.add(Genre("test2"))
+        val fragment = GenreListFragment.newInstance(genreList)
+        supportFragmentManager.beginTransaction().add(R.id.content_home, fragment).commit()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d("onAct11", genreList.hashCode().toString())
+
+        outState.putSerializable("KEY", genreList as Serializable)
+        super.onSaveInstanceState(outState)
     }
 
     override fun onBackPressed() {
@@ -105,6 +111,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
+    private inner class OnClickFavoriteButton : View.OnClickListener {
+        override fun onClick(v: View) {
+//            onChangeFavorite()
+            Log.d("OnClickGenre", v.toString())
+        }
+    }
+
+    override fun onChangeFavorite(data: Intent) {
+        Log.d("onChangeFavorite cb", data.toString())
+//        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -112,8 +130,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             1001 -> {
                 when (resultCode) {
                     RESULT_OK -> {
-                        Log.d("test", data.getStringExtra("genreName"))
-                        adapter!!.add(Genre(data.getStringExtra("genreName")))
+                        mGenreList.add(Genre(data.getStringExtra("genreName")))
+                        val genreListView: ListView = findViewById(R.id.genre_list_view) as ListView
+                        (genreListView.adapter as GenreAdapter).notifyDataSetChanged()
+//                        (mGenreList.adapter as GenreAdapter).notifyDataSetChanged()
                     }
                     RESULT_CANCELED -> {}
                 }
@@ -123,7 +143,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private inner class OnAddGenreButton : View.OnClickListener {
+    private inner class OnClickFloatingActionButton : View.OnClickListener {
         override fun onClick(v: View) {
             val intent = Intent(this@HomeActivity, AddGenreActivity::class.java)
             startActivityForResult(intent, 1001)
