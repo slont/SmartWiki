@@ -1,59 +1,62 @@
 package net.maytry.www.smartwiki
 
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ListView
-import net.maytry.www.smartwiki.fragment.GenreListFragment
+import net.maytry.www.smartwiki.databinding.ActivityHomeBinding
+import net.maytry.www.smartwiki.fragment.HomeContentFragment
 import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.viewmodel.GenreAdapter
 import java.io.Serializable
 
 /**
  * Created by slont on 8/6/16.
+ *
+ * Home画面のアクティビティ
+ * メインコンテンツではGenreリストの管理を行う
  */
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreListFragment.OnFragmentInteractionListener {
+class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HomeContentFragment.OnFragmentInteractionListener {
+
+    companion object {
+        private val ADD_GENRE_REQ_CODE = 100
+        private val LAYERED_REQ_CODE = 200
+    }
 
     private val mGenreList: MutableList<Genre> = mutableListOf()
-    private val genreList: List<Genre> = mGenreList
+    val genreList: List<Genre> = mGenreList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_home)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
+        val binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this@HomeActivity, R.layout.activity_home)
+
+        val toolbar = binding.appBarHome.toolbar
         setSupportActionBar(toolbar)
 
-        val fab = findViewById(R.id.add_genre_fab) as FloatingActionButton
-        fab.setOnClickListener(OnClickFloatingActionButton())
+        binding.appBarHome.onClickAddGenreFab = OnClickAddGenreFab()
 
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
+        val drawer = binding.drawerLayout
         val toggle = ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         drawer.setDrawerListener(toggle)
         toggle.syncState()
 
-        val navigationView = findViewById(R.id.nav_view) as NavigationView
-        navigationView.setNavigationItemSelectedListener(this)
-        Log.d("onAct", "4")
+        binding.navView.setNavigationItemSelectedListener(this)
 
-        mGenreList.add(Genre("test2"))
-        val fragment = GenreListFragment.newInstance(genreList)
+        val fragment = HomeContentFragment.newInstance(genreList)
         supportFragmentManager.beginTransaction().add(R.id.content_home, fragment).commit()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        Log.d("onAct11", genreList.hashCode().toString())
-
         outState.putSerializable("KEY", genreList as Serializable)
         super.onSaveInstanceState(outState)
     }
@@ -111,29 +114,31 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    private inner class OnClickFavoriteButton : View.OnClickListener {
-        override fun onClick(v: View) {
-//            onChangeFavorite()
-            Log.d("OnClickGenre", v.toString())
-        }
-    }
-
-    override fun onChangeFavorite(data: Intent) {
-        Log.d("onChangeFavorite cb", data.toString())
-//        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onClickGenreListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val intent = Intent(this@HomeActivity, GenreActivity::class.java)
+        intent.putExtra("genre", parent!!.getItemAtPosition(position) as Genre)
+        startActivityForResult(intent, LAYERED_REQ_CODE)
+        //        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            1001 -> {
+            ADD_GENRE_REQ_CODE -> {
                 when (resultCode) {
                     RESULT_OK -> {
                         mGenreList.add(Genre(data.getStringExtra("genreName")))
-                        val genreListView: ListView = findViewById(R.id.genre_list_view) as ListView
+                        val genreListView = findViewById(R.id.genre_list_view) as ListView
                         (genreListView.adapter as GenreAdapter).notifyDataSetChanged()
-//                        (mGenreList.adapter as GenreAdapter).notifyDataSetChanged()
+                    }
+                    RESULT_CANCELED -> {}
+                }
+            }
+            LAYERED_REQ_CODE -> {
+                when (resultCode) {
+                    RESULT_OK -> {
+
                     }
                     RESULT_CANCELED -> {}
                 }
@@ -143,10 +148,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private inner class OnClickFloatingActionButton : View.OnClickListener {
+    private inner class OnClickAddGenreFab : View.OnClickListener {
         override fun onClick(v: View) {
             val intent = Intent(this@HomeActivity, AddGenreActivity::class.java)
-            startActivityForResult(intent, 1001)
+            startActivityForResult(intent, ADD_GENRE_REQ_CODE)
         }
     }
 }

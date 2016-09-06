@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="net.maytry.www.smartwiki.fragment.HomeContentFragment">
+
+    <data>
+        <import type="java.util.List" />
+        <import type="net.maytry.www.smartwiki.model.Genre" />
+        <import type="android.widget.AdapterView.OnItemClickListener" />
+        <variable name="genreList" type="List&lt;Genre>" />
+        <variable name="onItemClickListener" type="OnItemClickListener" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <Switch
+            android:id="@+id/genre_list_view_switch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ListView
+            android:id="@+id/genre_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="246dp"
+            android:layout_gravity="center_horizontal"
+            android:onItemClickListener="@{onItemClickListener}"
+            app:genreList="@{genreList}" />
+    </LinearLayout>
+</layout>
