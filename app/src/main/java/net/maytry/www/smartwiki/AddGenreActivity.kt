@@ -3,6 +3,7 @@ package net.maytry.www.smartwiki
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -16,6 +17,8 @@ class AddGenreActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_add_genre)
+        val toolbar = findViewById(R.id.add_genre_toolbar) as Toolbar
+        setSupportActionBar(toolbar)
 
         val cancelButton = findViewById(R.id.cancel_button) as Button
         val createButton = findViewById(R.id.create_button) as Button
@@ -36,7 +39,6 @@ class AddGenreActivity : AppCompatActivity() {
             val intent = Intent()
             intent.putExtra("genreName", genreName.text.toString())
             setResult(RESULT_OK, intent)
-            Log.d("tag", genreName.text.toString())
             finish()
         }
     }
