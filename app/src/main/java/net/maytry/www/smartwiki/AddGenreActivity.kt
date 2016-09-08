@@ -1,45 +1,39 @@
 package net.maytry.www.smartwiki
 
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
-import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
+import net.maytry.www.smartwiki.databinding.ActivityAddGenreBinding
+import net.maytry.www.smartwiki.fragment.AddGenreContentFragment
 
 /**
  * Created by slont on 8/6/16.
  */
-class AddGenreActivity : AppCompatActivity() {
+class AddGenreActivity : AppCompatActivity(), AddGenreContentFragment.OnFragmentInteractionListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_add_genre)
-        val toolbar = findViewById(R.id.add_genre_toolbar) as Toolbar
-        setSupportActionBar(toolbar)
+        val binding = DataBindingUtil.setContentView<ActivityAddGenreBinding>(this@AddGenreActivity, R.layout.activity_add_genre)
 
-        val cancelButton = findViewById(R.id.cancel_button) as Button
-        val createButton = findViewById(R.id.create_button) as Button
-        cancelButton.setOnClickListener(OnClickCancelButton())
-        createButton.setOnClickListener(OnClickCreateButton())
+        setSupportActionBar(binding.toolbar)
+
+        val fragment = AddGenreContentFragment.newInstance()
+        supportFragmentManager.beginTransaction().add(R.id.content_add_genre, fragment).commit()
     }
 
-    private inner class OnClickCancelButton : View.OnClickListener {
-        override fun onClick(v: View) {
-            setResult(RESULT_CANCELED, Intent())
-            finish()
-        }
+    override fun onClickCancelButton(v: View) {
+        setResult(RESULT_CANCELED, Intent())
+        finish()
     }
 
-    private inner class OnClickCreateButton : View.OnClickListener {
-        override fun onClick(v: View) {
-            val genreName = findViewById(R.id.genre_name_edit) as EditText
-            val intent = Intent()
-            intent.putExtra("genreName", genreName.text.toString())
-            setResult(RESULT_OK, intent)
-            finish()
-        }
+    override fun onClickCreateButton(v: View) {
+        val genreName = findViewById(R.id.genre_name_edit) as EditText
+        val intent = Intent()
+        intent.putExtra("genreName", genreName.text.toString())
+        setResult(RESULT_OK, intent)
+        finish()
     }
 }
