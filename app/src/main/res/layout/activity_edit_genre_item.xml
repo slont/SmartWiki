@@ -15,7 +15,7 @@
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.v7.widget.Toolbar
-                android:id="@+id/edit_genre_item_toolbar"
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
@@ -23,7 +23,9 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_edit_genre_item" />
+        <include
+            layout="@layout/content_edit_genre_item"
+            android:id="@+id/content_edit_genre_item" />
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

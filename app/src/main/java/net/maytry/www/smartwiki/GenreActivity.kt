@@ -12,10 +12,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.ListView
 import net.maytry.www.smartwiki.databinding.ActivityGenreBinding
 import net.maytry.www.smartwiki.fragment.GenreContentFragment
 import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.model.GenreItem
+import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
 
 /**
  * Created by slont on 8/29/16.
@@ -119,6 +121,33 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
         intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
         startActivityForResult(intent, ADD_GENRE_REQ_CODE)
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            ADD_GENRE_REQ_CODE -> {
+                when (resultCode) {
+                    RESULT_OK -> {
+                        mItemList.add(data.getSerializableExtra("item") as GenreItem)
+                        val itemListView = findViewById(R.id.item_list_view) as ListView
+                        (itemListView.adapter as GenreItemAdapter).notifyDataSetChanged()
+                    }
+                    RESULT_CANCELED -> {}
+                }
+            }
+            LAYERED_REQ_CODE -> {
+                when (resultCode) {
+                    RESULT_OK -> {
+
+                    }
+                    RESULT_CANCELED -> {}
+                }
+            }
+            else -> {
+            }
+        }
     }
 
     /**

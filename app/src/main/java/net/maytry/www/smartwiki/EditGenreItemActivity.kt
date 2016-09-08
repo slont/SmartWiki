@@ -1,11 +1,13 @@
 package net.maytry.www.smartwiki
 
 import android.content.Intent
+import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
+import net.maytry.www.smartwiki.databinding.ActivityEditGenreItemBinding
 import net.maytry.www.smartwiki.fragment.EditGenreItemContentFragment
 import net.maytry.www.smartwiki.model.GenreItem
 
@@ -14,13 +16,15 @@ import net.maytry.www.smartwiki.model.GenreItem
  */
 class EditGenreItemActivity : AppCompatActivity(), EditGenreItemContentFragment.OnFragmentInteractionListener {
 
+    private var mItem: GenreItem? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_edit_genre_item)
+        val binding = DataBindingUtil.setContentView<ActivityEditGenreItemBinding>(this@EditGenreItemActivity, R.layout.activity_edit_genre_item)
 
-        val item = intent.getSerializableExtra("item") as GenreItem
+        mItem = intent.getSerializableExtra("item") as GenreItem
 
-        val fragment = EditGenreItemContentFragment.newInstance(item)
+        val fragment = EditGenreItemContentFragment.newInstance(mItem!!)
         supportFragmentManager.beginTransaction().add(R.id.content_edit_genre_item, fragment).commit()
     }
 
@@ -34,9 +38,10 @@ class EditGenreItemActivity : AppCompatActivity(), EditGenreItemContentFragment.
     }
 
     override fun onClickCreateButton(v: View) {
-        val genreName = findViewById(R.id.genre_name_edit) as EditText
+        val name = (findViewById(R.id.item_name_edit) as EditText).text.toString()
         val intent = Intent()
-        intent.putExtra("genreName", genreName.text.toString())
+        mItem!!.name = name
+        intent.putExtra("item", mItem)
         setResult(RESULT_OK, intent)
         finish()
     }

@@ -23,7 +23,7 @@
         android:weightSum="1">
 
         <ListView
-            android:id="@+id/genre_list_view"
+            android:id="@+id/item_list_view"
             android:layout_width="match_parent"
             android:layout_height="246dp"
             android:layout_gravity="center_horizontal"

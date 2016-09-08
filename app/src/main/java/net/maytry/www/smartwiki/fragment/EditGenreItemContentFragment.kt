@@ -108,10 +108,10 @@ class EditGenreItemContentFragment : Fragment() {
     companion object {
         private val ITEM = "item"
 
-        fun newInstance(contentList: GenreItem): EditGenreItemContentFragment {
+        fun newInstance(item: GenreItem): EditGenreItemContentFragment {
             val fragment = EditGenreItemContentFragment()
             val args = Bundle()
-            args.putSerializable(ITEM, contentList as Serializable)
+            args.putSerializable(ITEM, item)
             fragment.arguments = args
             return fragment
         }
