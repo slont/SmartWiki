@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
-        <import type="net.maytry.www.smartwiki.model.Genre" />
+        <import type="net.maytry.www.smartwiki.model.GenreItem" />
         <import type="android.view.View.OnClickListener" />
-        <variable name="genre" type="Genre" />
+        <variable name="item" type="GenreItem" />
         <variable name="onClickFavoriteButtonListener" type="OnClickListener" />
     </data>
 
@@ -22,16 +21,8 @@
             android:layout_alignParentTop="true"
             android:padding="10dp"
             android:gravity="center_vertical"
-            android:text="@{genre.name}"
+            android:text="@{item.name}"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
-        <ToggleButton
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:textOn=""
-            android:textOff=""
-            android:layout_alignParentRight="true"
-            android:background="@drawable/favorite_selector_star"
-            app:onClickListener="@{onClickFavoriteButtonListener}"/>
     </RelativeLayout>
 </layout>

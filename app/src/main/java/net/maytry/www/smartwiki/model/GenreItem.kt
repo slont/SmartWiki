@@ -1,27 +1,27 @@
 package net.maytry.www.smartwiki.model
 
 import java.io.Serializable
-import java.util.Date
+import java.util.*
 
 /**
- * Created by slont on 8/6/16.
+ * Created by slont on 8/29/16.
  */
-class Genre(name: String, isFavorite: Boolean) : Serializable {
+class GenreItem(name: String, infoList: MutableList<GenreItemInfo> = mutableListOf()) : Serializable {
 
     /**
-     * ジャンルの名前
+     * 名前
      */
     var name: String
 
     /**
-     * お気に入り
-     */
-    var favorite: Boolean
-
-    /**
      * アイテム情報
      */
-    val itemMap: MutableMap<String, GenreItem> = mutableMapOf()
+    val infoList: MutableList<GenreItemInfo> = mutableListOf()
+
+    /**
+     * お気に入り
+     */
+    var favorite: Boolean? = null
 
     /**
      * 作成日時
@@ -35,10 +35,10 @@ class Genre(name: String, isFavorite: Boolean) : Serializable {
 
     init {
         this.name = name
-        this.favorite = isFavorite
+        this.infoList.addAll(infoList)
+//        this.favorite = isFavorite
+
         this.createdDatetime = Date()
         this.modifiedDatetime = Date()
     }
-
-    constructor(name: String) : this(name, false)
 }

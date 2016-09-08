@@ -12,37 +12,37 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ListView
-import net.maytry.www.smartwiki.databinding.ActivityHomeBinding
-import net.maytry.www.smartwiki.fragment.HomeContentFragment
+import net.maytry.www.smartwiki.databinding.ActivityGenreBinding
+import net.maytry.www.smartwiki.fragment.GenreContentFragment
 import net.maytry.www.smartwiki.model.Genre
-import net.maytry.www.smartwiki.viewmodel.GenreAdapter
-import java.io.Serializable
+import net.maytry.www.smartwiki.model.GenreItem
 
 /**
- * Created by slont on 8/6/16.
+ * Created by slont on 8/29/16.
  *
- * Home画面のアクティビティ
- * メインコンテンツではGenreリストの管理を行う
+ * Genre画面のアクティビティ
+ * メインコンテンツではGenreItemの管理を行う
  */
-class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, HomeContentFragment.OnFragmentInteractionListener {
+class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreContentFragment.OnFragmentInteractionListener {
 
     companion object {
         private val ADD_GENRE_REQ_CODE = 100
         private val LAYERED_REQ_CODE = 200
     }
 
-    private val mGenreList: MutableList<Genre> = mutableListOf()
-    val genreList: List<Genre> = mGenreList
+    private var mItemList: MutableList<GenreItem> = mutableListOf()
+    val itemList: List<GenreItem> = mItemList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this@HomeActivity, R.layout.activity_home)
+        val binding = DataBindingUtil.setContentView<ActivityGenreBinding>(this@GenreActivity, R.layout.activity_genre)
 
-        val toolbar = binding.appBarHome.toolbar
+        val genre = intent.getSerializableExtra("genre") as Genre
+        title = genre.name
+        mItemList.addAll(genre.itemMap.values)
+
+        val toolbar = binding.appBarGenre.toolbar
         setSupportActionBar(toolbar)
-
-        binding.appBarHome.onClickAddGenreFab = OnClickAddGenreFab()
 
         val drawer = binding.drawerLayout
         val toggle = ActionBarDrawerToggle(
@@ -50,15 +50,11 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         drawer.setDrawerListener(toggle)
         toggle.syncState()
 
+        binding.appBarGenre.onClickEditGenreItemFab = OnClickEditGenreItemFab()
         binding.navView.setNavigationItemSelectedListener(this)
 
-        val fragment = HomeContentFragment.newInstance(genreList)
-        supportFragmentManager.beginTransaction().add(R.id.content_home, fragment).commit()
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable("KEY", genreList as Serializable)
-        super.onSaveInstanceState(outState)
+        val fragment = GenreContentFragment.newInstance(itemList)
+        supportFragmentManager.beginTransaction().add(R.id.content_genre, fragment).commit()
     }
 
     override fun onBackPressed() {
@@ -72,7 +68,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.home, menu)
+        menuInflater.inflate(R.menu.layered, menu)
         return true
     }
 
@@ -114,43 +110,24 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    override fun onClickGenreListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val intent = Intent(this@HomeActivity, GenreActivity::class.java)
-        intent.putExtra("genre", parent!!.getItemAtPosition(position) as Genre)
-        startActivityForResult(intent, LAYERED_REQ_CODE)
-        //        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    /**
+     * LayeredItemのセレクトイベント
+     * LayeredContentが設定されていればさらに潜る
+     * ItemContentが設定されていれば、ページを表示する
+     */
+    override fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
+        intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
+        startActivityForResult(intent, ADD_GENRE_REQ_CODE)
     }
 
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        when (requestCode) {
-            ADD_GENRE_REQ_CODE -> {
-                when (resultCode) {
-                    RESULT_OK -> {
-                        mGenreList.add(Genre(data.getStringExtra("genreName")))
-                        val genreListView = findViewById(R.id.genre_list_view) as ListView
-                        (genreListView.adapter as GenreAdapter).notifyDataSetChanged()
-                    }
-                    RESULT_CANCELED -> {}
-                }
-            }
-            LAYERED_REQ_CODE -> {
-                when (resultCode) {
-                    RESULT_OK -> {
-
-                    }
-                    RESULT_CANCELED -> {}
-                }
-            }
-            else -> {
-            }
-        }
-    }
-
-    private inner class OnClickAddGenreFab : View.OnClickListener {
+    /**
+     * EditGenreItemのクリックイベント
+     */
+    private inner class OnClickEditGenreItemFab : View.OnClickListener {
         override fun onClick(v: View) {
-            val intent = Intent(this@HomeActivity, AddGenreActivity::class.java)
+            val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
+            intent.putExtra("item",  GenreItem(""))
             startActivityForResult(intent, ADD_GENRE_REQ_CODE)
         }
     }
