@@ -26,6 +26,10 @@
             android:label="@string/title_activity_layered"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
+            android:name=".GenreItemActivity"
+            android:label="@string/title_activity_layered"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
             android:name=".EditGenreItemActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
