@@ -118,7 +118,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     override fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
         intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
-        startActivityForResult(intent, GenreActivity.ADD_GENRE_REQ_CODE)
+        startActivityForResult(intent, ADD_GENRE_REQ_CODE)
     }
 
     /**

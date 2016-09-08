@@ -3,14 +3,10 @@ package net.maytry.www.smartwiki
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Button
 import android.widget.EditText
 import net.maytry.www.smartwiki.fragment.EditGenreItemContentFragment
-import net.maytry.www.smartwiki.fragment.GenreContentFragment
-import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.model.GenreItem
 
 /**
@@ -42,7 +38,6 @@ class EditGenreItemActivity : AppCompatActivity(), EditGenreItemContentFragment.
         val intent = Intent()
         intent.putExtra("genreName", genreName.text.toString())
         setResult(RESULT_OK, intent)
-        Log.d("tag", genreName.text.toString())
         finish()
     }
 }
