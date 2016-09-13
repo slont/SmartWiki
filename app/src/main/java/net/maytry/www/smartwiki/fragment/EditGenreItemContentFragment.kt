@@ -11,11 +11,11 @@ import android.widget.AdapterView
 import android.widget.ListView
 import net.maytry.www.smartwiki.R
 import net.maytry.www.smartwiki.databinding.FragmentEditGenreItemContentBinding
+import net.maytry.www.smartwiki.enums.EditType
 import net.maytry.www.smartwiki.fragment.EditGenreItemContentFragment.OnFragmentInteractionListener
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
 import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
-import java.io.Serializable
 
 /**
  * A fragment representing a list of Items.
@@ -27,6 +27,7 @@ import java.io.Serializable
 class EditGenreItemContentFragment : Fragment() {
 
     private var mItem: GenreItem? = null
+    private var mType: EditType? = null
 
     private var mListener: OnFragmentInteractionListener? = null
 
@@ -34,22 +35,13 @@ class EditGenreItemContentFragment : Fragment() {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
             mItem = arguments.getSerializable(ITEM) as GenreItem
+            mType = arguments.getSerializable(TYPE) as EditType
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_edit_genre_item_content, container, false)
-    }
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-
-        val binding = FragmentEditGenreItemContentBinding.bind(view)
-        binding.item = mItem
-        binding.onClickGenreItemListItem = OnClickGenreItemListItem(mListener)
-        binding.onClickCancelButton = OnClickCancelButton(mListener)
-        binding.onClickCreateButton = OnClickCreateButton(mListener)
     }
 
     override fun onAttach(context: Context?) {
@@ -59,6 +51,16 @@ class EditGenreItemContentFragment : Fragment() {
         } else {
             throw RuntimeException(context!!.toString() + " must implement OnListFragmentInteractionListener")
         }
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        val binding = FragmentEditGenreItemContentBinding.bind(view)
+        binding.item = mItem
+        binding.submitButtonName = if (EditType.UPDATE == mType) "更新" else "作成"
+        binding.onClickGenreItemListItem = OnClickGenreItemListItem(mListener)
+        binding.onClickCancelButton = OnClickCancelButton(mListener)
+        binding.onClickSubmitButton = OnClickSubmitButton(mListener, mType)
     }
 
     override fun onDetach() {
@@ -79,39 +81,40 @@ class EditGenreItemContentFragment : Fragment() {
         fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
         fun onClickCancelButton(v: View)
         fun onClickCreateButton(v: View)
+        fun onClickUpdateButton(v: View)
     }
 
-    class OnClickGenreItemListItem(listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
-        private val listener = listener
-
+    private class OnClickGenreItemListItem(val listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             listener!!.onClickGenreItemListItem(parent, view, position, id)
         }
     }
 
-    class OnClickCancelButton(listener: OnFragmentInteractionListener?) : View.OnClickListener {
-        private val listener = listener
-
+    private class OnClickCancelButton(val listener: OnFragmentInteractionListener?) : View.OnClickListener {
         override fun onClick(v: View) {
             listener!!.onClickCancelButton(v)
         }
     }
 
-    class OnClickCreateButton(listener: OnFragmentInteractionListener?) : View.OnClickListener {
-        private val listener = listener
-
+    private class OnClickSubmitButton(val listener: OnFragmentInteractionListener?, val type: EditType?) : View.OnClickListener {
         override fun onClick(v: View) {
-            listener!!.onClickCreateButton(v)
+            when (type) {
+                EditType.UPDATE -> listener!!.onClickUpdateButton(v)
+                EditType.CREATE -> listener!!.onClickCreateButton(v)
+            }
         }
     }
 
     companion object {
-        private val ITEM = "item"
 
-        fun newInstance(item: GenreItem): EditGenreItemContentFragment {
+        private val ITEM = "item"
+        private val TYPE = "type"
+
+        fun newInstance(item: GenreItem, type: EditType): EditGenreItemContentFragment {
             val fragment = EditGenreItemContentFragment()
             val args = Bundle()
             args.putSerializable(ITEM, item)
+            args.putSerializable(TYPE, type)
             fragment.arguments = args
             return fragment
         }

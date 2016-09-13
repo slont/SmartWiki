@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
 import net.maytry.www.smartwiki.databinding.ActivityGenreBinding
+import net.maytry.www.smartwiki.enums.EditType
 import net.maytry.www.smartwiki.fragment.GenreContentFragment
 import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.model.GenreItem
@@ -28,8 +29,8 @@ import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
 class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreContentFragment.OnFragmentInteractionListener {
 
     companion object {
-        private val ADD_GENRE_REQ_CODE = 100
-        private val LAYERED_REQ_CODE = 200
+        private val CREATE_ITEM_REQ_CODE = 100
+        private val UPDATE_ITEM_REQ_CODE = 200
     }
 
     private var mItemList: MutableList<GenreItem> = mutableListOf()
@@ -120,27 +121,29 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     override fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
         intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
-        startActivityForResult(intent, ADD_GENRE_REQ_CODE)
+        intent.putExtra("type", EditType.UPDATE)
+        startActivityForResult(intent, UPDATE_ITEM_REQ_CODE)
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
 
         when (requestCode) {
-            ADD_GENRE_REQ_CODE -> {
+            UPDATE_ITEM_REQ_CODE -> {
                 when (resultCode) {
                     RESULT_OK -> {
-                        mItemList.add(data.getSerializableExtra("item") as GenreItem)
                         val itemListView = findViewById(R.id.item_list_view) as ListView
                         (itemListView.adapter as GenreItemAdapter).notifyDataSetChanged()
                     }
                     RESULT_CANCELED -> {}
                 }
             }
-            LAYERED_REQ_CODE -> {
+            CREATE_ITEM_REQ_CODE -> {
                 when (resultCode) {
                     RESULT_OK -> {
-
+                        mItemList.add(data.getSerializableExtra("item") as GenreItem)
+                        val itemListView = findViewById(R.id.item_list_view) as ListView
+                        (itemListView.adapter as GenreItemAdapter).notifyDataSetChanged()
                     }
                     RESULT_CANCELED -> {}
                 }
@@ -157,7 +160,8 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         override fun onClick(v: View) {
             val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
             intent.putExtra("item",  GenreItem(""))
-            startActivityForResult(intent, ADD_GENRE_REQ_CODE)
+            intent.putExtra("type", EditType.CREATE)
+            startActivityForResult(intent, CREATE_ITEM_REQ_CODE)
         }
     }
 }
