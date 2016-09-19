@@ -1,7 +1,9 @@
 package net.maytry.www.smartwiki.model
 
+import android.content.ContentValues
+import net.maytry.www.smartwiki.utils.DateUtil
 import java.io.Serializable
-import java.util.Date
+import java.util.*
 
 /**
  * Created by slont on 8/6/16.
@@ -38,4 +40,14 @@ class Genre(
          */
         var modified: Date = Date()
 
-) : Serializable {}
+) : Serializable {
+    fun contentValues(): ContentValues {
+        val values = ContentValues()
+        values.put("id", id)
+        values.put("name", name)
+        values.put("favorite", favorite)
+        values.put("created", DateUtil.dateToString(created))
+        values.put("modified", DateUtil.dateToString(modified))
+        return values
+    }
+}

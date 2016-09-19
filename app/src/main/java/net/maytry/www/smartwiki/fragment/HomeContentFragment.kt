@@ -29,6 +29,8 @@ class HomeContentFragment : Fragment() {
 
     private var mListener: OnFragmentInteractionListener? = null
 
+    private var binding: FragmentHomeContentBinding? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -45,9 +47,9 @@ class HomeContentFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val binding: FragmentHomeContentBinding = FragmentHomeContentBinding.bind(view)
-        binding.genreList = mGenreList
-        binding.onItemClickListener = OnClickListItem(mListener)
+        binding = FragmentHomeContentBinding.bind(view)
+        binding?.genreList = mGenreList
+        binding?.onItemClickListener = OnClickListItem(mListener)
     }
 
     override fun onAttach(context: Context?) {
@@ -62,6 +64,12 @@ class HomeContentFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         mListener = null
+    }
+
+    fun notifyDataSetChanged() {
+        if (null != binding) {
+            ((binding?.genreListView as ListView).adapter as GenreAdapter).notifyDataSetChanged()
+        }
     }
 
     /**

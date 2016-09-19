@@ -33,6 +33,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         private val UPDATE_ITEM_REQ_CODE = 200
     }
 
+    private var genre: Genre = Genre(name = "")
     private var mItemList: MutableList<GenreItem> = mutableListOf()
     val itemList: List<GenreItem> = mItemList
 
@@ -40,7 +41,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityGenreBinding>(this@GenreActivity, R.layout.activity_genre)
 
-        val genre = intent.getSerializableExtra("genre") as Genre
+        genre = intent.getSerializableExtra("genre") as Genre
         title = genre.name
         mItemList.addAll(genre.itemMap.values)
 
@@ -159,7 +160,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private inner class OnClickEditGenreItemFab : View.OnClickListener {
         override fun onClick(v: View) {
             val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
-            intent.putExtra("item",  GenreItem(""))
+            intent.putExtra("item",  GenreItem(name = "", parentID = genre.id ?: -1))
             intent.putExtra("type", EditType.CREATE)
             startActivityForResult(intent, CREATE_ITEM_REQ_CODE)
         }

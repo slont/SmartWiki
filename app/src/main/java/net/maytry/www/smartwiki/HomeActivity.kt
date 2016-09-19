@@ -12,11 +12,10 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.ListView
 import net.maytry.www.smartwiki.databinding.ActivityHomeBinding
+import net.maytry.www.smartwiki.db.GenreTableAdapter
 import net.maytry.www.smartwiki.fragment.HomeContentFragment
 import net.maytry.www.smartwiki.model.Genre
-import net.maytry.www.smartwiki.viewmodel.GenreAdapter
 import java.io.Serializable
 
 /**
@@ -35,8 +34,18 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     private val mGenreList: MutableList<Genre> = mutableListOf()
     val genreList: List<Genre> = mGenreList
 
+    private val genreTableAdapter: GenreTableAdapter
+
+    private val fragment: HomeContentFragment
+
+    init {
+        genreTableAdapter = GenreTableAdapter(this)
+        fragment = HomeContentFragment.newInstance(genreList)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         val binding = DataBindingUtil.setContentView<ActivityHomeBinding>(this@HomeActivity, R.layout.activity_home)
 
         val toolbar = binding.appBarHome.toolbar
@@ -52,8 +61,8 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        val fragment = HomeContentFragment.newInstance(genreList)
         supportFragmentManager.beginTransaction().add(R.id.content_home, fragment).commit()
+        load()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -128,9 +137,14 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             ADD_GENRE_REQ_CODE -> {
                 when (resultCode) {
                     RESULT_OK -> {
-                        mGenreList.add(Genre(data.getStringExtra("genreName")))
-                        val genreListView = findViewById(R.id.genre_list_view) as ListView
-                        (genreListView.adapter as GenreAdapter).notifyDataSetChanged()
+                        val id = data.getLongExtra("id", -1)
+                        genreTableAdapter.open()
+                        val genre = genreTableAdapter.selectByID(id)
+                        genreTableAdapter.close()
+                        if (null != genre) {
+                            mGenreList.add(genre)
+                            fragment.notifyDataSetChanged()
+                        }
                     }
                     RESULT_CANCELED -> {}
                 }
@@ -146,6 +160,13 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             else -> {
             }
         }
+    }
+
+    private fun load() {
+        genreTableAdapter.open()
+        mGenreList.addAll(genreTableAdapter.selectAll())
+        genreTableAdapter.close()
+        fragment.notifyDataSetChanged()
     }
 
     private inner class OnClickAddGenreFab : View.OnClickListener {
