@@ -1,7 +1,10 @@
 package net.maytry.www.smartwiki.model
 
+import android.content.ContentValues
+import net.maytry.www.smartwiki.db.DBAdapter
+import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
-import java.io.Serializable
+import net.maytry.www.smartwiki.utils.DateUtil
 import java.util.*
 
 /**
@@ -49,4 +52,16 @@ class GenreItemInfo(
          */
         var modified: Date = Date())
 
-: Serializable {}
+: AbstractModel<GenreItemInfo>() {
+    override fun contentValues(): ContentValues {
+            val values = ContentValues()
+            values.put(DBAdapter.COL_ID, id)
+            values.put(GenreItemInfoTableAdapter.COL_NAME, name)
+            values.put(GenreItemInfoTableAdapter.COL_PARENT_ID, parentID)
+            values.put(GenreItemInfoTableAdapter.COL_TYPE, type.toString())
+            values.put(GenreItemInfoTableAdapter.COL_FAVORITE, favorite)
+            values.put(GenreItemInfoTableAdapter.COL_CREATED, DateUtil.dateToString(created))
+            values.put(GenreItemInfoTableAdapter.COL_MODIFIED, DateUtil.dateToString(modified))
+            return values
+    }
+}

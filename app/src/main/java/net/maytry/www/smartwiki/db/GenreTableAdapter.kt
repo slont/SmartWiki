@@ -9,10 +9,9 @@ import net.maytry.www.smartwiki.utils.DateUtil
 /**
  * Created by slont on 9/15/16.
  */
-class GenreTableAdapter(context: Context) : DBAdapter(context) {
+class GenreTableAdapter(context: Context) : DBAdapter<Genre>(context) {
 
     companion object {
-        val COL_ID = "id"
         val COL_NAME = "name"
         val COL_FAVORITE = "favorite"
         val COL_CREATED = "created"
@@ -29,53 +28,13 @@ class GenreTableAdapter(context: Context) : DBAdapter(context) {
             Pair(COL_MODIFIED, "INTEGER")
     )
 
-    fun insert(genre: Genre): Long {
-        val values = genre.contentValues()
-        return db!!.insert(tableName, null, values)
-    }
-
-    fun deleteAll(): Boolean {
-        return db!!.delete(tableName, null, null) > 0
-    }
-
-    fun delete(id: Int): Boolean {
-        return db!!.delete(tableName, COL_ID + "=" + id, null) > 0
-    }
-
-    fun selectByID(id: Long): Genre? {
-        var genre: Genre? = null
-        val cursor = db!!.rawQuery("SELECT * FROM ? WHERE id=?", arrayOf(tableName, "id5000"))
-        try {
-            if (cursor.moveToNext()) {
-                genre = cursorToModel(cursor)
-            }
-        } finally {
-            cursor.close()
-        }
-        return genre
-    }
-
-    fun selectAll(): List<Genre> {
-        val genreList: MutableList<Genre> = mutableListOf()
-        val cursor = db!!.query(tableName, null, null, null, null, null, null)
-        try {
-            if (cursor.moveToNext()) {
-                val genre = cursorToModel(cursor)
-                genreList.add(genre)
-            }
-        } finally {
-            cursor.close()
-        }
-        return genreList
-    }
-
-    fun cursorToModel(c: Cursor): Genre {
+    override fun cursorToModel(cursor: Cursor): Genre {
         val genre = Genre(
-                id = c.getLong(c.getColumnIndex(GenreTableAdapter.COL_ID)),
-                name = c.getString(c.getColumnIndex(GenreTableAdapter.COL_NAME)),
-                favorite = c.getInt(c.getColumnIndex(GenreTableAdapter.COL_FAVORITE)) == 1,
-                created = DateUtil.stringToDate(c.getString(c.getColumnIndex(GenreTableAdapter.COL_CREATED))),
-                modified = DateUtil.stringToDate(c.getString(c.getColumnIndex(GenreTableAdapter.COL_MODIFIED)))
+                id = cursor.getLong(cursor.getColumnIndex(DBAdapter.COL_ID)),
+                name = cursor.getString(cursor.getColumnIndex(GenreTableAdapter.COL_NAME)),
+                favorite = cursor.getInt(cursor.getColumnIndex(GenreTableAdapter.COL_FAVORITE)) == 1,
+                created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(GenreTableAdapter.COL_CREATED))),
+                modified = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(GenreTableAdapter.COL_MODIFIED)))
         )
         return genre
     }

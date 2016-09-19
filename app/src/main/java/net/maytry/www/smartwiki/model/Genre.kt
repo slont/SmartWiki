@@ -1,8 +1,9 @@
 package net.maytry.www.smartwiki.model
 
 import android.content.ContentValues
+import net.maytry.www.smartwiki.db.DBAdapter
+import net.maytry.www.smartwiki.db.GenreTableAdapter
 import net.maytry.www.smartwiki.utils.DateUtil
-import java.io.Serializable
 import java.util.*
 
 /**
@@ -23,7 +24,7 @@ class Genre(
         /**
          * アイテム情報
          */
-        val itemMap: MutableMap<String, GenreItem> = mutableMapOf(),
+        val itemList: MutableList<GenreItem> = mutableListOf(),
 
         /**
          * お気に入り
@@ -40,14 +41,14 @@ class Genre(
          */
         var modified: Date = Date()
 
-) : Serializable {
-    fun contentValues(): ContentValues {
+) : AbstractModel<Genre>() {
+    override fun contentValues(): ContentValues {
         val values = ContentValues()
-        values.put("id", id)
-        values.put("name", name)
-        values.put("favorite", favorite)
-        values.put("created", DateUtil.dateToString(created))
-        values.put("modified", DateUtil.dateToString(modified))
+        values.put(DBAdapter.COL_ID, id)
+        values.put(GenreTableAdapter.COL_NAME, name)
+        values.put(GenreTableAdapter.COL_FAVORITE, favorite)
+        values.put(GenreTableAdapter.COL_CREATED, DateUtil.dateToString(created))
+        values.put(GenreTableAdapter.COL_MODIFIED, DateUtil.dateToString(modified))
         return values
     }
 }

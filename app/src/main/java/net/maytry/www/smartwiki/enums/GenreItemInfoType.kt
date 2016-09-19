@@ -11,5 +11,14 @@ enum class GenreItemInfoType {
     RADIO_BTN,
     SEEK_BAR,
     RATING_BAR,
-    ORIGINAL
+    ORIGINAL;
+
+    companion object {
+        /**
+         * TODO
+         */
+        fun intToEnum(int: Int): GenreItemInfoType {
+            return GenreItemInfoType.TIME
+        }
+    }
 }
