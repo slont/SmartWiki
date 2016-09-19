@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import net.maytry.www.smartwiki.R
 import net.maytry.www.smartwiki.databinding.FragmentAddGenreContentBinding
-import net.maytry.www.smartwiki.databinding.FragmentEditGenreItemContentBinding
-import net.maytry.www.smartwiki.model.Genre
 
 /**
  *
@@ -63,17 +61,13 @@ class AddGenreContentFragment : Fragment() {
         fun onClickCreateButton(v: View)
     }
 
-    class OnClickCancelButton(listener: OnFragmentInteractionListener?) : View.OnClickListener {
-        private val listener = listener
-
+    class OnClickCancelButton(private val listener: OnFragmentInteractionListener?) : View.OnClickListener {
         override fun onClick(v: View) {
             listener!!.onClickCancelButton(v)
         }
     }
 
-    class OnClickCreateButton(listener: OnFragmentInteractionListener?) : View.OnClickListener {
-        private val listener = listener
-
+    class OnClickCreateButton(private val listener: OnFragmentInteractionListener?) : View.OnClickListener {
         override fun onClick(v: View) {
             listener!!.onClickCreateButton(v)
         }

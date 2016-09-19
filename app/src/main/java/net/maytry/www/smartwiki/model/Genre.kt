@@ -6,39 +6,36 @@ import java.util.Date
 /**
  * Created by slont on 8/6/16.
  */
-class Genre(name: String, isFavorite: Boolean) : Serializable {
+class Genre(
 
-    /**
-     * ジャンルの名前
-     */
-    var name: String
+        /**
+         * ID
+         */
+        var id: Long? = null,
 
-    /**
-     * お気に入り
-     */
-    var favorite: Boolean
+        /**
+         * 名前
+         */
+        var name: String = "",
 
-    /**
-     * アイテム情報
-     */
-    val itemMap: MutableMap<String, GenreItem> = mutableMapOf()
+        /**
+         * アイテム情報
+         */
+        val itemMap: MutableMap<String, GenreItem> = mutableMapOf(),
 
-    /**
-     * 作成日時
-     */
-    val createdDatetime: Date
+        /**
+         * お気に入り
+         */
+        var favorite: Boolean = false,
 
-    /**
-     * 変更日時
-     */
-    var modifiedDatetime: Date
+        /**
+         * 作成日時
+         */
+        val created: Date = Date(),
 
-    init {
-        this.name = name
-        this.favorite = isFavorite
-        this.createdDatetime = Date()
-        this.modifiedDatetime = Date()
-    }
+        /**
+         * 変更日時
+         */
+        var modified: Date = Date()
 
-    constructor(name: String) : this(name, false)
-}
+) : Serializable {}

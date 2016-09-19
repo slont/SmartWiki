@@ -6,39 +6,41 @@ import java.util.*
 /**
  * Created by slont on 8/29/16.
  */
-class GenreItem(name: String, infoList: MutableList<GenreItemInfo> = mutableListOf()) : Serializable {
+class GenreItem(
 
-    /**
-     * 名前
-     */
-    var name: String
+        /**
+         * ID
+         */
+        var id: Long? = null,
 
-    /**
-     * アイテム情報
-     */
-    val infoList: MutableList<GenreItemInfo> = mutableListOf()
+        /**
+         * 名前
+         */
+        var name: String,
 
-    /**
-     * お気に入り
-     */
-    var favorite: Boolean? = null
+        /**
+         * 親GenreID
+         */
+        var parentID: Long,
 
-    /**
-     * 作成日時
-     */
-    val createdDatetime: Date
+        /**
+         * アイテム情報
+         */
+        val infoList: MutableList<GenreItemInfo> = mutableListOf(),
 
-    /**
-     * 変更日時
-     */
-    var modifiedDatetime: Date
+        /**
+         * お気に入り
+         */
+        var favorite: Boolean = false,
 
-    init {
-        this.name = name
-        this.infoList.addAll(infoList)
-//        this.favorite = isFavorite
+        /**
+         * 作成日時
+         */
+        val created: Date = Date(),
 
-        this.createdDatetime = Date()
-        this.modifiedDatetime = Date()
-    }
-}
+        /**
+         * 変更日時
+         */
+        var modified: Date = Date())
+
+: Serializable {}

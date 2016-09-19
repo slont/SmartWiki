@@ -84,19 +84,19 @@ class EditGenreItemContentFragment : Fragment() {
         fun onClickUpdateButton(v: View)
     }
 
-    private class OnClickGenreItemListItem(val listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
+    private class OnClickGenreItemListItem(private val listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             listener!!.onClickGenreItemListItem(parent, view, position, id)
         }
     }
 
-    private class OnClickCancelButton(val listener: OnFragmentInteractionListener?) : View.OnClickListener {
+    private class OnClickCancelButton(private val listener: OnFragmentInteractionListener?) : View.OnClickListener {
         override fun onClick(v: View) {
             listener!!.onClickCancelButton(v)
         }
     }
 
-    private class OnClickSubmitButton(val listener: OnFragmentInteractionListener?, val type: EditType?) : View.OnClickListener {
+    private class OnClickSubmitButton(private val listener: OnFragmentInteractionListener?, val type: EditType?) : View.OnClickListener {
         override fun onClick(v: View) {
             when (type) {
                 EditType.UPDATE -> listener!!.onClickUpdateButton(v)

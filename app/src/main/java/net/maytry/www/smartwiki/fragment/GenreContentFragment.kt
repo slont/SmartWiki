@@ -77,9 +77,7 @@ class GenreContentFragment : Fragment() {
 
     }
 
-    class OnClickListItem(listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
-        private val listener = listener
-
+    class OnClickListItem(private val listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
             listener!!.onClickGenreItemListItem(parent, view, position, id)
         }
