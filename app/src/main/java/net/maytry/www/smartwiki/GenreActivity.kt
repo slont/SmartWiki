@@ -14,6 +14,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.ListView
 import net.maytry.www.smartwiki.databinding.ActivityGenreBinding
+import net.maytry.www.smartwiki.db.GenreItemTableAdapter
 import net.maytry.www.smartwiki.enums.EditType
 import net.maytry.www.smartwiki.fragment.GenreContentFragment
 import net.maytry.www.smartwiki.model.Genre
@@ -33,17 +34,26 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         private val UPDATE_ITEM_REQ_CODE = 200
     }
 
-    private var genre: Genre = Genre(name = "")
-    private var mItemList: MutableList<GenreItem> = mutableListOf()
+    private var mGenre: Genre = Genre()
+    private val mItemList: MutableList<GenreItem> = mutableListOf()
     val itemList: List<GenreItem> = mItemList
+
+    private val itemTableAdapter: GenreItemTableAdapter
+
+    private val fragment: GenreContentFragment
+
+    init {
+        itemTableAdapter = GenreItemTableAdapter(this)
+        fragment = GenreContentFragment.newInstance(itemList)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityGenreBinding>(this@GenreActivity, R.layout.activity_genre)
 
-        genre = intent.getSerializableExtra("genre") as Genre
-        title = genre.name
-        mItemList.addAll(genre.itemMap.values)
+        mGenre = intent.getSerializableExtra("genre") as Genre
+        title = mGenre.name
+        mItemList.addAll(mGenre.itemList)
 
         val toolbar = binding.appBarGenre.toolbar
         setSupportActionBar(toolbar)
@@ -57,8 +67,8 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         binding.appBarGenre.onClickEditGenreItemFab = OnClickEditGenreItemFab()
         binding.navView.setNavigationItemSelectedListener(this)
 
-        val fragment = GenreContentFragment.newInstance(itemList)
         supportFragmentManager.beginTransaction().add(R.id.content_genre, fragment).commit()
+        load()
     }
 
     override fun onBackPressed() {
@@ -120,10 +130,9 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      * ItemContentが設定されていれば、ページを表示する
      */
     override fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
+        val intent = Intent(this@GenreActivity, GenreItemActivity::class.java)
         intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
-        intent.putExtra("type", EditType.UPDATE)
-        startActivityForResult(intent, UPDATE_ITEM_REQ_CODE)
+        startActivity(intent)
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
@@ -142,9 +151,14 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
             CREATE_ITEM_REQ_CODE -> {
                 when (resultCode) {
                     RESULT_OK -> {
-                        mItemList.add(data.getSerializableExtra("item") as GenreItem)
-                        val itemListView = findViewById(R.id.item_list_view) as ListView
-                        (itemListView.adapter as GenreItemAdapter).notifyDataSetChanged()
+                        val id = data.getLongExtra("_id", -1)
+                        itemTableAdapter.open()
+                        val item = itemTableAdapter.selectByID(id)
+                        itemTableAdapter.close()
+                        if (null != item) {
+                            mItemList.add(item)
+                            fragment.notifyDataSetChanged()
+                        }
                     }
                     RESULT_CANCELED -> {}
                 }
@@ -154,13 +168,20 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
+    private fun load() {
+        itemTableAdapter.open()
+        mItemList.addAll(itemTableAdapter.selectAll())
+        itemTableAdapter.close()
+        fragment.notifyDataSetChanged()
+    }
+
     /**
      * EditGenreItemのクリックイベント
      */
     private inner class OnClickEditGenreItemFab : View.OnClickListener {
         override fun onClick(v: View) {
             val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
-            intent.putExtra("item",  GenreItem(name = "", parentID = genre.id ?: -1))
+            intent.putExtra("item",  GenreItem(name = "", parentID = mGenre.id ?: -1))
             intent.putExtra("type", EditType.CREATE)
             startActivityForResult(intent, CREATE_ITEM_REQ_CODE)
         }

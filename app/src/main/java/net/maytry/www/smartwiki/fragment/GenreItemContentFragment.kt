@@ -10,10 +10,10 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.FragmentGenreContentBinding
+import net.maytry.www.smartwiki.databinding.FragmentGenreItemContentBinding
 import net.maytry.www.smartwiki.fragment.GenreItemContentFragment.OnFragmentInteractionListener
-import net.maytry.www.smartwiki.model.GenreItem
-import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
+import net.maytry.www.smartwiki.model.GenreItemInfo
+import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
 import java.io.Serializable
 
 /**
@@ -27,28 +27,28 @@ import java.io.Serializable
  */
 class GenreItemContentFragment : Fragment() {
 
-    private var mItemList: List<GenreItem>? = null
+    private var mInfoList: List<GenreItemInfo>? = null
 
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mItemList = arguments.getSerializable(ITEM_LIST) as List<GenreItem>
+            mInfoList = arguments.getSerializable(INFO_LIST) as List<GenreItemInfo>
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_genre_content, container, false)
+        return inflater!!.inflate(R.layout.fragment_genre_item_content, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val binding = FragmentGenreContentBinding.bind(view)
-        binding.itemList = mItemList
-        binding.onClickGenreItemListItem = OnClickListItem(mListener)
+        val binding = FragmentGenreItemContentBinding.bind(view)
+        binding.infoList = mInfoList
+        binding.onClickGenreItemInfoListItem = OnClickListItem(mListener)
     }
 
     override fun onAttach(context: Context?) {
@@ -75,23 +75,23 @@ class GenreItemContentFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
+        fun onClickGenreItemInfoListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
 
     }
 
     class OnClickListItem(private val listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
         override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            listener!!.onClickGenreItemListItem(parent, view, position, id)
+            listener!!.onClickGenreItemInfoListItem(parent, view, position, id)
         }
     }
 
     companion object {
-        private val ITEM_LIST = "item_list"
+        private val INFO_LIST = "info_list"
 
-        fun newInstance(itemList: List<GenreItem>): GenreContentFragment {
-            val fragment = GenreContentFragment()
+        fun newInstance(infoList: List<GenreItemInfo>): GenreItemContentFragment {
+            val fragment = GenreItemContentFragment()
             val args = Bundle()
-            args.putSerializable(ITEM_LIST, itemList as Serializable)
+            args.putSerializable(INFO_LIST, infoList as Serializable)
             fragment.arguments = args
             return fragment
         }
@@ -99,9 +99,9 @@ class GenreItemContentFragment : Fragment() {
 
     object CustomSetter {
         @JvmStatic
-        @BindingAdapter("itemList")
-        fun setContentList(listView: ListView, contentList: List<GenreItem>) {
-            val adapter = GenreItemAdapter(listView.context, R.layout.genre_item_list_item, contentList)
+        @BindingAdapter("infoList")
+        fun setContentList(listView: ListView, infoList: List<GenreItemInfo>) {
+            val adapter = GenreItemInfoAdapter(listView.context, R.layout.genre_item_info_list_item, infoList)
             listView.adapter = adapter
         }
     }

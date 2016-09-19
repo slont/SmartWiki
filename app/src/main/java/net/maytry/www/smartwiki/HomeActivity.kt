@@ -126,7 +126,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     override fun onClickGenreListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
         val intent = Intent(this@HomeActivity, GenreActivity::class.java)
         intent.putExtra("genre", parent!!.getItemAtPosition(position) as Genre)
-        startActivityForResult(intent, LAYERED_REQ_CODE)
+        startActivity(intent)
         //        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -137,7 +137,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
             ADD_GENRE_REQ_CODE -> {
                 when (resultCode) {
                     RESULT_OK -> {
-                        val id = data.getLongExtra("id", -1)
+                        val id = data.getLongExtra("_id", -1)
                         genreTableAdapter.open()
                         val genre = genreTableAdapter.selectByID(id)
                         genreTableAdapter.close()

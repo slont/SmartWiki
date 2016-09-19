@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
 import net.maytry.www.smartwiki.databinding.ActivityEditGenreItemBinding
+import net.maytry.www.smartwiki.db.GenreItemTableAdapter
 import net.maytry.www.smartwiki.enums.EditType
 import net.maytry.www.smartwiki.fragment.EditGenreItemContentFragment
 import net.maytry.www.smartwiki.model.GenreItem
@@ -18,6 +19,12 @@ import net.maytry.www.smartwiki.model.GenreItem
  * Genre item display activity.
  */
 class EditGenreItemActivity : AppCompatActivity(), EditGenreItemContentFragment.OnFragmentInteractionListener {
+
+    private val itemTableAdapter: GenreItemTableAdapter
+
+    init {
+        itemTableAdapter = GenreItemTableAdapter(this)
+    }
 
     private var mItem: GenreItem? = null
 
@@ -43,9 +50,9 @@ class EditGenreItemActivity : AppCompatActivity(), EditGenreItemContentFragment.
 
     override fun onClickCreateButton(v: View) {
         val name = (findViewById(R.id.item_name_edit) as EditText).text.toString()
+        val id = addGenreItem(name)
         val intent = Intent()
-        mItem!!.name = name
-        intent.putExtra("item", mItem)
+        intent.putExtra("_id", id)
         setResult(RESULT_OK, intent)
         finish()
     }
@@ -57,5 +64,13 @@ class EditGenreItemActivity : AppCompatActivity(), EditGenreItemContentFragment.
         intent.putExtra("item", mItem)
         setResult(RESULT_OK, intent)
         finish()
+    }
+
+    private fun addGenreItem(name: String): Long {
+        itemTableAdapter.open()
+        val item = GenreItem(name = name)
+        val id = itemTableAdapter.insert(item)
+        itemTableAdapter.close()
+        return id
     }
 }

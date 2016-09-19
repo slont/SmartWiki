@@ -1,6 +1,5 @@
 package net.maytry.www.smartwiki
 
-import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -13,16 +12,15 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import net.maytry.www.smartwiki.databinding.ActivityGenreItemBinding
-import net.maytry.www.smartwiki.fragment.GenreContentFragment
 import net.maytry.www.smartwiki.fragment.GenreItemContentFragment
-import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.model.GenreItem
+import net.maytry.www.smartwiki.model.GenreItemInfo
 
 /**
  * Created by slont on 9/8/16.
  *
  * GenreItem画面のアクティビティ
- * メインコンテンツではGenreInfoの管理を行う
+ * メインコンテンツではGenreItemInfoの管理を行う
  */
 class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreItemContentFragment.OnFragmentInteractionListener {
 
@@ -31,16 +29,17 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         private val LAYERED_REQ_CODE = 200
     }
 
-    private var mItemList: MutableList<GenreItem> = mutableListOf()
-    val itemList: List<GenreItem> = mItemList
+    private var mItem: GenreItem = GenreItem()
+    private var mInfoList: MutableList<GenreItemInfo> = mutableListOf()
+    val infoList: List<GenreItemInfo> = mInfoList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityGenreItemBinding>(this@GenreItemActivity, R.layout.activity_genre_item)
 
-        val genre = intent.getSerializableExtra("genre") as Genre
-        title = genre.name
-        mItemList.addAll(genre.itemMap.values)
+        val item = intent.getSerializableExtra("item") as GenreItem
+        title = item.name
+        mInfoList.addAll(item.infoList)
 
         val toolbar = binding.appBar.toolbar
         setSupportActionBar(toolbar)
@@ -53,8 +52,12 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        val fragment = GenreContentFragment.newInstance(itemList)
+        val fragment = GenreItemContentFragment.newInstance(infoList)
         supportFragmentManager.beginTransaction().add(R.id.content_genre_item, fragment).commit()
+    }
+
+    override fun onClickGenreItemInfoListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+//        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
     override fun onBackPressed() {
@@ -110,14 +113,4 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         return true
     }
 
-    /**
-     * LayeredItemのセレクトイベント
-     * LayeredContentが設定されていればさらに潜る
-     * ItemContentが設定されていれば、ページを表示する
-     */
-    override fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-        val intent = Intent(this@GenreItemActivity, EditGenreItemActivity::class.java)
-        intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
-        startActivityForResult(intent, ADD_GENRE_REQ_CODE)
-    }
 }

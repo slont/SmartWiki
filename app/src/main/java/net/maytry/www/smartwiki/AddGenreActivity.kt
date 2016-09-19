@@ -41,8 +41,7 @@ class AddGenreActivity : AppCompatActivity(), AddGenreContentFragment.OnFragment
         val name = (findViewById(R.id.genre_name_edit) as EditText).text.toString()
         val id = addGenre(name)
         val intent = Intent()
-        intent.putExtra("id", id)
-        intent.putExtra("name", name)
+        intent.putExtra("_id", id)
         setResult(RESULT_OK, intent)
         finish()
     }

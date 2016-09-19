@@ -29,6 +29,8 @@ class GenreContentFragment : Fragment() {
 
     private var mListener: OnFragmentInteractionListener? = null
 
+    private var binding: FragmentGenreContentBinding? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
@@ -44,9 +46,9 @@ class GenreContentFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val binding = FragmentGenreContentBinding.bind(view)
-        binding.itemList = mItemList
-        binding.onClickGenreItemListItem = OnClickListItem(mListener)
+        binding = FragmentGenreContentBinding.bind(view)
+        binding?.itemList = mItemList
+        binding?.onClickGenreItemListItem = OnClickListItem(mListener)
     }
 
     override fun onAttach(context: Context?) {
@@ -61,6 +63,12 @@ class GenreContentFragment : Fragment() {
     override fun onDetach() {
         super.onDetach()
         mListener = null
+    }
+
+    fun notifyDataSetChanged() {
+        if (null != binding) {
+            ((binding?.itemListView as ListView).adapter as GenreItemAdapter).notifyDataSetChanged()
+        }
     }
 
     /**
@@ -98,8 +106,8 @@ class GenreContentFragment : Fragment() {
     object CustomSetter {
         @JvmStatic
         @BindingAdapter("itemList")
-        fun setContentList(listView: ListView, contentList: List<GenreItem>) {
-            val adapter = GenreItemAdapter(listView.context, R.layout.genre_item_list_item, contentList)
+        fun setContentList(listView: ListView, itemList: List<GenreItem>) {
+            val adapter = GenreItemAdapter(listView.context, R.layout.genre_item_list_item, itemList)
             listView.adapter = adapter
         }
     }

@@ -5,7 +5,6 @@
 
     <data>
         <import type="android.view.View.OnClickListener" />
-        <!--<variable name="onClickEditGenreItemFab" type="OnClickListener" />-->
     </data>
 
     <android.support.design.widget.CoordinatorLayout
