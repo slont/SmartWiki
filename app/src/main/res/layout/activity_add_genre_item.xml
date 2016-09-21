@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true"
-        tools:context="net.maytry.www.smartwiki.EditGenreItemActivity">
+        tools:context="net.maytry.www.smartwiki.AddGenreItemActivity">
 
         <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
@@ -23,9 +23,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include
-            layout="@layout/content_edit_genre_item"
-            android:id="@+id/content_edit_genre_item" />
+        <include layout="@layout/content_add_genre_item"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

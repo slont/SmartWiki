@@ -5,7 +5,7 @@
 
     <data>
         <import type="android.view.View.OnClickListener" />
-        <variable name="onClickEditGenreItemFab" type="OnClickListener" />
+        <variable name="onClickAddGenreItemFab" type="OnClickListener" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -36,7 +36,7 @@
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:src="@android:drawable/ic_input_add"
-            android:onClick="@{onClickEditGenreItemFab}"
+            android:onClick="@{onClickAddGenreItemFab}"
             app:backgroundTint="@color/blue" />
 
         <!--<com.getbase.floatingactionbutton.FloatingActionsMenu-->

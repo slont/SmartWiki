@@ -64,7 +64,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         drawer.setDrawerListener(toggle)
         toggle.syncState()
 
-        binding.appBarGenre.onClickEditGenreItemFab = OnClickEditGenreItemFab()
+        binding.appBarGenre.onClickAddGenreItemFab = OnClickAddGenreItemFab()
         binding.navView.setNavigationItemSelectedListener(this)
 
         supportFragmentManager.beginTransaction().add(R.id.content_genre, fragment).commit()
@@ -178,9 +178,9 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     /**
      * EditGenreItemのクリックイベント
      */
-    private inner class OnClickEditGenreItemFab : View.OnClickListener {
+    private inner class OnClickAddGenreItemFab : View.OnClickListener {
         override fun onClick(v: View) {
-            val intent = Intent(this@GenreActivity, EditGenreItemActivity::class.java)
+            val intent = Intent(this@GenreActivity, AddGenreItemActivity::class.java)
             intent.putExtra("item",  GenreItem(name = "", parentID = mGenre.id ?: -1))
             intent.putExtra("type", EditType.CREATE)
             startActivityForResult(intent, CREATE_ITEM_REQ_CODE)

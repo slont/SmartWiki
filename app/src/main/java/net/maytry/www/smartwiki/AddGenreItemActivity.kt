@@ -7,10 +7,10 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.AdapterView
 import android.widget.EditText
-import net.maytry.www.smartwiki.databinding.ActivityEditGenreItemBinding
+import net.maytry.www.smartwiki.databinding.ActivityAddGenreItemBinding
 import net.maytry.www.smartwiki.db.GenreItemTableAdapter
 import net.maytry.www.smartwiki.enums.EditType
-import net.maytry.www.smartwiki.fragment.EditGenreItemContentFragment
+import net.maytry.www.smartwiki.fragment.AddGenreItemContentFragment
 import net.maytry.www.smartwiki.model.GenreItem
 
 /**
@@ -18,7 +18,7 @@ import net.maytry.www.smartwiki.model.GenreItem
  *
  * Genre item display activity.
  */
-class EditGenreItemActivity : AppCompatActivity(), EditGenreItemContentFragment.OnFragmentInteractionListener {
+class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.OnFragmentInteractionListener {
 
     private val itemTableAdapter: GenreItemTableAdapter
 
@@ -30,13 +30,13 @@ class EditGenreItemActivity : AppCompatActivity(), EditGenreItemContentFragment.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityEditGenreItemBinding>(this@EditGenreItemActivity, R.layout.activity_edit_genre_item)
+        val binding = DataBindingUtil.setContentView<ActivityAddGenreItemBinding>(this@AddGenreItemActivity, R.layout.activity_add_genre_item)
 
         mItem = intent.getSerializableExtra("item") as GenreItem
         val type = intent.getSerializableExtra("type") as EditType
 
-        val fragment = EditGenreItemContentFragment.newInstance(mItem!!, type!!)
-        supportFragmentManager.beginTransaction().add(R.id.content_edit_genre_item, fragment).commit()
+        val fragment = AddGenreItemContentFragment.newInstance(mItem!!, type!!)
+        supportFragmentManager.beginTransaction().add(R.id.content_add_genre_item, fragment).commit()
     }
 
     override fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

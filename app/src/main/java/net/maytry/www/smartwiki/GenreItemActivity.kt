@@ -37,9 +37,9 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityGenreItemBinding>(this@GenreItemActivity, R.layout.activity_genre_item)
 
-        val item = intent.getSerializableExtra("item") as GenreItem
-        title = item.name
-        mInfoList.addAll(item.infoList)
+        mItem = intent.getSerializableExtra("item") as GenreItem
+        title = mItem.name
+        mInfoList.addAll(mItem.infoList)
 
         val toolbar = binding.appBar.toolbar
         setSupportActionBar(toolbar)

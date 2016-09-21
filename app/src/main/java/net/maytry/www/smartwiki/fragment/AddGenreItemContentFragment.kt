@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.FragmentEditGenreItemContentBinding
+import net.maytry.www.smartwiki.databinding.FragmentAddGenreItemContentBinding
 import net.maytry.www.smartwiki.enums.EditType
-import net.maytry.www.smartwiki.fragment.EditGenreItemContentFragment.OnFragmentInteractionListener
+import net.maytry.www.smartwiki.fragment.AddGenreItemContentFragment.OnFragmentInteractionListener
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
 import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
@@ -24,7 +24,7 @@ import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
  * Activities containing this fragment MUST implement the [OnFragmentInteractionListener]
  * interface.
  */
-class EditGenreItemContentFragment : Fragment() {
+class AddGenreItemContentFragment : Fragment() {
 
     private var mItem: GenreItem? = null
     private var mType: EditType? = null
@@ -41,7 +41,7 @@ class EditGenreItemContentFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_edit_genre_item_content, container, false)
+        return inflater!!.inflate(R.layout.fragment_add_genre_item_content, container, false)
     }
 
     override fun onAttach(context: Context?) {
@@ -55,7 +55,7 @@ class EditGenreItemContentFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        val binding = FragmentEditGenreItemContentBinding.bind(view)
+        val binding = FragmentAddGenreItemContentBinding.bind(view)
         binding.item = mItem
         binding.submitButtonName = if (EditType.UPDATE == mType) "更新" else "作成"
         binding.onClickGenreItemListItem = OnClickGenreItemListItem(mListener)
@@ -110,8 +110,8 @@ class EditGenreItemContentFragment : Fragment() {
         private val ITEM = "item"
         private val TYPE = "type"
 
-        fun newInstance(item: GenreItem, type: EditType): EditGenreItemContentFragment {
-            val fragment = EditGenreItemContentFragment()
+        fun newInstance(item: GenreItem, type: EditType): AddGenreItemContentFragment {
+            val fragment = AddGenreItemContentFragment()
             val args = Bundle()
             args.putSerializable(ITEM, item)
             args.putSerializable(TYPE, type)

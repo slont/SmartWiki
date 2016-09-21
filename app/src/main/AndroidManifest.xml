@@ -30,7 +30,7 @@
             android:label="@string/title_activity_layered"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".EditGenreItemActivity"
+            android:name=".AddGenreItemActivity"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>
 
