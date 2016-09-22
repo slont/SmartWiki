@@ -34,7 +34,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         private val UPDATE_ITEM_REQ_CODE = 200
     }
 
-    private var mGenre: Genre = Genre()
+    private lateinit var mGenre: Genre
     private val mItemList: MutableList<GenreItem> = mutableListOf()
     val itemList: List<GenreItem> = mItemList
 
@@ -68,7 +68,6 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         binding.navView.setNavigationItemSelectedListener(this)
 
         supportFragmentManager.beginTransaction().add(R.id.content_genre, fragment).commit()
-        load()
     }
 
     override fun onBackPressed() {
@@ -82,7 +81,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.layered, menu)
+        menuInflater.inflate(R.menu.home, menu)
         return true
     }
 
@@ -168,20 +167,20 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         }
     }
 
-    private fun load() {
+    override fun loadData() {
         itemTableAdapter.open()
-        mItemList.addAll(itemTableAdapter.selectAll())
+        mItemList.addAll(itemTableAdapter.select("parent_id=${mGenre.id}"))
         itemTableAdapter.close()
-        fragment.notifyDataSetChanged()
     }
 
     /**
-     * EditGenreItemのクリックイベント
+     * AddGenreItemのクリックイベント
      */
     private inner class OnClickAddGenreItemFab : View.OnClickListener {
         override fun onClick(v: View) {
+            val genre = mGenre
             val intent = Intent(this@GenreActivity, AddGenreItemActivity::class.java)
-            intent.putExtra("item",  GenreItem(name = "", parentID = mGenre.id ?: -1))
+            intent.putExtra("item",  GenreItem(name = "", parentId= genre.id!!))
             intent.putExtra("type", EditType.CREATE)
             startActivityForResult(intent, CREATE_ITEM_REQ_CODE)
         }

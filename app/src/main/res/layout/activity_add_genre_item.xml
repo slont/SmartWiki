@@ -3,6 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <import type="android.view.View.OnClickListener" />
+    </data>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -23,7 +27,9 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_add_genre_item"/>
+        <include
+            android:id="@+id/content_add_genre_item"
+            layout="@layout/content_add_genre_item"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

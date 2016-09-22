@@ -25,11 +25,11 @@ import java.io.Serializable
  */
 class GenreContentFragment : Fragment() {
 
-    private var mItemList: List<GenreItem>? = null
+    private lateinit var mItemList: List<GenreItem>
 
     private var mListener: OnFragmentInteractionListener? = null
 
-    private var binding: FragmentGenreContentBinding? = null
+    private lateinit var binding: FragmentGenreContentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,8 +47,9 @@ class GenreContentFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding = FragmentGenreContentBinding.bind(view)
-        binding?.itemList = mItemList
-        binding?.onClickGenreItemListItem = OnClickListItem(mListener)
+        binding.itemList = mItemList
+        binding.onClickGenreItemListItem = OnClickListItem(mListener)
+        mListener?.loadData()
     }
 
     override fun onAttach(context: Context?) {
@@ -66,9 +67,7 @@ class GenreContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        if (null != binding) {
-            ((binding?.itemListView as ListView).adapter as GenreItemAdapter).notifyDataSetChanged()
-        }
+        ((binding.itemListView as ListView).adapter as GenreItemAdapter).notifyDataSetChanged()
     }
 
     /**
@@ -82,7 +81,7 @@ class GenreContentFragment : Fragment() {
      */
     interface OnFragmentInteractionListener {
         fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
-
+        fun loadData()
     }
 
     class OnClickListItem(private val listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
@@ -106,7 +105,7 @@ class GenreContentFragment : Fragment() {
     object CustomSetter {
         @JvmStatic
         @BindingAdapter("itemList")
-        fun setContentList(listView: ListView, itemList: List<GenreItem>) {
+        fun setItemList(listView: ListView, itemList: List<GenreItem>) {
             val adapter = GenreItemAdapter(listView.context, R.layout.genre_item_list_item, itemList)
             listView.adapter = adapter
         }

@@ -64,6 +64,14 @@
                     android:text="作成"
                     android:onClick="@{onClickCreateButton}" />
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight=".6"
+                android:orientation="horizontal">
+
+            </LinearLayout>
         </LinearLayout>
     </RelativeLayout>
 </layout>

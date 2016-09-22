@@ -25,11 +25,11 @@ import java.io.Serializable
  */
 class HomeContentFragment : Fragment() {
 
-    private var mGenreList: List<Genre>? = null
+    private lateinit var mGenreList: List<Genre>
 
     private var mListener: OnFragmentInteractionListener? = null
 
-    private var binding: FragmentHomeContentBinding? = null
+    private lateinit var binding: FragmentHomeContentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +48,9 @@ class HomeContentFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding = FragmentHomeContentBinding.bind(view)
-        binding?.genreList = mGenreList
-        binding?.onItemClickListener = OnClickListItem(mListener)
+        binding.genreList = mGenreList
+        binding.onItemClickListener = OnClickListItem(mListener)
+        mListener?.loadData()
     }
 
     override fun onAttach(context: Context?) {
@@ -67,9 +68,7 @@ class HomeContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        if (null != binding) {
-            ((binding?.genreListView as ListView).adapter as GenreAdapter).notifyDataSetChanged()
-        }
+        ((binding.genreListView as ListView)?.adapter as GenreAdapter)?.notifyDataSetChanged()
     }
 
     /**
@@ -83,6 +82,7 @@ class HomeContentFragment : Fragment() {
      */
     interface OnFragmentInteractionListener {
         fun onClickGenreListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
+        fun loadData()
     }
 
     class OnClickListItem(private val listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {

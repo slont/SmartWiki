@@ -39,7 +39,7 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
         val item = GenreItemInfo(
                 id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
                 name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                parentID = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
+                parentId = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
                 type = GenreItemInfoType.intToEnum(cursor.getInt(cursor.getColumnIndex(COL_TYPE))),
                 favorite = cursor.getInt(cursor.getColumnIndex(GenreItemTableAdapter.COL_FAVORITE)) == 1,
                 created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_CREATED))),

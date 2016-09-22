@@ -24,7 +24,7 @@ class GenreItem(
         /**
          * 親GenreID
          */
-        var parentID: Long = -1,
+        var parentId: Long = -1,
 
         /**
          * アイテム情報
@@ -51,7 +51,7 @@ class GenreItem(
         val values = ContentValues()
         values.put(DBAdapter.COL_ID, id)
         values.put(GenreItemTableAdapter.COL_NAME, name)
-        values.put(GenreItemTableAdapter.COL_PARENT_ID, parentID)
+        values.put(GenreItemTableAdapter.COL_PARENT_ID, parentId)
         values.put(GenreItemTableAdapter.COL_FAVORITE, favorite)
         values.put(GenreItemTableAdapter.COL_CREATED, DateUtil.dateToString(created))
         values.put(GenreItemTableAdapter.COL_MODIFIED, DateUtil.dateToString(modified))

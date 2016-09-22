@@ -34,7 +34,7 @@ class GenreItemTableAdapter(context: Context) : DBAdapter<GenreItem>(context) {
         val item = GenreItem(
                 id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
                 name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                parentID = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
+                parentId = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
                 favorite = cursor.getInt(cursor.getColumnIndex(COL_FAVORITE)) == 1,
                 created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_CREATED))),
                 modified = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_MODIFIED)))

@@ -12,6 +12,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import net.maytry.www.smartwiki.databinding.ActivityGenreItemBinding
+import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
 import net.maytry.www.smartwiki.fragment.GenreItemContentFragment
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
@@ -24,14 +25,18 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
  */
 class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreItemContentFragment.OnFragmentInteractionListener {
 
-    companion object {
-        private val ADD_GENRE_REQ_CODE = 100
-        private val LAYERED_REQ_CODE = 200
-    }
-
-    private var mItem: GenreItem = GenreItem()
+    private lateinit var mItem: GenreItem
     private var mInfoList: MutableList<GenreItemInfo> = mutableListOf()
     val infoList: List<GenreItemInfo> = mInfoList
+
+    private val infoTableAdapter: GenreItemInfoTableAdapter
+
+    private val fragment: GenreItemContentFragment
+
+    init {
+        infoTableAdapter = GenreItemInfoTableAdapter(this)
+        fragment = GenreItemContentFragment.newInstance(infoList)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,7 +57,6 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        val fragment = GenreItemContentFragment.newInstance(infoList)
         supportFragmentManager.beginTransaction().add(R.id.content_genre_item, fragment).commit()
     }
 
@@ -71,7 +75,7 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.layered, menu)
+        menuInflater.inflate(R.menu.add_genre_item_info, menu)
         return true
     }
 
@@ -113,4 +117,9 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         return true
     }
 
+    override fun loadData() {
+        infoTableAdapter.open()
+        mInfoList.addAll(infoTableAdapter.select("parent_id=${mItem.id}"))
+        infoTableAdapter.close()
+    }
 }

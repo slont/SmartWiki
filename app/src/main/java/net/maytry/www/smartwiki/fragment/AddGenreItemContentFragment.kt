@@ -26,8 +26,8 @@ import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
  */
 class AddGenreItemContentFragment : Fragment() {
 
-    private var mItem: GenreItem? = null
-    private var mType: EditType? = null
+    private lateinit var mItem: GenreItem
+    private lateinit var mType: EditType
 
     private var mListener: OnFragmentInteractionListener? = null
 

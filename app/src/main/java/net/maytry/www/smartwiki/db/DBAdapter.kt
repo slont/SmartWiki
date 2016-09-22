@@ -84,6 +84,19 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
         return db!!.delete(tableName, COL_ID + "=" + id, null) > 0
     }
 
+    fun select(where: String): List<T> {
+        val objList: MutableList<T> = mutableListOf()
+        val cursor = db!!.rawQuery("SELECT * FROM $tableName WHERE $where", arrayOf())
+        try {
+            if (cursor.moveToNext()) {
+                objList.add(cursorToModel(cursor))
+            }
+        } finally {
+            cursor.close()
+        }
+        return objList
+    }
+
     fun selectByID(id: Long): T? {
         var obj: T? = null
         val cursor = db!!.rawQuery("SELECT * FROM $tableName WHERE ${DBAdapter.COL_ID}=?", arrayOf(id.toString()))
@@ -99,7 +112,7 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
 
     fun selectAll(): List<T> {
         val objList: MutableList<T> = mutableListOf()
-        val cursor = db!!.query(tableName, null, null, null, null, null, null)
+        val cursor = db!!.rawQuery("SELECT * FROM $tableName", arrayOf())
         try {
             if (cursor.moveToNext()) {
                 objList.add(cursorToModel(cursor))

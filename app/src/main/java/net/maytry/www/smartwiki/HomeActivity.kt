@@ -62,7 +62,6 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         binding.navView.setNavigationItemSelectedListener(this)
 
         supportFragmentManager.beginTransaction().add(R.id.content_home, fragment).commit()
-        load()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -162,11 +161,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         }
     }
 
-    private fun load() {
+    override fun loadData() {
         genreTableAdapter.open()
         mGenreList.addAll(genreTableAdapter.selectAll())
         genreTableAdapter.close()
-        fragment.notifyDataSetChanged()
     }
 
     private inner class OnClickAddGenreFab : View.OnClickListener {
