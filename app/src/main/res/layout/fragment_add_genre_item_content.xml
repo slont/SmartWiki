@@ -5,12 +5,8 @@
     <data>
         <import type="net.maytry.www.smartwiki.model.GenreItem" />
         <import type="android.widget.AdapterView.OnItemClickListener" />
-        <import type="android.view.View.OnClickListener" />
         <variable name="item" type="GenreItem" />
-        <variable name="submitButtonName" type="String" />
         <variable name="onClickGenreItemListItem" type="OnItemClickListener" />
-        <variable name="onClickCancelButton" type="OnClickListener" />
-        <variable name="onClickSubmitButton" type="OnClickListener" />
     </data>
 
 
@@ -51,31 +47,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="246dp"
                         android:layout_gravity="center_horizontal"
-                        android:onItemClickListener="@{onClickGenreItemListItem}"
+                        app:onItemClickListener="@{onClickGenreItemListItem}"
                         app:infoList="@{item.infoList}" />
 
                 </LinearLayout>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_weight="0.20"
-                android:orientation="horizontal">
-
-                <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="キャンセル"
-                    android:onClick="@{onClickCancelButton}" />
-
-                <Button
-                    android:id="@+id/submit_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@{submitButtonName}"
-                    android:onClick="@{onClickSubmitButton}" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

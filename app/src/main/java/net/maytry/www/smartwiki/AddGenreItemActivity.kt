@@ -14,11 +14,9 @@ import android.widget.EditText
 import net.maytry.www.smartwiki.databinding.ActivityAddGenreItemBinding
 import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
 import net.maytry.www.smartwiki.db.GenreItemTableAdapter
-import net.maytry.www.smartwiki.enums.EditType
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
 import net.maytry.www.smartwiki.fragment.AddGenreItemContentFragment
 import net.maytry.www.smartwiki.layout.AnimatingRelativeLayout
-import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
 
@@ -32,20 +30,20 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
     private val itemTableAdapter: GenreItemTableAdapter
     private val infoTableAdapter: GenreItemInfoTableAdapter
 
+    private lateinit var fragment: AddGenreItemContentFragment
+
+    private lateinit var mItem: GenreItem
+
     init {
         itemTableAdapter = GenreItemTableAdapter(this)
         infoTableAdapter = GenreItemInfoTableAdapter(this)
     }
-
-    private lateinit var mItem: GenreItem
-    private var mInfoList: MutableList<GenreItemInfo> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityAddGenreItemBinding>(this@AddGenreItemActivity, R.layout.activity_add_genre_item)
 
         mItem = intent.getSerializableExtra("item") as GenreItem
-        val type = intent.getSerializableExtra("type") as EditType
 
         val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
@@ -56,10 +54,9 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
         animatingLayout.hide()
         binding.contentAddGenreItem.menuAddGenreItemInfo.showInfoMenuButton.setOnClickListener { animatingLayout.show() }
         binding.contentAddGenreItem.menuAddGenreItemInfo.hideInfoMenuButton.setOnClickListener { animatingLayout.hide() }
-        val lis: OnClickInfoMenuButton = OnClickInfoMenuButton()
-        binding.contentAddGenreItem.menuAddGenreItemInfo.onClickInfoMenuButton = lis
+        binding.contentAddGenreItem.menuAddGenreItemInfo.onClickInfoMenuButton = OnClickInfoMenuButton()
 
-        val fragment = AddGenreItemContentFragment.newInstance(mItem, type)
+        fragment = AddGenreItemContentFragment.newInstance(mItem)
         supportFragmentManager.beginTransaction().add(R.id.content_add_genre_item, fragment).commit()
     }
 
@@ -82,38 +79,21 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
+            val name = (findViewById(R.id.item_name_edit) as EditText).text.toString()
+            val id = addGenreItem(name)
+            addGenreItemInfo()
+            val intent = Intent()
+            intent.putExtra("_id", id)
+            setResult(RESULT_OK, intent)
+            finish()
             return true
         }
 
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    override fun onClickGenreItemListItem(parent: AdapterView<*>?, position: Int) {
 //        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onClickCancelButton(v: View) {
-        setResult(RESULT_CANCELED, Intent())
-        finish()
-    }
-
-    override fun onClickCreateButton(v: View) {
-        val name = (findViewById(R.id.item_name_edit) as EditText).text.toString()
-        val id = addGenreItem(name)
-        addGenreItemInfo()
-        val intent = Intent()
-        intent.putExtra("_id", id)
-        setResult(RESULT_OK, intent)
-        finish()
-    }
-
-    override fun onClickUpdateButton(v: View) {
-        val name = (findViewById(R.id.item_name_edit) as EditText).text.toString()
-        val intent = Intent()
-        mItem.name = name
-        intent.putExtra("item", mItem)
-        setResult(RESULT_OK, intent)
-        finish()
     }
 
     override fun openOptionsMenu() {
@@ -156,6 +136,7 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
             val type = GenreItemInfoType.strToEnum((v as Button).text.toString())
             if (null != type) {
                 mItem.infoList.add(GenreItemInfo(name = type.name, type = type))
+                fragment.notifyDataSetChanged()
             }
         }
     }

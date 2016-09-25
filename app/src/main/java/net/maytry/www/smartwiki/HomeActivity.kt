@@ -122,7 +122,7 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         return true
     }
 
-    override fun onClickGenreListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    override fun onClickGenreListItem(parent: AdapterView<*>?, position: Int) {
         val intent = Intent(this@HomeActivity, GenreActivity::class.java)
         intent.putExtra("genre", parent!!.getItemAtPosition(position) as Genre)
         startActivity(intent)

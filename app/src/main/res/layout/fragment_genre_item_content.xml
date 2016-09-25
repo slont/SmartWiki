@@ -16,9 +16,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
         android:orientation="vertical"
         android:weightSum="1">
 
@@ -27,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="246dp"
             android:layout_gravity="center_horizontal"
-            android:onItemClickListener="@{onClickGenreItemInfoListItem}"
+            app:onItemClickListener="@{onClickGenreItemInfoListItem}"
             app:infoList="@{infoList}" />
     </LinearLayout>
 </layout>

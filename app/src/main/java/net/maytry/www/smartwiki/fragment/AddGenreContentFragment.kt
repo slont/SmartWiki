@@ -20,8 +20,7 @@ class AddGenreContentFragment : Fragment() {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_add_genre_content, container, false)
     }
 
@@ -29,8 +28,8 @@ class AddGenreContentFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         val binding = FragmentAddGenreContentBinding.bind(view)
-        binding.onClickCancelButton = OnClickCancelButton(mListener)
-        binding.onClickCreateButton = OnClickCreateButton(mListener)
+        binding.cancelButton.setOnClickListener { mListener?.onClickCancelButton() }
+        binding.createButton.setOnClickListener { mListener?.onClickCreateButton() }
     }
 
     override fun onAttach(context: Context?) {
@@ -57,20 +56,8 @@ class AddGenreContentFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        fun onClickCancelButton(v: View)
-        fun onClickCreateButton(v: View)
-    }
-
-    class OnClickCancelButton(private val listener: OnFragmentInteractionListener?) : View.OnClickListener {
-        override fun onClick(v: View) {
-            listener!!.onClickCancelButton(v)
-        }
-    }
-
-    class OnClickCreateButton(private val listener: OnFragmentInteractionListener?) : View.OnClickListener {
-        override fun onClick(v: View) {
-            listener!!.onClickCreateButton(v)
-        }
+        fun onClickCancelButton()
+        fun onClickCreateButton()
     }
 
     companion object {

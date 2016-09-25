@@ -9,7 +9,6 @@ import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.AdapterView
 import net.maytry.www.smartwiki.databinding.ActivityGenreItemBinding
 import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
@@ -60,7 +59,7 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         supportFragmentManager.beginTransaction().add(R.id.content_genre_item, fragment).commit()
     }
 
-    override fun onClickGenreItemInfoListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    override fun onClickInfoListItem(parent: AdapterView<*>?, position: Int) {
 //        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

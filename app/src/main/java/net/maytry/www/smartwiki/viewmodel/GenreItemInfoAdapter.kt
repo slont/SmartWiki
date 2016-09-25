@@ -24,7 +24,7 @@ class GenreItemInfoAdapter(context: Context, textViewResourceId: Int, items: Lis
         val view: View
         val binding: GenreItemInfoListItemBinding
         if (null == convertView) {
-            binding = DataBindingUtil.inflate(inflater, R.layout.genre_item_list_item, parent, false)
+            binding = DataBindingUtil.inflate(inflater, R.layout.genre_item_info_list_item, parent, false)
             view = binding.root
             view.tag = binding
         } else {

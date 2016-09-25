@@ -32,21 +32,9 @@ class GenreAdapter(context: Context, textViewResourceId: Int, items: List<Genre>
             binding = convertView.tag as GenreListItemBinding
             view = convertView
         }
-        binding.genre = getItem(position)
-        binding.onClickFavoriteButtonListener = OnClickFavoriteButtonListener(getItem(position))
+        val genre = getItem(position)
+        binding.genre = genre
+        binding.favoriteToggle.setOnClickListener { v -> genre.favorite = (v as ToggleButton).isChecked }
         return view
-    }
-
-    /**
-     * change genre favorite state
-     *
-     * @property genre
-     */
-    class OnClickFavoriteButtonListener(genre: Genre) : View.OnClickListener {
-        val genre: Genre = genre
-
-        override fun onClick(v: View?) {
-            genre.favorite = (v as ToggleButton).isChecked
-        }
     }
 }

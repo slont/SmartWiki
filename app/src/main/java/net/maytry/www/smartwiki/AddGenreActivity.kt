@@ -4,7 +4,6 @@ import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.widget.EditText
 import net.maytry.www.smartwiki.databinding.ActivityAddGenreBinding
 import net.maytry.www.smartwiki.db.GenreTableAdapter
@@ -32,12 +31,12 @@ class AddGenreActivity : AppCompatActivity(), AddGenreContentFragment.OnFragment
         supportFragmentManager.beginTransaction().add(R.id.content_add_genre, fragment).commit()
     }
 
-    override fun onClickCancelButton(v: View) {
+    override fun onClickCancelButton() {
         setResult(RESULT_CANCELED, Intent())
         finish()
     }
 
-    override fun onClickCreateButton(v: View) {
+    override fun onClickCreateButton() {
         val name = (findViewById(R.id.genre_name_edit) as EditText).text.toString()
         val id = addGenre(name)
         val intent = Intent()

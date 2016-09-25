@@ -26,7 +26,7 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
 
     override val cols = mutableListOf(
             Pair(COL_ID, "INTEGER PRIMARY KEY AUTOINCREMENT"),
-            Pair(COL_NAME, "TEXT UNIQUE"),
+            Pair(COL_NAME, "TEXT"),
             Pair(COL_PARENT_ID, "INTEGER"),
             Pair(COL_TYPE, "TYPE"),
             Pair(COL_CONTENT_LIST, "TEXT"),

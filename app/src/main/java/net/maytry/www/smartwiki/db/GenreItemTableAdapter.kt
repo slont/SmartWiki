@@ -23,7 +23,7 @@ class GenreItemTableAdapter(context: Context) : DBAdapter<GenreItem>(context) {
 
     override val cols = mutableListOf(
             Pair(COL_ID, "INTEGER PRIMARY KEY AUTOINCREMENT"),
-            Pair(COL_NAME, "TEXT UNIQUE"),
+            Pair(COL_NAME, "TEXT"),
             Pair(COL_PARENT_ID, "INTEGER"),
             Pair(COL_FAVORITE, "INTEGER"),
             Pair(COL_CREATED, "INTEGER"),

@@ -128,7 +128,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
      * LayeredContentが設定されていればさらに潜る
      * ItemContentが設定されていれば、ページを表示する
      */
-    override fun onClickGenreItemListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+    override fun onClickItemListItem(parent: AdapterView<*>?, position: Int) {
         val intent = Intent(this@GenreActivity, GenreItemActivity::class.java)
         intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
         startActivity(intent)

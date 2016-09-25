@@ -50,7 +50,7 @@ class GenreItemContentFragment : Fragment() {
 
         binding = FragmentGenreItemContentBinding.bind(view)
         binding.infoList = mInfoList
-        binding.onClickGenreItemInfoListItem = OnClickListItem(mListener)
+        binding.infoListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickInfoListItem(parent, i) }
         mListener?.loadData()
     }
 
@@ -82,14 +82,8 @@ class GenreItemContentFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        fun onClickGenreItemInfoListItem(parent: AdapterView<*>?, view: View?, position: Int, id: Long)
+        fun onClickInfoListItem(parent: AdapterView<*>?, position: Int)
         fun loadData()
-    }
-
-    class OnClickListItem(private val listener: OnFragmentInteractionListener?) : AdapterView.OnItemClickListener {
-        override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-            listener!!.onClickGenreItemInfoListItem(parent, view, position, id)
-        }
     }
 
     companion object {

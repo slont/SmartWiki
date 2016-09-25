@@ -88,7 +88,7 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
         val objList: MutableList<T> = mutableListOf()
         val cursor = db!!.rawQuery("SELECT * FROM $tableName WHERE $where", arrayOf())
         try {
-            if (cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 objList.add(cursorToModel(cursor))
             }
         } finally {
@@ -114,7 +114,7 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
         val objList: MutableList<T> = mutableListOf()
         val cursor = db!!.rawQuery("SELECT * FROM $tableName", arrayOf())
         try {
-            if (cursor.moveToNext()) {
+            while (cursor.moveToNext()) {
                 objList.add(cursorToModel(cursor))
             }
         } finally {
