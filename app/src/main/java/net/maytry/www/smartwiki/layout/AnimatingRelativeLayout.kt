@@ -12,13 +12,11 @@ import net.maytry.www.smartwiki.R
  * Created by slont on 9/22/16.
  */
 
-class AnimatingRelativeLayout(context: Context, attrs: AttributeSet?, defStyle: Int) : RelativeLayout(context, attrs, defStyle) {
-    internal var context: Context
+class AnimatingRelativeLayout(internal val context: Context, attrs: AttributeSet?, defStyle: Int) : RelativeLayout(context, attrs, defStyle) {
     internal var inAnimation: Animation
     internal var outAnimation: Animation
 
     init {
-        this.context = context
         inAnimation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_in_bottom) as Animation
         outAnimation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_out_bottom) as Animation
     }

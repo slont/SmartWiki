@@ -40,8 +40,7 @@ class GenreItemContentFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_genre_item_content, container, false)
     }
 
@@ -69,7 +68,7 @@ class GenreItemContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.infoListView as ListView).adapter as GenreItemInfoAdapter).notifyDataSetChanged()
+        ((binding.infoListView as? ListView)?.adapter as? GenreItemInfoAdapter)?.notifyDataSetChanged()
     }
 
     /**
@@ -102,7 +101,7 @@ class GenreItemContentFragment : Fragment() {
         @JvmStatic
         @BindingAdapter("infoList")
         fun setInfoList(listView: ListView, infoList: List<GenreItemInfo>) {
-            val adapter = GenreItemInfoAdapter(listView.context, R.layout.genre_item_info_list_item, infoList)
+            val adapter = GenreItemInfoAdapter(listView.context, infoList)
             listView.adapter = adapter
         }
     }

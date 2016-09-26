@@ -68,7 +68,7 @@ class HomeContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.genreListView as ListView)?.adapter as GenreAdapter)?.notifyDataSetChanged()
+        ((binding.genreListView as? ListView)?.adapter as? GenreAdapter)?.notifyDataSetChanged()
     }
 
     /**

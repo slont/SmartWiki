@@ -111,10 +111,11 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
 
     private fun addGenreItem(name: String): Long {
         val item = mItem
+        item.name = name
         itemTableAdapter.open()
-        val id = itemTableAdapter.insert(GenreItem(name = name, parentId = item.parentId!!))
+        val id = itemTableAdapter.insert(item)
         itemTableAdapter.close()
-        mItem.id = id
+        item.id = id
         return id
     }
 

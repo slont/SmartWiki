@@ -67,7 +67,7 @@ class GenreContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.itemListView as ListView).adapter as GenreItemAdapter).notifyDataSetChanged()
+        ((binding.itemListView as? ListView)?.adapter as? GenreItemAdapter)?.notifyDataSetChanged()
     }
 
     /**

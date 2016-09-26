@@ -64,7 +64,7 @@ class AddGenreItemContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.infoListView as ListView)?.adapter as GenreItemInfoAdapter)?.notifyDataSetChanged()
+        ((binding.infoListView as? ListView)?.adapter as? GenreItemInfoAdapter)?.notifyDataSetChanged()
     }
 
     /**
@@ -96,7 +96,7 @@ class AddGenreItemContentFragment : Fragment() {
         @JvmStatic
         @BindingAdapter("infoList")
         fun setInfoList(listView: ListView, infoList: List<GenreItemInfo>) {
-            val adapter = GenreItemInfoAdapter(listView.context, R.layout.genre_item_info_list_item, infoList)
+            val adapter = GenreItemInfoAdapter(listView.context, infoList)
             listView.adapter = adapter
         }
     }

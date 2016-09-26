@@ -25,16 +25,14 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
 class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreItemContentFragment.OnFragmentInteractionListener {
 
     private lateinit var mItem: GenreItem
-    private var mInfoList: MutableList<GenreItemInfo> = mutableListOf()
-    val infoList: List<GenreItemInfo> = mInfoList
+    lateinit var infoList: List<GenreItemInfo>
 
     private val infoTableAdapter: GenreItemInfoTableAdapter
 
-    private val fragment: GenreItemContentFragment
+    private lateinit var fragment: GenreItemContentFragment
 
     init {
         infoTableAdapter = GenreItemInfoTableAdapter(this)
-        fragment = GenreItemContentFragment.newInstance(infoList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,7 +41,6 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         mItem = intent.getSerializableExtra("item") as GenreItem
         title = mItem.name
-        mInfoList.addAll(mItem.infoList)
 
         val toolbar = binding.appBar.toolbar
         setSupportActionBar(toolbar)
@@ -56,6 +53,7 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         binding.navView.setNavigationItemSelectedListener(this)
 
+        fragment = GenreItemContentFragment.newInstance(mItem.infoList)
         supportFragmentManager.beginTransaction().add(R.id.content_genre_item, fragment).commit()
     }
 
@@ -118,7 +116,7 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     override fun loadData() {
         infoTableAdapter.open()
-        mInfoList.addAll(infoTableAdapter.select("parent_id=${mItem.id}"))
+        mItem.infoList.addAll(infoTableAdapter.select("parent_id=${mItem.id}"))
         infoTableAdapter.close()
     }
 }

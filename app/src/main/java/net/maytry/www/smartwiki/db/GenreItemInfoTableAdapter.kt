@@ -40,7 +40,7 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
                 id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
                 name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
                 parentId = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
-                type = GenreItemInfoType.intToEnum(cursor.getInt(cursor.getColumnIndex(COL_TYPE))),
+                type = GenreItemInfoType.strToEnum(cursor.getString(cursor.getColumnIndex(COL_TYPE)))!!,
                 favorite = cursor.getInt(cursor.getColumnIndex(GenreItemTableAdapter.COL_FAVORITE)) == 1,
                 created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_CREATED))),
                 modified = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_MODIFIED)))
