@@ -1,15 +1,13 @@
 package net.maytry.www.smartwiki.viewmodel
 
 import android.content.Context
-import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.GenreItemInfoListItemCommonBinding
-import net.maytry.www.smartwiki.databinding.GenreItemInfoListItemTimeBinding
+import net.maytry.www.smartwiki.databinding.*
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
 import net.maytry.www.smartwiki.model.GenreItemInfo
 
@@ -35,14 +33,14 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) : Array
             view = convertView
         }
         when (info.type) {
-            GenreItemInfoType.PHOTO -> (binding as GenreItemInfoListItemCommonBinding).info = info
-            GenreItemInfoType.MOVIE -> (binding as GenreItemInfoListItemCommonBinding).info = info
+            GenreItemInfoType.PHOTO -> (binding as GenreItemInfoListItemPhotoBinding).info = info
+            GenreItemInfoType.MOVIE -> (binding as GenreItemInfoListItemMovieBinding).info = info
             GenreItemInfoType.TIME -> (binding as GenreItemInfoListItemTimeBinding).info = info
-            GenreItemInfoType.MAP -> (binding as GenreItemInfoListItemCommonBinding).info = info
-            GenreItemInfoType.RADIO_BTN -> (binding as GenreItemInfoListItemCommonBinding).info = info
-            GenreItemInfoType.SEEK_BAR -> (binding as GenreItemInfoListItemCommonBinding).info = info
-            GenreItemInfoType.RATING_BAR -> (binding as GenreItemInfoListItemCommonBinding).info = info
-            GenreItemInfoType.ORIGINAL -> (binding as GenreItemInfoListItemCommonBinding).info = info
+            GenreItemInfoType.MAP -> (binding as GenreItemInfoListItemMapBinding).info = info
+            GenreItemInfoType.RADIO_BTN -> (binding as GenreItemInfoListItemRadioBtnBinding).info = info
+            GenreItemInfoType.SEEK_BAR -> (binding as GenreItemInfoListItemSeekBarBinding).info = info
+            GenreItemInfoType.RATING_BAR -> (binding as GenreItemInfoListItemRatingBarBinding).info = info
+            GenreItemInfoType.ORIGINAL -> (binding as GenreItemInfoListItemOriginalBinding).info = info
             else -> (binding as GenreItemInfoListItemCommonBinding).info = info
         }
         return view
@@ -64,14 +62,14 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) : Array
 
     private fun getLayout(info: GenreItemInfo): Int {
         when (info.type) {
-            GenreItemInfoType.PHOTO -> return R.layout.genre_item_info_list_item_common
-            GenreItemInfoType.MOVIE -> return R.layout.genre_item_info_list_item_common
+            GenreItemInfoType.PHOTO -> return R.layout.genre_item_info_list_item_photo
+            GenreItemInfoType.MOVIE -> return R.layout.genre_item_info_list_item_movie
             GenreItemInfoType.TIME -> return R.layout.genre_item_info_list_item_time
-            GenreItemInfoType.MAP -> return R.layout.genre_item_info_list_item_common
-            GenreItemInfoType.RADIO_BTN -> return R.layout.genre_item_info_list_item_common
-            GenreItemInfoType.SEEK_BAR -> return R.layout.genre_item_info_list_item_common
-            GenreItemInfoType.RATING_BAR -> return R.layout.genre_item_info_list_item_common
-            GenreItemInfoType.ORIGINAL -> return R.layout.genre_item_info_list_item_common
+            GenreItemInfoType.MAP -> return R.layout.genre_item_info_list_item_map
+            GenreItemInfoType.RADIO_BTN -> return R.layout.genre_item_info_list_item_radio_btn
+            GenreItemInfoType.SEEK_BAR -> return R.layout.genre_item_info_list_item_seek_bar
+            GenreItemInfoType.RATING_BAR -> return R.layout.genre_item_info_list_item_rating_bar
+            GenreItemInfoType.ORIGINAL -> return R.layout.genre_item_info_list_item_original
             else -> return R.layout.genre_item_info_list_item_common
         }
     }

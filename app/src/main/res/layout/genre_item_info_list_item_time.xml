@@ -6,7 +6,7 @@
         <variable name="info" type="GenreItemInfo" />
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:descendantFocusability="blocksDescendants"
@@ -26,5 +26,5 @@
             android:text="@{info.created.toString()}"
             android:textAppearance="?android:attr/textAppearanceMedium"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 </layout>
