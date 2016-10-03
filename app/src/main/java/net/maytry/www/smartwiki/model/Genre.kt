@@ -14,7 +14,7 @@ class Genre(
         /**
          * ID
          */
-        var id: Long? = null,
+        id: Long? = null,
 
         /**
          * 名前
@@ -39,16 +39,16 @@ class Genre(
         /**
          * 変更日時
          */
-        var modified: Date = Date()
+        var updated: Date = Date()
 
-) : AbstractModel<Genre>() {
+) : AbstractModel<Genre>(id) {
     override fun contentValues(): ContentValues {
         val values = ContentValues()
         values.put(DBAdapter.COL_ID, id)
         values.put(GenreTableAdapter.COL_NAME, name)
         values.put(GenreTableAdapter.COL_FAVORITE, favorite)
         values.put(GenreTableAdapter.COL_CREATED, DateUtil.dateToString(created))
-        values.put(GenreTableAdapter.COL_MODIFIED, DateUtil.dateToString(modified))
+        values.put(GenreTableAdapter.COL_UPDATED, DateUtil.dateToString(updated))
         return values
     }
 }

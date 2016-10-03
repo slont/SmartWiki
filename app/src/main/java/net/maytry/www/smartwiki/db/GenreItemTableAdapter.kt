@@ -16,7 +16,7 @@ class GenreItemTableAdapter(context: Context) : DBAdapter<GenreItem>(context) {
         val COL_PARENT_ID = "parent_id"
         val COL_FAVORITE = "favorite"
         val COL_CREATED = "created"
-        val COL_MODIFIED = "modified"
+        val COL_UPDATED = "updated"
     }
 
     override val tableName = "genre_item"
@@ -27,7 +27,7 @@ class GenreItemTableAdapter(context: Context) : DBAdapter<GenreItem>(context) {
             Pair(COL_PARENT_ID, "INTEGER"),
             Pair(COL_FAVORITE, "INTEGER"),
             Pair(COL_CREATED, "INTEGER"),
-            Pair(COL_MODIFIED, "INTEGER")
+            Pair(COL_UPDATED, "INTEGER")
     )
 
     override fun cursorToModel(cursor: Cursor): GenreItem {
@@ -37,7 +37,7 @@ class GenreItemTableAdapter(context: Context) : DBAdapter<GenreItem>(context) {
                 parentId = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
                 favorite = cursor.getInt(cursor.getColumnIndex(COL_FAVORITE)) == 1,
                 created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_CREATED))),
-                modified = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_MODIFIED)))
+                updated = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_UPDATED)))
         )
         return item
     }

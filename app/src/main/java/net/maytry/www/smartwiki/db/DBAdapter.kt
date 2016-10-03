@@ -22,7 +22,7 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
     abstract val cols: List<Pair<String, String>>
 
     protected val dbHelper: DatabaseHelper
-    protected var db: SQLiteDatabase? = null
+    protected lateinit var db: SQLiteDatabase
 
     init {
         dbHelper = DatabaseHelper(context)
@@ -73,20 +73,24 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
     }
 
     fun insert(obj: T): Long {
-        return db!!.insert(tableName, null, obj.contentValues())
+        return db.insert(tableName, null, obj.contentValues())
+    }
+
+    fun update(obj: T): Int {
+        return db.update(tableName, obj.contentValues(), "_id=${obj.id}", null)
     }
 
     fun deleteAll(): Boolean {
-        return db!!.delete(tableName, null, null) > 0
+        return db.delete(tableName, null, null) > 0
     }
 
     fun delete(id: Int): Boolean {
-        return db!!.delete(tableName, COL_ID + "=" + id, null) > 0
+        return db.delete(tableName, COL_ID + "=" + id, null) > 0
     }
 
     fun select(where: String): List<T> {
         val objList: MutableList<T> = mutableListOf()
-        val cursor = db!!.rawQuery("SELECT * FROM $tableName WHERE $where", arrayOf())
+        val cursor = db.rawQuery("SELECT * FROM $tableName WHERE $where", arrayOf())
         try {
             while (cursor.moveToNext()) {
                 objList.add(cursorToModel(cursor))
@@ -99,7 +103,7 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
 
     fun selectByID(id: Long): T? {
         var obj: T? = null
-        val cursor = db!!.rawQuery("SELECT * FROM $tableName WHERE ${DBAdapter.COL_ID}=?", arrayOf(id.toString()))
+        val cursor = db.rawQuery("SELECT * FROM $tableName WHERE ${DBAdapter.COL_ID}=?", arrayOf(id.toString()))
         try {
             if (cursor.moveToNext()) {
                 obj = cursorToModel(cursor)
@@ -112,7 +116,7 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
 
     fun selectAll(): List<T> {
         val objList: MutableList<T> = mutableListOf()
-        val cursor = db!!.rawQuery("SELECT * FROM $tableName", arrayOf())
+        val cursor = db.rawQuery("SELECT * FROM $tableName", arrayOf())
         try {
             while (cursor.moveToNext()) {
                 objList.add(cursorToModel(cursor))

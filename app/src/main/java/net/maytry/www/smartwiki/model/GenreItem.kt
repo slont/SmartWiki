@@ -14,7 +14,7 @@ class GenreItem(
         /**
          * ID
          */
-        var id: Long? = null,
+        id: Long? = null,
 
         /**
          * 名前
@@ -44,9 +44,9 @@ class GenreItem(
         /**
          * 変更日時
          */
-        var modified: Date = Date())
+        var updated: Date = Date())
 
-: AbstractModel<GenreItem>() {
+: AbstractModel<GenreItem>(id) {
     override fun contentValues(): ContentValues {
         val values = ContentValues()
         values.put(DBAdapter.COL_ID, id)
@@ -54,7 +54,7 @@ class GenreItem(
         values.put(GenreItemTableAdapter.COL_PARENT_ID, parentId)
         values.put(GenreItemTableAdapter.COL_FAVORITE, favorite)
         values.put(GenreItemTableAdapter.COL_CREATED, DateUtil.dateToString(created))
-        values.put(GenreItemTableAdapter.COL_MODIFIED, DateUtil.dateToString(modified))
+        values.put(GenreItemTableAdapter.COL_UPDATED, DateUtil.dateToString(updated))
         return values
     }
 }

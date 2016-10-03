@@ -19,7 +19,7 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
         val COL_CONTENT_LIST = "content_list"
         val COL_FAVORITE = "favorite"
         val COL_CREATED = "created"
-        val COL_MODIFIED = "modified"
+        val COL_UPDATED = "updated"
     }
 
     override val tableName = "genre_item_info"
@@ -32,18 +32,23 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
             Pair(COL_CONTENT_LIST, "TEXT"),
             Pair(COL_FAVORITE, "INTEGER"),
             Pair(COL_CREATED, "INTEGER"),
-            Pair(COL_MODIFIED, "INTEGER")
+            Pair(COL_UPDATED, "INTEGER")
     )
 
     override fun cursorToModel(cursor: Cursor): GenreItemInfo {
+        val contentList = mutableListOf<String>()
+        val str = cursor.getString(cursor.getColumnIndex(COL_CONTENT_LIST))
+        val list = str.split(",")
+        contentList.addAll(list)
         val item = GenreItemInfo(
                 id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
                 name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
                 parentId = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
                 type = GenreItemInfoType.strToEnum(cursor.getString(cursor.getColumnIndex(COL_TYPE)))!!,
-                favorite = cursor.getInt(cursor.getColumnIndex(GenreItemTableAdapter.COL_FAVORITE)) == 1,
+                contentList = contentList,
+                favorite = cursor.getInt(cursor.getColumnIndex(COL_FAVORITE)) == 1,
                 created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_CREATED))),
-                modified = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_MODIFIED)))
+                updated = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_UPDATED)))
         )
         return item
     }

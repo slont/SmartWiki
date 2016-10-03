@@ -15,7 +15,7 @@ class GenreTableAdapter(context: Context) : DBAdapter<Genre>(context) {
         val COL_NAME = "name"
         val COL_FAVORITE = "favorite"
         val COL_CREATED = "created"
-        val COL_MODIFIED = "modified"
+        val COL_UPDATED = "updated"
     }
 
     override val tableName = "genre"
@@ -25,7 +25,7 @@ class GenreTableAdapter(context: Context) : DBAdapter<Genre>(context) {
             Pair(COL_NAME, "TEXT UNIQUE"),
             Pair(COL_FAVORITE, "INTEGER"),
             Pair(COL_CREATED, "INTEGER"),
-            Pair(COL_MODIFIED, "INTEGER")
+            Pair(COL_UPDATED, "INTEGER")
     )
 
     override fun cursorToModel(cursor: Cursor): Genre {
@@ -34,7 +34,7 @@ class GenreTableAdapter(context: Context) : DBAdapter<Genre>(context) {
                 name = cursor.getString(cursor.getColumnIndex(GenreTableAdapter.COL_NAME)),
                 favorite = cursor.getInt(cursor.getColumnIndex(GenreTableAdapter.COL_FAVORITE)) == 1,
                 created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(GenreTableAdapter.COL_CREATED))),
-                modified = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(GenreTableAdapter.COL_MODIFIED)))
+                updated = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(GenreTableAdapter.COL_UPDATED)))
         )
         return genre
     }
