@@ -7,11 +7,13 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.AdapterView
 import net.maytry.www.smartwiki.databinding.ActivityGenreItemBinding
 import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
+import net.maytry.www.smartwiki.fragment.EditGenreItemInfoDialogFragment
 import net.maytry.www.smartwiki.fragment.GenreItemContentFragment
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
@@ -22,7 +24,7 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
  * GenreItem画面のアクティビティ
  * メインコンテンツではGenreItemInfoの管理を行う
  */
-class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreItemContentFragment.OnFragmentInteractionListener {
+class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreItemContentFragment.OnFragmentInteractionListener, EditGenreItemInfoDialogFragment.OnFragmentInteractionListener {
 
     private lateinit var mItem: GenreItem
     lateinit var infoList: List<GenreItemInfo>
@@ -58,7 +60,27 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onClickInfoListItem(parent: AdapterView<*>?, position: Int) {
-//        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+        val info = parent?.getItemAtPosition(position) as? GenreItemInfo
+        val dialog = EditGenreItemInfoDialogFragment.newInstance(info!!)
+        dialog.show(fragmentManager, "dialog")
+    }
+
+    override fun onClickAddContentButton(position: Int) {
+        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onClickUpdateInfoButton(info: GenreItemInfo) {
+        infoTableAdapter.open()
+        val id = infoTableAdapter.update(info)
+        if (-1 != id) {
+            val list = infoTableAdapter.select("parent_id=${mItem.id}")
+            mItem.infoList.clear()
+            mItem.infoList.addAll(list)
+            fragment.notifyDataSetChanged()
+        } else {
+            Log.d(this.toString(), "failed update")
+        }
+        infoTableAdapter.close()
     }
 
     override fun onBackPressed() {
@@ -116,7 +138,9 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
     override fun loadData() {
         infoTableAdapter.open()
-        mItem.infoList.addAll(infoTableAdapter.select("parent_id=${mItem.id}"))
+        val list = infoTableAdapter.select("parent_id=${mItem.id}")
         infoTableAdapter.close()
+        mItem.infoList.clear()
+        mItem.infoList.addAll(list)
     }
 }

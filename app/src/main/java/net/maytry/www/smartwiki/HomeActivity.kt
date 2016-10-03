@@ -163,8 +163,10 @@ class HomeActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     override fun loadData() {
         genreTableAdapter.open()
-        mGenreList.addAll(genreTableAdapter.selectAll())
+        val list = genreTableAdapter.selectAll()
         genreTableAdapter.close()
+        mGenreList.clear()
+        mGenreList.addAll(list)
     }
 
     private inner class OnClickAddGenreFab : View.OnClickListener {

@@ -169,8 +169,10 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun loadData() {
         itemTableAdapter.open()
-        mItemList.addAll(itemTableAdapter.select("parent_id=${mGenre.id}"))
+        val list = itemTableAdapter.select("parent_id=${mGenre.id}")
         itemTableAdapter.close()
+        mItemList.clear()
+        mItemList.addAll(list)
     }
 
     /**
