@@ -32,6 +32,7 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     private val infoTableAdapter: GenreItemInfoTableAdapter
 
     private lateinit var fragment: GenreItemContentFragment
+    private lateinit var dialog: EditGenreItemInfoDialogFragment
 
     init {
         infoTableAdapter = GenreItemInfoTableAdapter(this)
@@ -59,9 +60,12 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         supportFragmentManager.beginTransaction().add(R.id.content_genre_item, fragment).commit()
     }
 
+    /**
+     * On click info item interface from @link{GenreItemContentFragment}
+     */
     override fun onClickInfoListItem(parent: AdapterView<*>?, position: Int) {
         val info = parent?.getItemAtPosition(position) as? GenreItemInfo
-        val dialog = EditGenreItemInfoDialogFragment.newInstance(info!!)
+        dialog = EditGenreItemInfoDialogFragment.newInstance(info!!)
         dialog.show(fragmentManager, "dialog")
     }
 
@@ -70,6 +74,7 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onClickUpdateInfoButton(info: GenreItemInfo) {
+        dialog.notifyDataSetChanged()
         infoTableAdapter.open()
         val id = infoTableAdapter.update(info)
         if (-1 != id) {
@@ -136,6 +141,9 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         return true
     }
 
+    /**
+     * Load info data interface from @link{GenreItemContentFragment}
+     */
     override fun loadData() {
         infoTableAdapter.open()
         val list = infoTableAdapter.select("parent_id=${mItem.id}")

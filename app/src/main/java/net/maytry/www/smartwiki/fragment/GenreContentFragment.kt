@@ -100,7 +100,7 @@ class GenreContentFragment : Fragment() {
         @JvmStatic
         @BindingAdapter("itemList")
         fun setItemList(listView: ListView, itemList: List<GenreItem>) {
-            val adapter = GenreItemAdapter(listView.context, R.layout.genre_item_list_item, itemList)
+            val adapter = GenreItemAdapter(listView.context, itemList)
             listView.adapter = adapter
         }
     }

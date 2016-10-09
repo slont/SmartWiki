@@ -8,6 +8,7 @@ import android.databinding.BindingAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
 import net.maytry.www.smartwiki.R
@@ -65,7 +66,9 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.contentListView as? ListView)?.adapter as? GenreItemInfoContentAdapter)?.notifyDataSetChanged()
+        val adapter = ((binding.contentListView as? ListView)?.adapter as? GenreItemInfoContentAdapter)
+        adapter?.setValues()
+        adapter?.notifyDataSetChanged()
     }
 
     interface OnFragmentInteractionListener {
