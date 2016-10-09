@@ -1,6 +1,7 @@
 package net.maytry.www.smartwiki.db
 
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import net.maytry.www.smartwiki.model.GenreItem
@@ -42,4 +43,14 @@ class GenreItemTableAdapter(context: Context) : DBAdapter<GenreItem>(context) {
         return item
     }
 
+    override fun contentValues(item: GenreItem): ContentValues {
+        val values = ContentValues()
+        values.put(COL_ID, item.id)
+        values.put(COL_NAME, item.name)
+        values.put(COL_PARENT_ID, item.parentId)
+        values.put(COL_FAVORITE, item.favorite)
+        values.put(COL_CREATED, DateUtil.dateToString(item.created))
+        values.put(COL_UPDATED, DateUtil.dateToString(item.updated))
+        return values
+    }
 }

@@ -1,16 +1,18 @@
 package net.maytry.www.smartwiki.db
 
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import net.maytry.www.smartwiki.model.AbstractModel
+import net.maytry.www.smartwiki.utils.DateUtil
 
 /**
  * Created by slont on 9/14/16.
  */
-abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
+abstract class DBAdapter<T : AbstractModel>(private val context: Context) {
 
     companion object {
         val COL_ID = "_id"
@@ -73,11 +75,11 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
     }
 
     fun insert(obj: T): Long {
-        return db.insert(tableName, null, obj.contentValues())
+        return db.insert(tableName, null, contentValues(obj))
     }
 
     fun update(obj: T): Int {
-        return db.update(tableName, obj.contentValues(), "_id=${obj.id}", null)
+        return db.update(tableName, contentValues(obj), "_id=${obj.id}", null)
     }
 
     fun deleteAll(): Boolean {
@@ -128,4 +130,5 @@ abstract class DBAdapter<T : AbstractModel<T>>(private val context: Context) {
     }
 
     abstract fun cursorToModel(cursor: Cursor): T
+    abstract fun contentValues(obj: T): ContentValues
 }

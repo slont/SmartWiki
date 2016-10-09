@@ -1,6 +1,7 @@
 package net.maytry.www.smartwiki.db
 
 
+import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
@@ -51,5 +52,18 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
                 updated = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_UPDATED)))
         )
         return item
+    }
+
+    override fun contentValues(info: GenreItemInfo): ContentValues {
+        val values = ContentValues()
+        values.put(COL_ID, info.id)
+        values.put(COL_NAME, info.name)
+        values.put(COL_PARENT_ID, info.parentId)
+        values.put(COL_TYPE, info.type.toString())
+        values.put(COL_CONTENT_LIST, info.contentList.reduce { s1, s2 -> "$s1,$s2" })
+        values.put(COL_FAVORITE, info.favorite)
+        values.put(COL_CREATED, DateUtil.dateToString(info.created))
+        values.put(COL_UPDATED, DateUtil.dateToString(info.updated))
+        return values
     }
 }

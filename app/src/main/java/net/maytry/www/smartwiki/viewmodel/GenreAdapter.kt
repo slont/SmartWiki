@@ -16,7 +16,7 @@ import net.maytry.www.smartwiki.model.Genre
  *
  * Created by slont on 8/7/16.
  */
-class GenreAdapter(context: Context, textViewResourceId: Int, items: List<Genre>) :
+class GenreAdapter(context: Context, items: List<Genre>, val textViewResourceId: Int = R.layout.genre_list_item) :
         ArrayAdapter<Genre>(context, textViewResourceId, items) {
 
     val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -25,7 +25,7 @@ class GenreAdapter(context: Context, textViewResourceId: Int, items: List<Genre>
         val view: View
         val binding: GenreListItemBinding
         if (null == convertView) {
-            binding = DataBindingUtil.inflate(inflater, R.layout.genre_list_item, parent, false)
+            binding = DataBindingUtil.inflate(inflater, textViewResourceId, parent, false)
             view = binding.root
             view.tag = binding
         } else {

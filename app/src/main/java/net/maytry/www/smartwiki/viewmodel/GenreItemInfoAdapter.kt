@@ -16,7 +16,8 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
  *
  * Created by slont on 8/29/16.
  */
-class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) : ArrayAdapter<GenreItemInfo>(context, 0, items) {
+class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
+        ArrayAdapter<GenreItemInfo>(context, 0, items) {
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 

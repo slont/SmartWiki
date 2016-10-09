@@ -15,7 +15,7 @@ import net.maytry.www.smartwiki.model.GenreItem
  *
  * Created by slont on 8/16/16.
  */
-class GenreItemAdapter(context: Context, textViewResourceId: Int, items: List<GenreItem>) :
+class GenreItemAdapter(context: Context, items: List<GenreItem>, val textViewResourceId: Int = R.layout.genre_item_list_item) :
         ArrayAdapter<GenreItem>(context, textViewResourceId, items) {
 
     val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -24,7 +24,7 @@ class GenreItemAdapter(context: Context, textViewResourceId: Int, items: List<Ge
         val view: View
         val binding: GenreItemListItemBinding
         if (null == convertView) {
-            binding = DataBindingUtil.inflate(inflater, R.layout.genre_item_list_item, parent, false)
+            binding = DataBindingUtil.inflate(inflater, textViewResourceId, parent, false)
             view = binding.root
             view.tag = binding
         } else {

@@ -46,15 +46,4 @@ class GenreItem(
          */
         var updated: Date = Date())
 
-: AbstractModel<GenreItem>(id) {
-    override fun contentValues(): ContentValues {
-        val values = ContentValues()
-        values.put(DBAdapter.COL_ID, id)
-        values.put(GenreItemTableAdapter.COL_NAME, name)
-        values.put(GenreItemTableAdapter.COL_PARENT_ID, parentId)
-        values.put(GenreItemTableAdapter.COL_FAVORITE, favorite)
-        values.put(GenreItemTableAdapter.COL_CREATED, DateUtil.dateToString(created))
-        values.put(GenreItemTableAdapter.COL_UPDATED, DateUtil.dateToString(updated))
-        return values
-    }
-}
+: AbstractModel(id)
