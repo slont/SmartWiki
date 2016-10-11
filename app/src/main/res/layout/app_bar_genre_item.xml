@@ -27,7 +27,8 @@
 
         </android.support.design.widget.AppBarLayout>
 
-        <include layout="@layout/content_genre_item" />
+        <include layout="@layout/content_genre_item"
+            android:id="@+id/content_genre_item"/>
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

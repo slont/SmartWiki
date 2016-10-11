@@ -51,7 +51,6 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
         val animatingLayout: AnimatingRelativeLayout = binding.contentAddGenreItem.menuAddGenreItemInfo.menuButtonLayout
-        animatingLayout.hide()
         binding.contentAddGenreItem.menuAddGenreItemInfo.showInfoMenuButton.setOnClickListener { animatingLayout.show() }
         binding.contentAddGenreItem.menuAddGenreItemInfo.hideInfoMenuButton.setOnClickListener { animatingLayout.hide() }
         binding.contentAddGenreItem.menuAddGenreItemInfo.onClickInfoMenuButton = OnClickInfoMenuButton()

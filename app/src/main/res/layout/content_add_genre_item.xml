@@ -11,17 +11,8 @@
         tools:context="net.maytry.www.smartwiki.AddGenreItemActivity"
         tools:showIn="@layout/activity_add_genre_item">
 
-        <net.maytry.www.smartwiki.layout.AnimatingRelativeLayout
-            android:id="@+id/content_genre"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context="net.maytry.www.smartwiki.GenreActivity"
-            tools:showIn="@layout/app_bar_genre">
-
-            <include
-                android:id="@+id/menu_add_genre_item_info"
-                layout="@layout/menu_add_genre_item_info"/>
-        </net.maytry.www.smartwiki.layout.AnimatingRelativeLayout>
+        <include
+            android:id="@+id/menu_add_genre_item_info"
+            layout="@layout/menu_add_genre_item_info"/>
     </RelativeLayout>
 </layout>

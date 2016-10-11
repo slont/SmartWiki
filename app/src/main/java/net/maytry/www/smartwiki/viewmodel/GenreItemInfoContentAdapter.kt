@@ -4,7 +4,6 @@ import android.content.Context
 import android.databinding.DataBindingUtil
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -44,15 +43,19 @@ class GenreItemInfoContentAdapter(context: Context, items: List<String>, val tex
         binding.content = getItem(position)
         binding.addButton.setOnClickListener { v ->
             items.add(position + 1, "")
-            clear()
-            addAll(items)
-            notifyDataSetChanged()
+            reload()
         }
-        android.util.Log.d(binding.contentEdit.toString(), "")
+        binding.removeButton.setOnClickListener { v ->
+            items.removeAt(position)
+            reload()
+        }
         return view
     }
 
-    fun setValues() {
+    /**
+     * 画面遷移時に呼び出す
+     */
+    fun reload() {
         clear()
         addAll(items)
         notifyDataSetChanged()

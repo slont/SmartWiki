@@ -7,12 +7,11 @@ import android.content.Context
 import android.databinding.BindingAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.widget.ArrayAdapter
-import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
 import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.DialogEditGenreItemInfoBinding
+import net.maytry.www.smartwiki.databinding.*
+import net.maytry.www.smartwiki.enums.GenreItemInfoType
 import net.maytry.www.smartwiki.model.GenreItemInfo
 import net.maytry.www.smartwiki.viewmodel.GenreItemInfoContentAdapter
 import org.apache.commons.lang3.SerializationUtils
@@ -26,7 +25,7 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
 
     private var mListener: EditGenreItemInfoDialogFragment.OnFragmentInteractionListener? = null
 
-    private lateinit var binding: DialogEditGenreItemInfoBinding
+    private lateinit var binding: Any
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,16 +39,27 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
 
         setListener(activity)
         val inflater = LayoutInflater.from(activity)
-        val dialog = inflater.inflate(R.layout.dialog_edit_genre_item_info, null) as LinearLayout
-        binding = DialogEditGenreItemInfoBinding.bind(dialog)
-        binding.info = SerializationUtils.clone(mInfo)
-        binding.contentListView.emptyView = binding.emptyListView
+        val dialog = inflater.inflate(GenreItemInfoType.getEditLayout(mInfo.type), null) as LinearLayout
         val builder = AlertDialog.Builder(activity)
-        return builder.setView(dialog)
-                .setPositiveButton("ok") { dialog, which -> mListener?.onClickUpdateInfoButton(binding.info) }
+        builder.setView(dialog)
                 .setNegativeButton("cancel") { dialog, which -> }
                 .setCancelable(true)
-                .create()
+        when (mInfo.type) {
+            GenreItemInfoType.TAG -> {
+                binding = DialogEditGenreItemInfoMultiBinding.bind(dialog)
+                val b: DialogEditGenreItemInfoMultiBinding = binding as DialogEditGenreItemInfoMultiBinding
+                b.info = SerializationUtils.clone(mInfo)
+                b.contentListView.emptyView = b.emptyListView
+                builder.setPositiveButton("ok") { dialog, which -> mListener?.onClickUpdateInfoButton(b.info) }
+            }
+            else -> {
+                binding = DialogEditGenreItemInfoSingleBinding.bind(dialog)
+                val b: DialogEditGenreItemInfoSingleBinding = binding as DialogEditGenreItemInfoSingleBinding
+                b.info = SerializationUtils.clone(mInfo)
+                builder.setPositiveButton("ok") { dialog, which -> mListener?.onClickUpdateInfoButton(b.info) }
+            }
+        }
+        return builder.create()
     }
 
     private fun setListener(context: Context?) {
@@ -66,9 +76,9 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
     }
 
     fun notifyDataSetChanged() {
-        val adapter = ((binding.contentListView as? ListView)?.adapter as? GenreItemInfoContentAdapter)
-        adapter?.setValues()
-        adapter?.notifyDataSetChanged()
+        val adapter = ((binding as DialogEditGenreItemInfoMultiBinding).contentListView as ListView).adapter as GenreItemInfoContentAdapter
+        adapter.reload()
+        adapter.notifyDataSetChanged()
     }
 
     interface OnFragmentInteractionListener {

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="android.view.View.OnClickListener" />
@@ -12,9 +11,7 @@
         android:id="@+id/add_genre_item_info_menu_button"
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_column="0"
-        tools:context="net.maytry.www.smartwiki.GenreActivity">
+        android:layout_height="match_parent">
 
         <Button
             android:id="@+id/show_info_menu_button"
@@ -44,6 +41,20 @@
                         android:layout_width="0dip"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
+                        android:text="TEXT"
+                        android:onClick="@{onClickInfoMenuButton}"/>
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="TAG"
+                        android:onClick="@{onClickInfoMenuButton}"/>
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
                         android:text="PHOTO"
                         android:onClick="@{onClickInfoMenuButton}"/>
 
@@ -53,6 +64,12 @@
                         android:layout_weight="1"
                         android:text="MOVIE"
                         android:onClick="@{onClickInfoMenuButton}"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <Button
                         android:layout_width="0dip"
@@ -68,12 +85,6 @@
                         android:layout_weight="1"
                         android:text="MAP"
                         android:onClick="@{onClickInfoMenuButton}"/>
-                </TableRow>
-
-                <TableRow
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
 
                     <Button
                         android:layout_width="0dip"
@@ -89,6 +100,12 @@
                         android:layout_weight="1"
                         android:text="SEEK_BAR"
                         android:onClick="@{onClickInfoMenuButton}"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
                     <Button
                         android:layout_width="0dip"

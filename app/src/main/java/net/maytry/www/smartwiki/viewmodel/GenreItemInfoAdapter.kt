@@ -25,15 +25,18 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
         val view: View
         val info = getItem(position)
         val binding: Any
-        if (null == convertView || null == convertView.getTag(getKey(info))) {
-            binding = DataBindingUtil.inflate(inflater, getLayout(info), parent, false)
+        val key = GenreItemInfoType.getKey(info.type)
+        if (null == convertView || null == convertView.getTag(key)) {
+            binding = DataBindingUtil.inflate(inflater, GenreItemInfoType.getItemLayout(info.type), parent, false)
             view = binding.root
-            view.setTag(getKey(info), binding)
+            view.setTag(key, binding)
         } else {
-            binding = convertView.getTag(getKey(info))
+            binding = convertView.getTag(key)
             view = convertView
         }
         when (info.type) {
+            GenreItemInfoType.TEXT -> (binding as GenreItemInfoListItemTextBinding).info = info
+            GenreItemInfoType.TAG -> (binding as GenreItemInfoListItemTagBinding).info = info
             GenreItemInfoType.PHOTO -> (binding as GenreItemInfoListItemPhotoBinding).info = info
             GenreItemInfoType.MOVIE -> (binding as GenreItemInfoListItemMovieBinding).info = info
             GenreItemInfoType.TIME -> (binding as GenreItemInfoListItemTimeBinding).info = info
@@ -45,33 +48,5 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
             else -> (binding as GenreItemInfoListItemCommonBinding).info = info
         }
         return view
-    }
-
-    private fun getKey(info: GenreItemInfo): Int {
-        when (info.type) {
-            GenreItemInfoType.PHOTO -> return R.string.genre_item_info_type_photo
-            GenreItemInfoType.MOVIE -> return R.string.genre_item_info_type_movie
-            GenreItemInfoType.TIME -> return R.string.genre_item_info_type_time
-            GenreItemInfoType.MAP -> return R.string.genre_item_info_type_map
-            GenreItemInfoType.RADIO_BTN -> return R.string.genre_item_info_type_radio_btn
-            GenreItemInfoType.SEEK_BAR -> return R.string.genre_item_info_type_seek_bar
-            GenreItemInfoType.RATING_BAR -> return R.string.genre_item_info_type_rating_bar
-            GenreItemInfoType.ORIGINAL -> return R.string.genre_item_info_type_original
-            else -> return R.string.genre_item_info_type_photo
-        }
-    }
-
-    private fun getLayout(info: GenreItemInfo): Int {
-        when (info.type) {
-            GenreItemInfoType.PHOTO -> return R.layout.genre_item_info_list_item_photo
-            GenreItemInfoType.MOVIE -> return R.layout.genre_item_info_list_item_movie
-            GenreItemInfoType.TIME -> return R.layout.genre_item_info_list_item_time
-            GenreItemInfoType.MAP -> return R.layout.genre_item_info_list_item_map
-            GenreItemInfoType.RADIO_BTN -> return R.layout.genre_item_info_list_item_radio_btn
-            GenreItemInfoType.SEEK_BAR -> return R.layout.genre_item_info_list_item_seek_bar
-            GenreItemInfoType.RATING_BAR -> return R.layout.genre_item_info_list_item_rating_bar
-            GenreItemInfoType.ORIGINAL -> return R.layout.genre_item_info_list_item_original
-            else -> return R.layout.genre_item_info_list_item_common
-        }
     }
 }

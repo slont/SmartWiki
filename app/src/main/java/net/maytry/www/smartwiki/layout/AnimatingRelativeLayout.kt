@@ -19,6 +19,7 @@ class AnimatingRelativeLayout(internal val context: Context, attrs: AttributeSet
     init {
         inAnimation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_in_bottom) as Animation
         outAnimation = AnimationUtils.loadAnimation(context, R.anim.abc_slide_out_bottom) as Animation
+        if (isVisible) hide()
     }
 
     constructor(context: Context, attrs: AttributeSet) : this(context, attrs, 0)

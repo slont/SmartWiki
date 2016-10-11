@@ -10,11 +10,15 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.AdapterView
+import android.widget.Button
 import net.maytry.www.smartwiki.databinding.ActivityGenreItemBinding
 import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
+import net.maytry.www.smartwiki.enums.GenreItemInfoType
 import net.maytry.www.smartwiki.fragment.EditGenreItemInfoDialogFragment
 import net.maytry.www.smartwiki.fragment.GenreItemContentFragment
+import net.maytry.www.smartwiki.layout.AnimatingRelativeLayout
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
 
@@ -45,7 +49,7 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         mItem = intent.getSerializableExtra("item") as GenreItem
         title = mItem.name
 
-        val toolbar = binding.appBar.toolbar
+        val toolbar = binding.appBarGenreItem.toolbar
         setSupportActionBar(toolbar)
 
         val drawer = binding.drawerLayout
@@ -55,6 +59,10 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         toggle.syncState()
 
         binding.navView.setNavigationItemSelectedListener(this)
+        val animatingLayout: AnimatingRelativeLayout = binding.appBarGenreItem.contentGenreItem.menuAddGenreItemInfo.menuButtonLayout
+        binding.appBarGenreItem.contentGenreItem.menuAddGenreItemInfo.showInfoMenuButton.setOnClickListener { animatingLayout.show() }
+        binding.appBarGenreItem.contentGenreItem.menuAddGenreItemInfo.hideInfoMenuButton.setOnClickListener { animatingLayout.hide() }
+        binding.appBarGenreItem.contentGenreItem.menuAddGenreItemInfo.onClickInfoMenuButton = OnClickInfoMenuButton()
 
         fragment = GenreItemContentFragment.newInstance(mItem.infoList)
         supportFragmentManager.beginTransaction().add(R.id.content_genre_item, fragment).commit()
@@ -74,7 +82,9 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     override fun onClickUpdateInfoButton(info: GenreItemInfo) {
-        dialog.notifyDataSetChanged()
+        if (GenreItemInfoType.TAG == info.type) {
+            dialog.notifyDataSetChanged()
+        }
         infoTableAdapter.open()
         val id = infoTableAdapter.update(info)
         if (-1 != id) {
@@ -115,6 +125,16 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    private inner class OnClickInfoMenuButton() : View.OnClickListener {
+        override fun onClick(v: View) {
+            val type = GenreItemInfoType.strToEnum((v as Button).text.toString())
+            if (null != type) {
+                mItem.infoList.add(GenreItemInfo(name = type.name, type = type))
+                fragment.notifyDataSetChanged()
+            }
+        }
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
