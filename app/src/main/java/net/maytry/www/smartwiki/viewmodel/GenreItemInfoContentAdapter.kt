@@ -21,7 +21,7 @@ class GenreItemInfoContentAdapter(context: Context, items: List<String>, val tex
 
     private val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    private val items: MutableList<String> = mutableListOf()
+    private val items = mutableListOf<String>()
 
     init {
         this.items.addAll(items)
@@ -51,13 +51,19 @@ class GenreItemInfoContentAdapter(context: Context, items: List<String>, val tex
         }
         return view
     }
+    fun reload() {
+        clear()
+        addAll(items)
+        notifyDataSetChanged()
+    }
 
     /**
      * 画面遷移時に呼び出す
      */
-    fun reload() {
+    fun safeSave() {
+        val tmpItems = items.filter(String::isNotEmpty)
         clear()
-        addAll(items)
+        addAll(tmpItems)
         notifyDataSetChanged()
     }
 

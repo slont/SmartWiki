@@ -91,13 +91,4 @@ class AddGenreItemContentFragment : Fragment() {
             return fragment
         }
     }
-
-    object CustomSetter {
-        @JvmStatic
-        @BindingAdapter("infoList")
-        fun setInfoList(listView: ListView, infoList: List<GenreItemInfo>) {
-            val adapter = GenreItemInfoAdapter(listView.context, infoList)
-            listView.adapter = adapter
-        }
-    }
 }

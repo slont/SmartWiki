@@ -76,9 +76,7 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
     }
 
     fun notifyDataSetChanged() {
-        val adapter = ((binding as DialogEditGenreItemInfoMultiBinding).contentListView as ListView).adapter as GenreItemInfoContentAdapter
-        adapter.reload()
-        adapter.notifyDataSetChanged()
+        (((binding as DialogEditGenreItemInfoMultiBinding).contentListView as ListView).adapter as GenreItemInfoContentAdapter).safeSave()
     }
 
     interface OnFragmentInteractionListener {
