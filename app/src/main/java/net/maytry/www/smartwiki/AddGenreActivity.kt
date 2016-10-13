@@ -1,5 +1,6 @@
 package net.maytry.www.smartwiki
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
@@ -38,11 +39,20 @@ class AddGenreActivity : AppCompatActivity(), AddGenreContentFragment.OnFragment
 
     override fun onClickCreateButton() {
         val name = (findViewById(R.id.genre_name_edit) as EditText).text.toString()
-        val id = addGenre(name)
-        val intent = Intent()
-        intent.putExtra("_id", id)
-        setResult(RESULT_OK, intent)
-        finish()
+        if (name.isNullOrBlank()) {
+            // TODO:切り出し
+            AlertDialog.Builder(this)
+                    .setTitle("エラー")
+                    .setMessage("タイトルが空です")
+                    .setPositiveButton("OK") { dialog, which -> }
+                    .create().show()
+        } else {
+            val id = addGenre(name)
+            val intent = Intent()
+            intent.putExtra("_id", id)
+            setResult(RESULT_OK, intent)
+            finish()
+        }
     }
 
     private fun addGenre(name: String): Long {

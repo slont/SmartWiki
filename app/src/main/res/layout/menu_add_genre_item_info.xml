@@ -20,7 +20,7 @@
             android:layout_alignParentBottom="true"
             android:text="追加"/>
 
-        <net.maytry.www.smartwiki.layout.AnimatingRelativeLayout
+        <net.maytry.www.smartwiki.view.AnimatingRelativeLayout
             android:id="@+id/menu_button_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,6 +131,6 @@
                     android:text="閉じる"/>
             </TableLayout>
 
-        </net.maytry.www.smartwiki.layout.AnimatingRelativeLayout>
+        </net.maytry.www.smartwiki.view.AnimatingRelativeLayout>
     </RelativeLayout>
 </layout>

@@ -18,9 +18,11 @@ import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
 import net.maytry.www.smartwiki.fragment.EditGenreItemInfoDialogFragment
 import net.maytry.www.smartwiki.fragment.GenreItemContentFragment
-import net.maytry.www.smartwiki.layout.AnimatingRelativeLayout
+import net.maytry.www.smartwiki.view.AnimatingRelativeLayout
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
+
+private const val MENU_RES = R.menu.genre_item
 
 /**
  * Created by slont on 9/8/16.
@@ -42,6 +44,12 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         infoTableAdapter = GenreItemInfoTableAdapter(this)
     }
 
+    var isEditable = false
+    set(value) {
+        field = value
+        fragment.isEditable = value
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityGenreItemBinding>(this@GenreItemActivity, R.layout.activity_genre_item)
@@ -51,6 +59,8 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
 
         val toolbar = binding.appBarGenreItem.toolbar
         setSupportActionBar(toolbar)
+        toolbar.setNavigationIcon(R.drawable.ic_menu_back)
+        toolbar.setNavigationOnClickListener { onBackPressed() }
 
         val drawer = binding.drawerLayout
         val toggle = ActionBarDrawerToggle(
@@ -72,8 +82,8 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
      * On click info item interface from @link{GenreItemContentFragment}
      */
     override fun onClickInfoListItem(parent: AdapterView<*>?, position: Int) {
-        val info = parent?.getItemAtPosition(position) as? GenreItemInfo
-        dialog = EditGenreItemInfoDialogFragment.newInstance(info!!)
+        val info = parent?.getItemAtPosition(position) as GenreItemInfo
+        dialog = EditGenreItemInfoDialogFragment.newInstance(info)
         dialog.show(fragmentManager, "dialog")
     }
 
@@ -107,9 +117,12 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
 
+    /**
+     * ツールバーのメニュー
+     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.add_genre_item_info, menu)
+        menuInflater.inflate(MENU_RES, menu)
         return true
     }
 
@@ -120,19 +133,27 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         val id = item.itemId
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_edit) {
+            isEditable = !isEditable
             return true
         }
 
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * GenreInfoの追加アクションリスナー
+     */
     private inner class OnClickInfoMenuButton() : View.OnClickListener {
         override fun onClick(v: View) {
             val type = GenreItemInfoType.strToEnum((v as Button).text.toString())
             if (null != type) {
-                mItem.infoList.add(GenreItemInfo(name = type.name, type = type))
+                val info = GenreItemInfo(name = type.name, type = type)
+                mItem.infoList.add(info)
                 fragment.notifyDataSetChanged()
+                infoTableAdapter.open()
+                infoTableAdapter.insert(info)
+                infoTableAdapter.close()
             }
         }
     }

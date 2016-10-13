@@ -26,7 +26,12 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
 
     private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-    var displayWidth = wm.defaultDisplay.width
+    var maxDisplayWidth = wm.defaultDisplay.width
+    var isEditable = false
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view: View
@@ -46,7 +51,9 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
             GenreItemInfoType.TAG -> {
                 val b: GenreItemInfoListItemTagBinding = binding as GenreItemInfoListItemTagBinding
                 b.info = info
+                b.isEditable = isEditable
                 b.tagLayout.removeAllViews()
+                val displayWidth = maxDisplayWidth - (if (isEditable) 100 else 0)
                 var totalSize = 0
                 var preId = -1
                 info.contentList.forEachIndexed { i, s ->

@@ -1,28 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View" />
         <import type="net.maytry.www.smartwiki.model.GenreItemInfo" />
         <variable name="info" type="GenreItemInfo" />
+        <variable name="isEditable" type="Boolean" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="5dp">
 
         <TextView
+            android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginBottom="3dp"
             android:text="@{info.name}"
             android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <RelativeLayout
-            android:id="@+id/tag_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp">
+            android:layout_below="@id/name">
+
+            <CheckBox
+                android:id="@+id/checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:visibility="@{isEditable ? View.VISIBLE : View.GONE}"/>
+
+            <RelativeLayout
+                android:id="@+id/tag_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@id/checkbox">
+            </RelativeLayout>
         </RelativeLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </layout>

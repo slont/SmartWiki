@@ -1,4 +1,4 @@
-package net.maytry.www.smartwiki.layout
+package net.maytry.www.smartwiki.view
 
 import android.content.Context
 import android.util.AttributeSet

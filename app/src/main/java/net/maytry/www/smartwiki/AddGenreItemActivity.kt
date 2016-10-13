@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -16,7 +17,7 @@ import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
 import net.maytry.www.smartwiki.db.GenreItemTableAdapter
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
 import net.maytry.www.smartwiki.fragment.AddGenreItemContentFragment
-import net.maytry.www.smartwiki.layout.AnimatingRelativeLayout
+import net.maytry.www.smartwiki.view.AnimatingRelativeLayout
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
 
@@ -27,21 +28,18 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
  */
 class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.OnFragmentInteractionListener {
 
-    private val itemTableAdapter: GenreItemTableAdapter
-    private val infoTableAdapter: GenreItemInfoTableAdapter
+    private lateinit var mItem: GenreItem
 
     private lateinit var fragment: AddGenreItemContentFragment
 
-    private lateinit var mItem: GenreItem
+    private lateinit var binding: ActivityAddGenreItemBinding
 
-    init {
-        itemTableAdapter = GenreItemTableAdapter(this)
-        infoTableAdapter = GenreItemInfoTableAdapter(this)
-    }
+    private val itemTableAdapter = GenreItemTableAdapter(this)
+    private val infoTableAdapter = GenreItemInfoTableAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityAddGenreItemBinding>(this@AddGenreItemActivity, R.layout.activity_add_genre_item)
+        binding = DataBindingUtil.setContentView<ActivityAddGenreItemBinding>(this@AddGenreItemActivity, R.layout.activity_add_genre_item)
 
         mItem = intent.getSerializableExtra("item") as GenreItem
 
@@ -64,6 +62,9 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
         finish()
     }
 
+    /**
+     * ツールバーのメニュー
+     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.add_genre_item_info, menu)
@@ -79,13 +80,22 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
             val name = (findViewById(R.id.item_name_edit) as EditText).text.toString()
-            val id = addGenreItem(name)
-            addGenreItemInfo()
-            val intent = Intent()
-            intent.putExtra("_id", id)
-            setResult(RESULT_OK, intent)
-            finish()
-            return true
+            if (name.isNullOrBlank()) {
+                // TODO:切り出し
+                AlertDialog.Builder(this)
+                        .setTitle("エラー")
+                        .setMessage("タイトルが空です")
+                        .setPositiveButton("OK") { dialog, which -> }
+                        .create().show()
+            } else {
+                val id = addGenreItem(name)
+                addGenreItemInfo()
+                val intent = Intent()
+                intent.putExtra("_id", id)
+                setResult(RESULT_OK, intent)
+                finish()
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)
