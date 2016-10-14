@@ -9,8 +9,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.ListView
-import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.*
+import net.maytry.www.smartwiki.databinding.DialogEditGenreItemInfoMultiBinding
+import net.maytry.www.smartwiki.databinding.DialogEditGenreItemInfoSingleBinding
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
 import net.maytry.www.smartwiki.model.GenreItemInfo
 import net.maytry.www.smartwiki.viewmodel.GenreItemInfoContentAdapter
@@ -25,7 +25,7 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
 
     private var mListener: EditGenreItemInfoDialogFragment.OnFragmentInteractionListener? = null
 
-    private lateinit var binding: Any
+    private lateinit var mBinding: Any
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,17 +46,17 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
                 .setCancelable(true)
         when (mInfo.type) {
             GenreItemInfoType.TAG -> {
-                binding = DialogEditGenreItemInfoMultiBinding.bind(dialog)
-                val b: DialogEditGenreItemInfoMultiBinding = binding as DialogEditGenreItemInfoMultiBinding
+                mBinding = DialogEditGenreItemInfoMultiBinding.bind(dialog)
+                val b: DialogEditGenreItemInfoMultiBinding = mBinding as DialogEditGenreItemInfoMultiBinding
                 b.info = SerializationUtils.clone(mInfo)
                 b.contentListView.emptyView = b.emptyListView
-                builder.setPositiveButton("ok") { dialog, which -> mListener?.onClickUpdateInfoButton(b.info) }
+                builder.setPositiveButton("ok") { dialog, which -> mListener?.onClickUpdateInfoBtn(b.info) }
             }
             else -> {
-                binding = DialogEditGenreItemInfoSingleBinding.bind(dialog)
-                val b: DialogEditGenreItemInfoSingleBinding = binding as DialogEditGenreItemInfoSingleBinding
+                mBinding = DialogEditGenreItemInfoSingleBinding.bind(dialog)
+                val b: DialogEditGenreItemInfoSingleBinding = mBinding as DialogEditGenreItemInfoSingleBinding
                 b.info = SerializationUtils.clone(mInfo)
-                builder.setPositiveButton("ok") { dialog, which -> mListener?.onClickUpdateInfoButton(b.info) }
+                builder.setPositiveButton("ok") { dialog, which -> mListener?.onClickUpdateInfoBtn(b.info) }
             }
         }
         return builder.create()
@@ -76,12 +76,12 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
     }
 
     fun notifyDataSetChanged() {
-        (((binding as DialogEditGenreItemInfoMultiBinding).contentListView as ListView).adapter as GenreItemInfoContentAdapter).safeSave()
+        (((mBinding as DialogEditGenreItemInfoMultiBinding).contentListView as ListView).adapter as GenreItemInfoContentAdapter).safeSave()
     }
 
     interface OnFragmentInteractionListener {
-        fun onClickAddContentButton(position: Int)
-        fun onClickUpdateInfoButton(info: GenreItemInfo)
+        fun onClickAddContentBtn(position: Int)
+        fun onClickUpdateInfoBtn(info: GenreItemInfo)
     }
 
     companion object {

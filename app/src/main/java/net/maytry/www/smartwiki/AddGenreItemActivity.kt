@@ -16,7 +16,7 @@ import net.maytry.www.smartwiki.databinding.ActivityAddGenreItemBinding
 import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
 import net.maytry.www.smartwiki.db.GenreItemTableAdapter
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
-import net.maytry.www.smartwiki.fragment.AddGenreItemContentFragment
+import net.maytry.www.smartwiki.fragment.AddGenreItemFragment
 import net.maytry.www.smartwiki.view.AnimatingRelativeLayout
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
@@ -26,35 +26,35 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
  *
  * Genre item display activity.
  */
-class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.OnFragmentInteractionListener {
+class AddGenreItemActivity : AppCompatActivity(), AddGenreItemFragment.OnFragmentInteractionListener {
 
     private lateinit var mItem: GenreItem
 
-    private lateinit var fragment: AddGenreItemContentFragment
+    private lateinit var mFragment: AddGenreItemFragment
 
-    private lateinit var binding: ActivityAddGenreItemBinding
+    private lateinit var mBinding: ActivityAddGenreItemBinding
 
-    private val itemTableAdapter = GenreItemTableAdapter(this)
-    private val infoTableAdapter = GenreItemInfoTableAdapter(this)
+    private val mItemTableAdapter = GenreItemTableAdapter(this)
+    private val mInfoTableAdapter = GenreItemInfoTableAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView<ActivityAddGenreItemBinding>(this@AddGenreItemActivity, R.layout.activity_add_genre_item)
+        mBinding = DataBindingUtil.setContentView<ActivityAddGenreItemBinding>(this@AddGenreItemActivity, R.layout.activity_add_genre_item)
 
         mItem = intent.getSerializableExtra("item") as GenreItem
 
-        val toolbar = binding.toolbar
+        val toolbar = mBinding.toolbar
         setSupportActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_menu_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        val animatingLayout: AnimatingRelativeLayout = binding.contentAddGenreItem.menuAddGenreItemInfo.menuButtonLayout
-        binding.contentAddGenreItem.menuAddGenreItemInfo.showInfoMenuButton.setOnClickListener { animatingLayout.show() }
-        binding.contentAddGenreItem.menuAddGenreItemInfo.hideInfoMenuButton.setOnClickListener { animatingLayout.hide() }
-        binding.contentAddGenreItem.menuAddGenreItemInfo.onClickInfoMenuButton = OnClickInfoMenuButton()
+        val animatingLayout: AnimatingRelativeLayout = mBinding.contentAddGenreItem.menuAddGenreItemInfo.menuBtnLayout
+        mBinding.contentAddGenreItem.menuAddGenreItemInfo.showInfoMenuBtn.setOnClickListener { animatingLayout.show() }
+        mBinding.contentAddGenreItem.menuAddGenreItemInfo.hideInfoMenuBtn.setOnClickListener { animatingLayout.hide() }
+        mBinding.contentAddGenreItem.menuAddGenreItemInfo.onClickInfoMenuButton = OnClickInfoMenuBtn()
 
-        fragment = AddGenreItemContentFragment.newInstance(mItem)
-        supportFragmentManager.beginTransaction().add(R.id.content_add_genre_item, fragment).commit()
+        mFragment = AddGenreItemFragment.newInstance(mItem)
+        supportFragmentManager.beginTransaction().add(R.id.content_add_genre_item, mFragment).commit()
     }
 
     override fun onBackPressed() {
@@ -66,18 +66,13 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
      * ツールバーのメニュー
      */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
         menuInflater.inflate(R.menu.add_genre_item_info, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_save) {
             val name = (findViewById(R.id.item_name_edit) as EditText).text.toString()
             if (name.isNullOrBlank()) {
@@ -101,7 +96,7 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onClickGenreItemListItem(parent: AdapterView<*>?, position: Int) {
+    override fun onClickGenreItem(parent: AdapterView<*>?, position: Int) {
 //        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
@@ -121,9 +116,9 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
     private fun addGenreItem(name: String): Long {
         val item = mItem
         item.name = name
-        itemTableAdapter.open()
-        val id = itemTableAdapter.insert(item)
-        itemTableAdapter.close()
+        mItemTableAdapter.open()
+        val id = mItemTableAdapter.insert(item)
+        mItemTableAdapter.close()
         item.id = id
         return id
     }
@@ -133,20 +128,20 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemContentFragment.On
      */
     private fun addGenreItemInfo() {
         val item = mItem
-        infoTableAdapter.open()
+        mInfoTableAdapter.open()
         item.infoList.forEach { info ->
             info.parentId = item.id!!
-            infoTableAdapter.insert(info)
+            mInfoTableAdapter.insert(info)
         }
-        infoTableAdapter.close()
+        mInfoTableAdapter.close()
     }
 
-    private inner class OnClickInfoMenuButton() : View.OnClickListener {
+    private inner class OnClickInfoMenuBtn() : View.OnClickListener {
         override fun onClick(v: View) {
             val type = GenreItemInfoType.strToEnum((v as Button).text.toString())
             if (null != type) {
                 mItem.infoList.add(GenreItemInfo(name = type.name, type = type))
-                fragment.notifyDataSetChanged()
+                mFragment.notifyDataSetChanged()
             }
         }
     }

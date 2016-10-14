@@ -9,27 +9,27 @@
     </data>
 
     <LinearLayout
-        android:id="@+id/dialogEditInfo"
+        android:id="@+id/dialog_edit_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp">
 
         <EditText
-            android:id="@+id/infoName"
+            android:id="@+id/info_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@={info.name}"/>
 
         <ListView
-            android:id="@+id/contentListView"
+            android:id="@+id/content_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
             app:contentList="@{info.contentList}"/>
 
         <RelativeLayout
-            android:id="@+id/emptyListView"
+            android:id="@+id/empty_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

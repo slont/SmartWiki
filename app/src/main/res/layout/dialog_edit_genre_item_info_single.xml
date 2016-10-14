@@ -8,20 +8,20 @@
     </data>
 
     <LinearLayout
-        android:id="@+id/dialogEditInfo"
+        android:id="@+id/dialog_edit_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="10dp">
 
         <EditText
-            android:id="@+id/infoName"
+            android:id="@+id/info_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@={info.name}"/>
 
         <EditText
-            android:id="@+id/contentView"
+            android:id="@+id/content_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@{info.contentList[0]}"/>

@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.ToggleButton
 import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.GenreListItemBinding
+import net.maytry.www.smartwiki.databinding.GenreBinding
 import net.maytry.www.smartwiki.model.Genre
 
 /**
@@ -16,20 +16,20 @@ import net.maytry.www.smartwiki.model.Genre
  *
  * Created by slont on 8/7/16.
  */
-class GenreAdapter(context: Context, items: List<Genre>, val textViewResourceId: Int = R.layout.genre_list_item) :
+class GenreAdapter(context: Context, items: List<Genre>, val textViewResourceId: Int = R.layout.genre) :
         ArrayAdapter<Genre>(context, textViewResourceId, items) {
 
-    val inflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private val mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view: View
-        val binding: GenreListItemBinding
+        val binding: GenreBinding
         if (null == convertView) {
-            binding = DataBindingUtil.inflate(inflater, textViewResourceId, parent, false)
+            binding = DataBindingUtil.inflate(mInflater, textViewResourceId, parent, false)
             view = binding.root
             view.tag = binding
         } else {
-            binding = convertView.tag as GenreListItemBinding
+            binding = convertView.tag as GenreBinding
             view = convertView
         }
         val genre = getItem(position)

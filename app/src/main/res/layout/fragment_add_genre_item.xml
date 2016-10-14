@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <import type="net.maytry.www.smartwiki.model.GenreItem" />
-        <import type="android.widget.AdapterView.OnItemClickListener" />
         <variable name="item" type="GenreItem" />
-        <variable name="onClickGenreItemListItem" type="OnItemClickListener" />
     </data>
 
 
@@ -47,7 +45,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="246dp"
                         android:layout_gravity="center_horizontal"
-                        app:onItemClickListener="@{onClickGenreItemListItem}"
                         app:infoList="@{item.infoList}" />
 
                 </LinearLayout>

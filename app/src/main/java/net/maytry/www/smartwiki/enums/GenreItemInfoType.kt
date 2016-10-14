@@ -68,17 +68,17 @@ enum class GenreItemInfoType(val num: Int) {
 
         fun getItemLayout(type: GenreItemInfoType): Int {
             when (type) {
-                TEXT -> return R.layout.genre_item_info_list_item_text
-                TAG -> return R.layout.genre_item_info_list_item_tag
-                PHOTO -> return R.layout.genre_item_info_list_item_photo
-                MOVIE -> return R.layout.genre_item_info_list_item_movie
-                TIME -> return R.layout.genre_item_info_list_item_time
-                MAP -> return R.layout.genre_item_info_list_item_map
-                RADIO_BTN -> return R.layout.genre_item_info_list_item_radio_btn
-                SEEK_BAR -> return R.layout.genre_item_info_list_item_seek_bar
-                RATING_BAR -> return R.layout.genre_item_info_list_item_rating_bar
-                ORIGINAL -> return R.layout.genre_item_info_list_item_original
-                else -> return R.layout.genre_item_info_list_item_common
+                TEXT -> return R.layout.genre_item_info_text
+                TAG -> return R.layout.genre_item_info_tag
+                PHOTO -> return R.layout.genre_item_info_photo
+                MOVIE -> return R.layout.genre_item_info_movie
+                TIME -> return R.layout.genre_item_info_time
+                MAP -> return R.layout.genre_item_info_map
+                RADIO_BTN -> return R.layout.genre_item_info_radio_btn
+                SEEK_BAR -> return R.layout.genre_item_info_seek_bar
+                RATING_BAR -> return R.layout.genre_item_info_rating_bar
+                ORIGINAL -> return R.layout.genre_item_info_original
+                else -> return R.layout.genre_item_info_common
             }
         }
 

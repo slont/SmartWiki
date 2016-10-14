@@ -7,12 +7,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.FragmentAddGenreContentBinding
+import net.maytry.www.smartwiki.databinding.FragmentAddGenreBinding
 
 /**
  *
  */
-class AddGenreContentFragment : Fragment() {
+class AddGenreFragment : Fragment() {
 
     private var mListener: OnFragmentInteractionListener? = null
 
@@ -21,15 +21,15 @@ class AddGenreContentFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_add_genre_content, container, false)
+        return inflater!!.inflate(R.layout.fragment_add_genre, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val binding = FragmentAddGenreContentBinding.bind(view)
-        binding.cancelButton.setOnClickListener { mListener?.onClickCancelButton() }
-        binding.createButton.setOnClickListener { mListener?.onClickCreateButton() }
+        val binding = FragmentAddGenreBinding.bind(view)
+        binding.cancelBtn.setOnClickListener { mListener?.onClickCancelBtn() }
+        binding.createBtn.setOnClickListener { mListener?.onClickCreateBtn() }
     }
 
     override fun onAttach(context: Context?) {
@@ -56,13 +56,13 @@ class AddGenreContentFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        fun onClickCancelButton()
-        fun onClickCreateButton()
+        fun onClickCancelBtn()
+        fun onClickCreateBtn()
     }
 
     companion object {
-        fun newInstance(): AddGenreContentFragment {
-            return AddGenreContentFragment()
+        fun newInstance(): AddGenreFragment {
+            return AddGenreFragment()
         }
     }
 }

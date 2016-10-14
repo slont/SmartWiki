@@ -14,7 +14,7 @@ import android.view.View
 import android.widget.AdapterView
 import net.maytry.www.smartwiki.databinding.ActivityGenreBinding
 import net.maytry.www.smartwiki.db.GenreTableAdapter
-import net.maytry.www.smartwiki.fragment.GenreContentFragment
+import net.maytry.www.smartwiki.fragment.GenreFragment
 import net.maytry.www.smartwiki.model.Genre
 import java.io.Serializable
 
@@ -24,7 +24,7 @@ import java.io.Serializable
  * Home画面のアクティビティ
  * メインコンテンツではGenreリストの管理を行う
  */
-class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreContentFragment.OnFragmentInteractionListener {
+class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreFragment.OnFragmentInteractionListener {
 
     companion object {
         private val ADD_GENRE_REQ_CODE = 100
@@ -34,13 +34,13 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     private val mGenreList: MutableList<Genre> = mutableListOf()
     val genreList: List<Genre> = mGenreList
 
-    private val genreTableAdapter: GenreTableAdapter
+    private val mGenreTableAdapter: GenreTableAdapter
 
-    private val fragment: GenreContentFragment
+    private val mFragment: GenreFragment
 
     init {
-        genreTableAdapter = GenreTableAdapter(this)
-        fragment = GenreContentFragment.newInstance(genreList)
+        mGenreTableAdapter = GenreTableAdapter(this)
+        mFragment = GenreFragment.newInstance(genreList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,7 +61,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         binding.navView.setNavigationItemSelectedListener(this)
 
-        supportFragmentManager.beginTransaction().add(R.id.content_genre, fragment).commit()
+        supportFragmentManager.beginTransaction().add(R.id.content_genre, mFragment).commit()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -117,7 +117,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         return true
     }
 
-    override fun onClickGenreListItem(parent: AdapterView<*>?, position: Int) {
+    override fun onClickGenre(parent: AdapterView<*>?, position: Int) {
         val intent = Intent(this@GenreActivity, GenreItemActivity::class.java)
         intent.putExtra("genre", parent!!.getItemAtPosition(position) as Genre)
         startActivity(intent)
@@ -131,12 +131,12 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 when (resultCode) {
                     RESULT_OK -> {
                         val id = data.getLongExtra("_id", -1)
-                        genreTableAdapter.open()
-                        val genre = genreTableAdapter.selectByID(id)
-                        genreTableAdapter.close()
+                        mGenreTableAdapter.open()
+                        val genre = mGenreTableAdapter.selectByID(id)
+                        mGenreTableAdapter.close()
                         if (null != genre) {
                             mGenreList.add(genre)
-                            fragment.notifyDataSetChanged()
+                            mFragment.notifyDataSetChanged()
                         }
                     }
                     RESULT_CANCELED -> {}
@@ -156,9 +156,9 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun loadData() {
-        genreTableAdapter.open()
-        val list = genreTableAdapter.selectAll()
-        genreTableAdapter.close()
+        mGenreTableAdapter.open()
+        val list = mGenreTableAdapter.selectAll()
+        mGenreTableAdapter.close()
         mGenreList.clear()
         mGenreList.addAll(list)
     }

@@ -1,7 +1,6 @@
 package net.maytry.www.smartwiki.fragment
 
 import android.content.Context
-import android.databinding.BindingAdapter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -10,10 +9,9 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.FragmentAddGenreItemContentBinding
-import net.maytry.www.smartwiki.fragment.AddGenreItemContentFragment.OnFragmentInteractionListener
+import net.maytry.www.smartwiki.databinding.FragmentAddGenreItemBinding
+import net.maytry.www.smartwiki.fragment.AddGenreItemFragment.OnFragmentInteractionListener
 import net.maytry.www.smartwiki.model.GenreItem
-import net.maytry.www.smartwiki.model.GenreItemInfo
 import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
 
 /**
@@ -23,13 +21,13 @@ import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
  * Activities containing this fragment MUST implement the [OnFragmentInteractionListener]
  * interface.
  */
-class AddGenreItemContentFragment : Fragment() {
+class AddGenreItemFragment : Fragment() {
 
     private lateinit var mItem: GenreItem
 
     private var mListener: OnFragmentInteractionListener? = null
 
-    private lateinit var binding: FragmentAddGenreItemContentBinding
+    private lateinit var mBinding: FragmentAddGenreItemBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +37,7 @@ class AddGenreItemContentFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_add_genre_item_content, container, false)
+        return inflater!!.inflate(R.layout.fragment_add_genre_item, container, false)
     }
 
     override fun onAttach(context: Context?) {
@@ -53,9 +51,9 @@ class AddGenreItemContentFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        binding = FragmentAddGenreItemContentBinding.bind(view)
-        binding.item = mItem
-        binding.infoListView.setOnItemClickListener { parent, view, position, id -> mListener?.onClickGenreItemListItem(parent, position) }
+        mBinding = FragmentAddGenreItemBinding.bind(view)
+        mBinding.item = mItem
+        mBinding.infoListView.setOnItemClickListener { parent, view, position, id -> mListener?.onClickGenreItem(parent, position) }
     }
 
     override fun onDetach() {
@@ -64,7 +62,7 @@ class AddGenreItemContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.infoListView as? ListView)?.adapter as? GenreItemInfoAdapter)?.notifyDataSetChanged()
+        ((mBinding.infoListView as? ListView)?.adapter as? GenreItemInfoAdapter)?.notifyDataSetChanged()
     }
 
     /**
@@ -77,14 +75,14 @@ class AddGenreItemContentFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        fun onClickGenreItemListItem(parent: AdapterView<*>?, position: Int)
+        fun onClickGenreItem(parent: AdapterView<*>?, position: Int)
     }
 
     companion object {
         private val ITEM = "item"
 
-        fun newInstance(item: GenreItem): AddGenreItemContentFragment {
-            val fragment = AddGenreItemContentFragment()
+        fun newInstance(item: GenreItem): AddGenreItemFragment {
+            val fragment = AddGenreItemFragment()
             val args = Bundle()
             args.putSerializable(ITEM, item)
             fragment.arguments = args

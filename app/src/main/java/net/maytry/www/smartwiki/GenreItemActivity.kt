@@ -3,8 +3,6 @@ package net.maytry.www.smartwiki
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.v4.view.GravityCompat
-import android.support.v4.widget.DrawerLayout
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -14,7 +12,7 @@ import android.widget.ListView
 import net.maytry.www.smartwiki.databinding.ActivityGenreItemBinding
 import net.maytry.www.smartwiki.db.GenreItemTableAdapter
 import net.maytry.www.smartwiki.enums.EditType
-import net.maytry.www.smartwiki.fragment.GenreItemContentFragment
+import net.maytry.www.smartwiki.fragment.GenreItemFragment
 import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
@@ -25,7 +23,7 @@ import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
  * Genre画面のアクティビティ
  * メインコンテンツではGenreItemの管理を行う
  */
-class GenreItemActivity : AppCompatActivity(), GenreItemContentFragment.OnFragmentInteractionListener {
+class GenreItemActivity : AppCompatActivity(), GenreItemFragment.OnFragmentInteractionListener {
 
     companion object {
         private val CREATE_ITEM_REQ_CODE = 100
@@ -36,13 +34,13 @@ class GenreItemActivity : AppCompatActivity(), GenreItemContentFragment.OnFragme
     private val mItemList: MutableList<GenreItem> = mutableListOf()
     val itemList: List<GenreItem> = mItemList
 
-    private val itemTableAdapter: GenreItemTableAdapter
+    private val mItemTableAdapter: GenreItemTableAdapter
 
-    private val fragment: GenreItemContentFragment
+    private val mFragment: GenreItemFragment
 
     init {
-        itemTableAdapter = GenreItemTableAdapter(this)
-        fragment = GenreItemContentFragment.newInstance(itemList)
+        mItemTableAdapter = GenreItemTableAdapter(this)
+        mFragment = GenreItemFragment.newInstance(itemList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -60,16 +58,11 @@ class GenreItemActivity : AppCompatActivity(), GenreItemContentFragment.OnFragme
 
         binding.onClickAddGenreItemFab = OnClickAddGenreItemFab()
 
-        supportFragmentManager.beginTransaction().add(R.id.content_genre_item, fragment).commit()
+        supportFragmentManager.beginTransaction().add(R.id.content_genre_item, mFragment).commit()
     }
 
     override fun onBackPressed() {
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
-        }
+        super.onBackPressed()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -92,7 +85,7 @@ class GenreItemActivity : AppCompatActivity(), GenreItemContentFragment.OnFragme
      * LayeredContentが設定されていればさらに潜る
      * ItemContentが設定されていれば、ページを表示する
      */
-    override fun onClickItemListItem(parent: AdapterView<*>?, position: Int) {
+    override fun onClickItem(parent: AdapterView<*>?, position: Int) {
         val intent = Intent(this@GenreItemActivity, GenreItemInfoActivity::class.java)
         intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
         startActivity(intent)
@@ -115,12 +108,12 @@ class GenreItemActivity : AppCompatActivity(), GenreItemContentFragment.OnFragme
                 when (resultCode) {
                     RESULT_OK -> {
                         val id = data.getLongExtra("_id", -1)
-                        itemTableAdapter.open()
-                        val item = itemTableAdapter.selectByID(id)
-                        itemTableAdapter.close()
+                        mItemTableAdapter.open()
+                        val item = mItemTableAdapter.selectByID(id)
+                        mItemTableAdapter.close()
                         if (null != item) {
                             mItemList.add(item)
-                            fragment.notifyDataSetChanged()
+                            mFragment.notifyDataSetChanged()
                         }
                     }
                     RESULT_CANCELED -> {}
@@ -132,9 +125,9 @@ class GenreItemActivity : AppCompatActivity(), GenreItemContentFragment.OnFragme
     }
 
     override fun loadData() {
-        itemTableAdapter.open()
-        val list = itemTableAdapter.select("parent_id=${mGenre.id}")
-        itemTableAdapter.close()
+        mItemTableAdapter.open()
+        val list = mItemTableAdapter.select("parent_id=${mGenre.id}")
+        mItemTableAdapter.close()
         mItemList.clear()
         mItemList.addAll(list)
     }

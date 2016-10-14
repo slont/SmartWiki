@@ -1,5 +1,6 @@
 package net.maytry.www.smartwiki
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
@@ -13,37 +14,34 @@ import net.maytry.www.smartwiki.databinding.ActivityGenreItemInfoBinding
 import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
 import net.maytry.www.smartwiki.fragment.EditGenreItemInfoDialogFragment
-import net.maytry.www.smartwiki.fragment.GenreItemInfoContentFragment
+import net.maytry.www.smartwiki.fragment.GenreItemInfoFragment
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.model.GenreItemInfo
 import net.maytry.www.smartwiki.view.AnimatingRelativeLayout
 
-private val MENU_RES = R.menu.genre_item_info
-
 /**
  * Created by slont on 9/8/16.
  *
- * GenreItem画面のアクティビティ
- * メインコンテンツではGenreItemInfoの管理を行う
+ * GenreItemInfo画面のアクティビティ
  */
-class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoContentFragment.OnFragmentInteractionListener, EditGenreItemInfoDialogFragment.OnFragmentInteractionListener {
+class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoFragment.OnFragmentInteractionListener, EditGenreItemInfoDialogFragment.OnFragmentInteractionListener {
+
+    companion object {
+        private val EDIT_ITEM_REQ_CODE = 100
+        private val LAYERED_REQ_CODE = 200
+        private val MENU_RES = R.menu.genre_item_info
+    }
 
     private lateinit var mItem: GenreItem
     lateinit var infoList: List<GenreItemInfo>
 
-    private val infoTableAdapter: GenreItemInfoTableAdapter
+    private val mInfoTableAdapter: GenreItemInfoTableAdapter
 
-    private lateinit var fragment: GenreItemInfoContentFragment
-    private lateinit var dialog: EditGenreItemInfoDialogFragment
+    private lateinit var mFragment: GenreItemInfoFragment
+    private lateinit var mDialog: EditGenreItemInfoDialogFragment
 
     init {
-        infoTableAdapter = GenreItemInfoTableAdapter(this)
-    }
-
-    var isEditable = false
-    set(value) {
-        field = value
-        fragment.isEditable = value
+        mInfoTableAdapter = GenreItemInfoTableAdapter(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -58,43 +56,43 @@ class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoContentFragment.
         toolbar.setNavigationIcon(R.drawable.ic_menu_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        val animatingLayout: AnimatingRelativeLayout = binding.contentGenreItemInfo.menuAddGenreItemInfo.menuButtonLayout
-        binding.contentGenreItemInfo.menuAddGenreItemInfo.showInfoMenuButton.setOnClickListener { animatingLayout.show() }
-        binding.contentGenreItemInfo.menuAddGenreItemInfo.hideInfoMenuButton.setOnClickListener { animatingLayout.hide() }
+        val animatingLayout: AnimatingRelativeLayout = binding.contentGenreItemInfo.menuAddGenreItemInfo.menuBtnLayout
+        binding.contentGenreItemInfo.menuAddGenreItemInfo.showInfoMenuBtn.setOnClickListener { animatingLayout.show() }
+        binding.contentGenreItemInfo.menuAddGenreItemInfo.hideInfoMenuBtn.setOnClickListener { animatingLayout.hide() }
         binding.contentGenreItemInfo.menuAddGenreItemInfo.onClickInfoMenuButton = OnClickInfoMenuButton()
 
-        fragment = GenreItemInfoContentFragment.newInstance(mItem.infoList)
-        supportFragmentManager.beginTransaction().add(R.id.content_genre_item_info, fragment).commit()
+        mFragment = GenreItemInfoFragment.newInstance(mItem.infoList)
+        supportFragmentManager.beginTransaction().add(R.id.content_genre_item_info, mFragment).commit()
     }
 
     /**
-     * On click info item interface from @link{GenreItemInfoContentFragment}
+     * On click info item interface from @link{GenreItemInfoFragment}
      */
-    override fun onClickInfoListItem(parent: AdapterView<*>?, position: Int) {
+    override fun onClickInfo(parent: AdapterView<*>?, position: Int) {
         val info = parent?.getItemAtPosition(position) as GenreItemInfo
-        dialog = EditGenreItemInfoDialogFragment.newInstance(info)
-        dialog.show(fragmentManager, "dialog")
+        mDialog = EditGenreItemInfoDialogFragment.newInstance(info)
+        mDialog.show(fragmentManager, "dialog")
     }
 
-    override fun onClickAddContentButton(position: Int) {
+    override fun onClickAddContentBtn(position: Int) {
         throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onClickUpdateInfoButton(info: GenreItemInfo) {
+    override fun onClickUpdateInfoBtn(info: GenreItemInfo) {
         if (GenreItemInfoType.TAG == info.type) {
-            dialog.notifyDataSetChanged()
+            mDialog.notifyDataSetChanged()
         }
-        infoTableAdapter.open()
-        val id = infoTableAdapter.update(info)
+        mInfoTableAdapter.open()
+        val id = mInfoTableAdapter.update(info)
         if (-1 != id) {
-            val list = infoTableAdapter.select("parent_id=${mItem.id}")
+            val list = mInfoTableAdapter.select("parent_id=${mItem.id}")
             mItem.infoList.clear()
             mItem.infoList.addAll(list)
-            fragment.notifyDataSetChanged()
+            mFragment.notifyDataSetChanged()
         } else {
             Log.d(this.toString(), "failed update")
         }
-        infoTableAdapter.close()
+        mInfoTableAdapter.close()
     }
 
     override fun onBackPressed() {
@@ -114,7 +112,9 @@ class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoContentFragment.
         val id = item.itemId
 
         if (id == R.id.action_edit) {
-            isEditable = !isEditable
+//            val intent = Intent(this@GenreItemInfoActivity, EditGenreItemInfoActivity::class.java)
+//            intent.putExtra("item",  mItem)
+//            startActivityForResult(intent, EDIT_ITEM_REQ_CODE)
             return true
         }
 
@@ -130,21 +130,21 @@ class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoContentFragment.
             if (null != type) {
                 val info = GenreItemInfo(name = type.name, type = type)
                 mItem.infoList.add(info)
-                fragment.notifyDataSetChanged()
-                infoTableAdapter.open()
-                infoTableAdapter.insert(info)
-                infoTableAdapter.close()
+                mFragment.notifyDataSetChanged()
+                mInfoTableAdapter.open()
+                mInfoTableAdapter.insert(info)
+                mInfoTableAdapter.close()
             }
         }
     }
 
     /**
-     * Load info data interface from @link{GenreItemInfoContentFragment}
+     * Load info data interface from @link{GenreItemInfoFragment}
      */
     override fun loadData() {
-        infoTableAdapter.open()
-        val list = infoTableAdapter.select("parent_id=${mItem.id}")
-        infoTableAdapter.close()
+        mInfoTableAdapter.open()
+        val list = mInfoTableAdapter.select("parent_id=${mItem.id}")
+        mInfoTableAdapter.close()
         mItem.infoList.clear()
         mItem.infoList.addAll(list)
     }

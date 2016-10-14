@@ -10,8 +10,8 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import net.maytry.www.smartwiki.R
-import net.maytry.www.smartwiki.databinding.FragmentGenreItemContentBinding
-import net.maytry.www.smartwiki.fragment.GenreItemContentFragment.OnFragmentInteractionListener
+import net.maytry.www.smartwiki.databinding.FragmentGenreItemBinding
+import net.maytry.www.smartwiki.fragment.GenreItemFragment.OnFragmentInteractionListener
 import net.maytry.www.smartwiki.model.GenreItem
 import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
 import java.io.Serializable
@@ -23,13 +23,13 @@ import java.io.Serializable
  * Activities containing this fragment MUST implement the [OnFragmentInteractionListener]
  * interface.
  */
-class GenreItemContentFragment : Fragment() {
+class GenreItemFragment : Fragment() {
 
     private lateinit var mItemList: List<GenreItem>
 
     private var mListener: OnFragmentInteractionListener? = null
 
-    private lateinit var binding: FragmentGenreItemContentBinding
+    private lateinit var mBinding: FragmentGenreItemBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,15 +40,15 @@ class GenreItemContentFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_genre_item_content, container, false)
+        return inflater!!.inflate(R.layout.fragment_genre_item, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        binding = FragmentGenreItemContentBinding.bind(view)
-        binding.itemList = mItemList
-        binding.itemListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickItemListItem(parent, i) }
+        mBinding = FragmentGenreItemBinding.bind(view)
+        mBinding.itemList = mItemList
+        mBinding.itemListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickItem(parent, i) }
         mListener?.loadData()
     }
 
@@ -67,7 +67,7 @@ class GenreItemContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.itemListView as? ListView)?.adapter as? GenreItemAdapter)?.notifyDataSetChanged()
+        ((mBinding.itemListView as? ListView)?.adapter as? GenreItemAdapter)?.notifyDataSetChanged()
     }
 
     /**
@@ -80,15 +80,15 @@ class GenreItemContentFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        fun onClickItemListItem(parent: AdapterView<*>?, position: Int)
+        fun onClickItem(parent: AdapterView<*>?, position: Int)
         fun loadData()
     }
 
     companion object {
         private val ITEM_LIST = "item_list"
 
-        fun newInstance(itemList: List<GenreItem>): GenreItemContentFragment {
-            val fragment = GenreItemContentFragment()
+        fun newInstance(itemList: List<GenreItem>): GenreItemFragment {
+            val fragment = GenreItemFragment()
             val args = Bundle()
             args.putSerializable(ITEM_LIST, itemList as Serializable)
             fragment.arguments = args

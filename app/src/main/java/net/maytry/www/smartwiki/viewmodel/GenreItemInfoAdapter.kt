@@ -24,7 +24,7 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
 class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
         ArrayAdapter<GenreItemInfo>(context, 0, items) {
 
-    private val inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
+    private val mInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     var maxDisplayWidth = wm.defaultDisplay.width
     var isEditable = false
@@ -39,7 +39,7 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
         val binding: Any
         val key = GenreItemInfoType.getKey(info.type)
         if (null == convertView || null == convertView.getTag(key)) {
-            binding = DataBindingUtil.inflate(inflater, GenreItemInfoType.getItemLayout(info.type), parent, false)
+            binding = DataBindingUtil.inflate(mInflater, GenreItemInfoType.getItemLayout(info.type), parent, false)
             view = binding.root
             view.setTag(key, binding)
         } else {
@@ -47,9 +47,9 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
             view = convertView
         }
         when (info.type) {
-            GenreItemInfoType.TEXT -> (binding as GenreItemInfoListItemTextBinding).info = info
+            GenreItemInfoType.TEXT -> (binding as GenreItemInfoTextBinding).info = info
             GenreItemInfoType.TAG -> {
-                val b: GenreItemInfoListItemTagBinding = binding as GenreItemInfoListItemTagBinding
+                val b: GenreItemInfoTagBinding = binding as GenreItemInfoTagBinding
                 b.info = info
                 b.isEditable = isEditable
                 b.tagLayout.removeAllViews()
@@ -57,7 +57,7 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
                 var totalSize = 0
                 var preId = -1
                 info.contentList.forEachIndexed { i, s ->
-                    val tagBinding: ItemTagBinding = DataBindingUtil.inflate(inflater, R.layout.item_tag, parent, false)
+                    val tagBinding: ItemTagBinding = DataBindingUtil.inflate(mInflater, R.layout.item_tag, parent, false)
                     val textView = tagBinding.root as TextView
                     textView.id = textView.id + i
                     textView.text = s
@@ -83,15 +83,15 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
                     b.tagLayout.addView(textView, params)
                 }
             }
-            GenreItemInfoType.PHOTO -> (binding as GenreItemInfoListItemPhotoBinding).info = info
-            GenreItemInfoType.MOVIE -> (binding as GenreItemInfoListItemMovieBinding).info = info
-            GenreItemInfoType.TIME -> (binding as GenreItemInfoListItemTimeBinding).info = info
-            GenreItemInfoType.MAP -> (binding as GenreItemInfoListItemMapBinding).info = info
-            GenreItemInfoType.RADIO_BTN -> (binding as GenreItemInfoListItemRadioBtnBinding).info = info
-            GenreItemInfoType.SEEK_BAR -> (binding as GenreItemInfoListItemSeekBarBinding).info = info
-            GenreItemInfoType.RATING_BAR -> (binding as GenreItemInfoListItemRatingBarBinding).info = info
-            GenreItemInfoType.ORIGINAL -> (binding as GenreItemInfoListItemOriginalBinding).info = info
-            else -> (binding as GenreItemInfoListItemCommonBinding).info = info
+            GenreItemInfoType.PHOTO -> (binding as GenreItemInfoPhotoBinding).info = info
+            GenreItemInfoType.MOVIE -> (binding as GenreItemInfoMovieBinding).info = info
+            GenreItemInfoType.TIME -> (binding as GenreItemInfoTimeBinding).info = info
+            GenreItemInfoType.MAP -> (binding as GenreItemInfoMapBinding).info = info
+            GenreItemInfoType.RADIO_BTN -> (binding as GenreItemInfoRadioBtnBinding).info = info
+            GenreItemInfoType.SEEK_BAR -> (binding as GenreItemInfoSeekBarBinding).info = info
+            GenreItemInfoType.RATING_BAR -> (binding as GenreItemInfoRatingBarBinding).info = info
+            GenreItemInfoType.ORIGINAL -> (binding as GenreItemInfoOriginalBinding).info = info
+            else -> (binding as GenreItemInfoCommonBinding).info = info
         }
         return view
     }

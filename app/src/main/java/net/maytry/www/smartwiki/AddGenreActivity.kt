@@ -8,18 +8,18 @@ import android.support.v7.app.AppCompatActivity
 import android.widget.EditText
 import net.maytry.www.smartwiki.databinding.ActivityAddGenreBinding
 import net.maytry.www.smartwiki.db.GenreTableAdapter
-import net.maytry.www.smartwiki.fragment.AddGenreContentFragment
+import net.maytry.www.smartwiki.fragment.AddGenreFragment
 import net.maytry.www.smartwiki.model.Genre
 
 /**
  * Created by slont on 8/6/16.
  */
-class AddGenreActivity : AppCompatActivity(), AddGenreContentFragment.OnFragmentInteractionListener {
+class AddGenreActivity : AppCompatActivity(), AddGenreFragment.OnFragmentInteractionListener {
 
-    private val genreTableAdapter: GenreTableAdapter
+    private val mGenreTableAdapter: GenreTableAdapter
 
     init {
-        genreTableAdapter = GenreTableAdapter(this)
+        mGenreTableAdapter = GenreTableAdapter(this)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,16 +28,16 @@ class AddGenreActivity : AppCompatActivity(), AddGenreContentFragment.OnFragment
 
         setSupportActionBar(binding.toolbar)
 
-        val fragment = AddGenreContentFragment.newInstance()
+        val fragment = AddGenreFragment.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.content_add_genre, fragment).commit()
     }
 
-    override fun onClickCancelButton() {
+    override fun onClickCancelBtn() {
         setResult(RESULT_CANCELED, Intent())
         finish()
     }
 
-    override fun onClickCreateButton() {
+    override fun onClickCreateBtn() {
         val name = (findViewById(R.id.genre_name_edit) as EditText).text.toString()
         if (name.isNullOrBlank()) {
             // TODO:切り出し
@@ -56,10 +56,10 @@ class AddGenreActivity : AppCompatActivity(), AddGenreContentFragment.OnFragment
     }
 
     private fun addGenre(name: String): Long {
-        genreTableAdapter.open()
+        mGenreTableAdapter.open()
         val genre = Genre(name = name)
-        val id = genreTableAdapter.insert(genre)
-        genreTableAdapter.close()
+        val id = mGenreTableAdapter.insert(genre)
+        mGenreTableAdapter.close()
         return id
     }
 }
