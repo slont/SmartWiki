@@ -7,8 +7,8 @@
 
     <data>
         <import type="java.util.List" />
-        <import type="net.maytry.www.smartwiki.model.GenreItemInfo" />
-        <variable name="infoList" type="List&lt;GenreItemInfo>" />
+        <import type="net.maytry.www.smartwiki.model.GenreItem" />
+        <variable name="itemList" type="List&lt;GenreItem>" />
     </data>
 
     <LinearLayout
@@ -18,10 +18,10 @@
         android:weightSum="1">
 
         <ListView
-            android:id="@+id/info_list_view"
+            android:id="@+id/item_list_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="246dp"
             android:layout_gravity="center_horizontal"
-            app:infoList="@{infoList}" />
+            app:itemList="@{itemList}" />
     </LinearLayout>
 </layout>

@@ -3,12 +3,12 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="net.maytry.www.smartwiki.fragment.HomeContentFragment">
+    tools:context="net.maytry.www.smartwiki.fragment.GenreItemInfoContentFragment">
 
     <data>
         <import type="java.util.List" />
-        <import type="net.maytry.www.smartwiki.model.Genre" />
-        <variable name="genreList" type="List&lt;Genre>" />
+        <import type="net.maytry.www.smartwiki.model.GenreItemInfo" />
+        <variable name="infoList" type="List&lt;GenreItemInfo>" />
     </data>
 
     <LinearLayout
@@ -18,10 +18,10 @@
         android:weightSum="1">
 
         <ListView
-            android:id="@+id/genre_list_view"
+            android:id="@+id/info_list_view"
             android:layout_width="match_parent"
-            android:layout_height="246dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:genreList="@{genreList}" />
+            app:infoList="@{infoList}" />
     </LinearLayout>
 </layout>

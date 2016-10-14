@@ -10,8 +10,7 @@
         android:fitsSystemWindows="true"
         tools:openDrawer="start">
 
-        <include
-            layout="@layout/app_bar_genre"
+        <include layout="@layout/app_bar_genre"
             android:id="@+id/app_bar_genre"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -23,7 +22,7 @@
             android:layout_gravity="start"
             android:fitsSystemWindows="true"
             app:headerLayout="@layout/nav_header_genre"
-            app:menu="@menu/activity_home_drawer" />
+            app:menu="@menu/activity_genre_drawer" />
 
     </android.support.v4.widget.DrawerLayout>
 </layout>

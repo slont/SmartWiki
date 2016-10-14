@@ -11,21 +11,21 @@ import android.widget.AdapterView
 import android.widget.ListView
 import net.maytry.www.smartwiki.R
 import net.maytry.www.smartwiki.databinding.FragmentGenreContentBinding
-import net.maytry.www.smartwiki.fragment.GenreContentFragment.OnFragmentInteractionListener
-import net.maytry.www.smartwiki.model.GenreItem
-import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
+import net.maytry.www.smartwiki.model.Genre
+import net.maytry.www.smartwiki.viewmodel.GenreAdapter
 import java.io.Serializable
 
 /**
- * A fragment representing a list of Items.
- *
- *
- * Activities containing this fragment MUST implement the [OnFragmentInteractionListener]
- * interface.
+ * A simple [Fragment] subclass.
+ * Activities that contain this fragment must implement the
+ * [GenreContentFragment.OnFragmentInteractionListener] interface
+ * to handle interaction events.
+ * Use the [GenreContentFragment.newInstance] factory method to
+ * create an instance of this fragment.
  */
 class GenreContentFragment : Fragment() {
 
-    private lateinit var mItemList: List<GenreItem>
+    private lateinit var mGenreList: List<Genre>
 
     private var mListener: OnFragmentInteractionListener? = null
 
@@ -34,12 +34,13 @@ class GenreContentFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mItemList = arguments.getSerializable(ITEM_LIST) as List<GenreItem>
+            mGenreList = arguments.getSerializable(GENRE_LIST) as List<Genre>
         }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
+        // Inflate the layout for this fragment
         return inflater!!.inflate(R.layout.fragment_genre_content, container, false)
     }
 
@@ -47,8 +48,8 @@ class GenreContentFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding = FragmentGenreContentBinding.bind(view)
-        binding.itemList = mItemList
-        binding.itemListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickItemListItem(parent, i) }
+        binding.genreList = mGenreList
+        binding.genreListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickGenreListItem(parent, i) }
         mListener?.loadData()
     }
 
@@ -57,7 +58,7 @@ class GenreContentFragment : Fragment() {
         if (context is OnFragmentInteractionListener) {
             mListener = context as OnFragmentInteractionListener?
         } else {
-            throw RuntimeException(context!!.toString() + " must implement OnListFragmentInteractionListener")
+            throw RuntimeException(context!!.toString() + " must implement OnFragmentInteractionListener")
         }
     }
 
@@ -67,7 +68,7 @@ class GenreContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.itemListView as? ListView)?.adapter as? GenreItemAdapter)?.notifyDataSetChanged()
+        ((binding.genreListView as? ListView)?.adapter as? GenreAdapter)?.notifyDataSetChanged()
     }
 
     /**
@@ -80,17 +81,26 @@ class GenreContentFragment : Fragment() {
      * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
      */
     interface OnFragmentInteractionListener {
-        fun onClickItemListItem(parent: AdapterView<*>?, position: Int)
+        fun onClickGenreListItem(parent: AdapterView<*>?, position: Int)
         fun loadData()
     }
 
     companion object {
-        private val ITEM_LIST = "item_list"
+        private val GENRE_LIST = "genre_list"
 
-        fun newInstance(itemList: List<GenreItem>): GenreContentFragment {
+        /**
+         * Use this factory method to create a new instance of
+         * this fragment using the provided parameters.
+
+         * @param genreList Parameter
+         * *
+         * @return A new instance of fragment GenreContentFragment.
+         */
+        // TODO: Rename and change types and number of parameters
+        fun newInstance(genreList: List<Genre>): GenreContentFragment {
             val fragment = GenreContentFragment()
             val args = Bundle()
-            args.putSerializable(ITEM_LIST, itemList as Serializable)
+            args.putSerializable(GENRE_LIST, genreList as Serializable)
             fragment.arguments = args
             return fragment
         }
@@ -98,9 +108,9 @@ class GenreContentFragment : Fragment() {
 
     object CustomSetter {
         @JvmStatic
-        @BindingAdapter("itemList")
-        fun setItemList(listView: ListView, itemList: List<GenreItem>) {
-            val adapter = GenreItemAdapter(listView.context, itemList)
+        @BindingAdapter("genreList")
+        fun setGenreList(listView: ListView, genreList: List<Genre>) {
+            val adapter: GenreAdapter = GenreAdapter(listView.context, genreList)
             listView.adapter = adapter
         }
     }

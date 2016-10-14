@@ -12,13 +12,11 @@ import android.widget.ListView
 import net.maytry.www.smartwiki.R
 import net.maytry.www.smartwiki.databinding.FragmentGenreItemContentBinding
 import net.maytry.www.smartwiki.fragment.GenreItemContentFragment.OnFragmentInteractionListener
-import net.maytry.www.smartwiki.model.GenreItemInfo
-import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
+import net.maytry.www.smartwiki.model.GenreItem
+import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
 import java.io.Serializable
 
 /**
- * Created by slont on 9/8/16.
- *
  * A fragment representing a list of Items.
  *
  *
@@ -27,26 +25,21 @@ import java.io.Serializable
  */
 class GenreItemContentFragment : Fragment() {
 
-    private lateinit var mInfoList: List<GenreItemInfo>
+    private lateinit var mItemList: List<GenreItem>
 
     private var mListener: OnFragmentInteractionListener? = null
 
     private lateinit var binding: FragmentGenreItemContentBinding
 
-    var isEditable = false
-    set(value) {
-        field = value
-        ((binding.infoListView as? ListView)?.adapter as? GenreItemInfoAdapter)?.isEditable = value
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (arguments != null) {
-            mInfoList = arguments.getSerializable(INFO_LIST) as List<GenreItemInfo>
+            mItemList = arguments.getSerializable(ITEM_LIST) as List<GenreItem>
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.fragment_genre_item_content, container, false)
     }
 
@@ -54,8 +47,8 @@ class GenreItemContentFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
 
         binding = FragmentGenreItemContentBinding.bind(view)
-        binding.infoList = mInfoList
-        binding.infoListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickInfoListItem(parent, i) }
+        binding.itemList = mItemList
+        binding.itemListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickItemListItem(parent, i) }
         mListener?.loadData()
     }
 
@@ -74,21 +67,30 @@ class GenreItemContentFragment : Fragment() {
     }
 
     fun notifyDataSetChanged() {
-        ((binding.infoListView as? ListView)?.adapter as? GenreItemInfoAdapter)?.notifyDataSetChanged()
+        ((binding.itemListView as? ListView)?.adapter as? GenreItemAdapter)?.notifyDataSetChanged()
     }
 
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     *
+     *
+     * See the Android Training lesson [Communicating with Other Fragments](http://developer.android.com/training/basics/fragments/communicating.html) for more information.
+     */
     interface OnFragmentInteractionListener {
-        fun onClickInfoListItem(parent: AdapterView<*>?, position: Int)
+        fun onClickItemListItem(parent: AdapterView<*>?, position: Int)
         fun loadData()
     }
 
     companion object {
-        private val INFO_LIST = "info_list"
+        private val ITEM_LIST = "item_list"
 
-        fun newInstance(infoList: List<GenreItemInfo>): GenreItemContentFragment {
+        fun newInstance(itemList: List<GenreItem>): GenreItemContentFragment {
             val fragment = GenreItemContentFragment()
             val args = Bundle()
-            args.putSerializable(INFO_LIST, infoList as Serializable)
+            args.putSerializable(ITEM_LIST, itemList as Serializable)
             fragment.arguments = args
             return fragment
         }
@@ -96,9 +98,9 @@ class GenreItemContentFragment : Fragment() {
 
     object CustomSetter {
         @JvmStatic
-        @BindingAdapter("infoList")
-        fun setInfoList(listView: ListView, infoList: List<GenreItemInfo>) {
-            val adapter = GenreItemInfoAdapter(listView.context, infoList)
+        @BindingAdapter("itemList")
+        fun setItemList(listView: ListView, itemList: List<GenreItem>) {
+            val adapter = GenreItemAdapter(listView.context, itemList)
             listView.adapter = adapter
         }
     }

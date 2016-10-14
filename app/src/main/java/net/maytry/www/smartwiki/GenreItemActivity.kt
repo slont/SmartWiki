@@ -1,111 +1,66 @@
 package net.maytry.www.smartwiki
 
+import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
-import android.support.v7.app.ActionBarDrawerToggle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Button
+import android.widget.ListView
 import net.maytry.www.smartwiki.databinding.ActivityGenreItemBinding
-import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
-import net.maytry.www.smartwiki.enums.GenreItemInfoType
-import net.maytry.www.smartwiki.fragment.EditGenreItemInfoDialogFragment
+import net.maytry.www.smartwiki.db.GenreItemTableAdapter
+import net.maytry.www.smartwiki.enums.EditType
 import net.maytry.www.smartwiki.fragment.GenreItemContentFragment
-import net.maytry.www.smartwiki.view.AnimatingRelativeLayout
+import net.maytry.www.smartwiki.model.Genre
 import net.maytry.www.smartwiki.model.GenreItem
-import net.maytry.www.smartwiki.model.GenreItemInfo
-
-private const val MENU_RES = R.menu.genre_item
+import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
 
 /**
- * Created by slont on 9/8/16.
+ * Created by slont on 8/29/16.
  *
- * GenreItem画面のアクティビティ
- * メインコンテンツではGenreItemInfoの管理を行う
+ * Genre画面のアクティビティ
+ * メインコンテンツではGenreItemの管理を行う
  */
-class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreItemContentFragment.OnFragmentInteractionListener, EditGenreItemInfoDialogFragment.OnFragmentInteractionListener {
+class GenreItemActivity : AppCompatActivity(), GenreItemContentFragment.OnFragmentInteractionListener {
 
-    private lateinit var mItem: GenreItem
-    lateinit var infoList: List<GenreItemInfo>
-
-    private val infoTableAdapter: GenreItemInfoTableAdapter
-
-    private lateinit var fragment: GenreItemContentFragment
-    private lateinit var dialog: EditGenreItemInfoDialogFragment
-
-    init {
-        infoTableAdapter = GenreItemInfoTableAdapter(this)
+    companion object {
+        private val CREATE_ITEM_REQ_CODE = 100
+        private val UPDATE_ITEM_REQ_CODE = 200
     }
 
-    var isEditable = false
-    set(value) {
-        field = value
-        fragment.isEditable = value
+    private lateinit var mGenre: Genre
+    private val mItemList: MutableList<GenreItem> = mutableListOf()
+    val itemList: List<GenreItem> = mItemList
+
+    private val itemTableAdapter: GenreItemTableAdapter
+
+    private val fragment: GenreItemContentFragment
+
+    init {
+        itemTableAdapter = GenreItemTableAdapter(this)
+        fragment = GenreItemContentFragment.newInstance(itemList)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = DataBindingUtil.setContentView<ActivityGenreItemBinding>(this@GenreItemActivity, R.layout.activity_genre_item)
 
-        mItem = intent.getSerializableExtra("item") as GenreItem
-        title = mItem.name
+        mGenre = intent.getSerializableExtra("genre") as Genre
+        title = mGenre.name
+        mItemList.addAll(mGenre.itemList)
 
-        val toolbar = binding.appBarGenreItem.toolbar
+        val toolbar = binding.toolbar
         setSupportActionBar(toolbar)
         toolbar.setNavigationIcon(R.drawable.ic_menu_back)
         toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        val drawer = binding.drawerLayout
-        val toggle = ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer.setDrawerListener(toggle)
-        toggle.syncState()
+        binding.onClickAddGenreItemFab = OnClickAddGenreItemFab()
 
-        binding.navView.setNavigationItemSelectedListener(this)
-        val animatingLayout: AnimatingRelativeLayout = binding.appBarGenreItem.contentGenreItem.menuAddGenreItemInfo.menuButtonLayout
-        binding.appBarGenreItem.contentGenreItem.menuAddGenreItemInfo.showInfoMenuButton.setOnClickListener { animatingLayout.show() }
-        binding.appBarGenreItem.contentGenreItem.menuAddGenreItemInfo.hideInfoMenuButton.setOnClickListener { animatingLayout.hide() }
-        binding.appBarGenreItem.contentGenreItem.menuAddGenreItemInfo.onClickInfoMenuButton = OnClickInfoMenuButton()
-
-        fragment = GenreItemContentFragment.newInstance(mItem.infoList)
         supportFragmentManager.beginTransaction().add(R.id.content_genre_item, fragment).commit()
-    }
-
-    /**
-     * On click info item interface from @link{GenreItemContentFragment}
-     */
-    override fun onClickInfoListItem(parent: AdapterView<*>?, position: Int) {
-        val info = parent?.getItemAtPosition(position) as GenreItemInfo
-        dialog = EditGenreItemInfoDialogFragment.newInstance(info)
-        dialog.show(fragmentManager, "dialog")
-    }
-
-    override fun onClickAddContentButton(position: Int) {
-        throw UnsupportedOperationException("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onClickUpdateInfoButton(info: GenreItemInfo) {
-        if (GenreItemInfoType.TAG == info.type) {
-            dialog.notifyDataSetChanged()
-        }
-        infoTableAdapter.open()
-        val id = infoTableAdapter.update(info)
-        if (-1 != id) {
-            val list = infoTableAdapter.select("parent_id=${mItem.id}")
-            mItem.infoList.clear()
-            mItem.infoList.addAll(list)
-            fragment.notifyDataSetChanged()
-        } else {
-            Log.d(this.toString(), "failed update")
-        }
-        infoTableAdapter.close()
     }
 
     override fun onBackPressed() {
@@ -117,24 +72,15 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
         }
     }
 
-    /**
-     * ツールバーのメニュー
-     */
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(MENU_RES, menu)
+        menuInflater.inflate(R.menu.genre_item, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_edit) {
-            isEditable = !isEditable
+        if (id == R.id.action_settings) {
             return true
         }
 
@@ -142,54 +88,67 @@ class GenreItemActivity : AppCompatActivity(), NavigationView.OnNavigationItemSe
     }
 
     /**
-     * GenreInfoの追加アクションリスナー
+     * LayeredItemのセレクトイベント
+     * LayeredContentが設定されていればさらに潜る
+     * ItemContentが設定されていれば、ページを表示する
      */
-    private inner class OnClickInfoMenuButton() : View.OnClickListener {
-        override fun onClick(v: View) {
-            val type = GenreItemInfoType.strToEnum((v as Button).text.toString())
-            if (null != type) {
-                val info = GenreItemInfo(name = type.name, type = type)
-                mItem.infoList.add(info)
-                fragment.notifyDataSetChanged()
-                infoTableAdapter.open()
-                infoTableAdapter.insert(info)
-                infoTableAdapter.close()
+    override fun onClickItemListItem(parent: AdapterView<*>?, position: Int) {
+        val intent = Intent(this@GenreItemActivity, GenreItemInfoActivity::class.java)
+        intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
+        startActivity(intent)
+    }
+
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            UPDATE_ITEM_REQ_CODE -> {
+                when (resultCode) {
+                    RESULT_OK -> {
+                        val itemListView = findViewById(R.id.item_list_view) as ListView
+                        (itemListView.adapter as GenreItemAdapter).notifyDataSetChanged()
+                    }
+                    RESULT_CANCELED -> {}
+                }
+            }
+            CREATE_ITEM_REQ_CODE -> {
+                when (resultCode) {
+                    RESULT_OK -> {
+                        val id = data.getLongExtra("_id", -1)
+                        itemTableAdapter.open()
+                        val item = itemTableAdapter.selectByID(id)
+                        itemTableAdapter.close()
+                        if (null != item) {
+                            mItemList.add(item)
+                            fragment.notifyDataSetChanged()
+                        }
+                    }
+                    RESULT_CANCELED -> {}
+                }
+            }
+            else -> {
             }
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
-        // Handle navigation view item clicks here.
-        val id = item.itemId
-
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }
-
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-        drawer.closeDrawer(GravityCompat.START)
-        return true
+    override fun loadData() {
+        itemTableAdapter.open()
+        val list = itemTableAdapter.select("parent_id=${mGenre.id}")
+        itemTableAdapter.close()
+        mItemList.clear()
+        mItemList.addAll(list)
     }
 
     /**
-     * Load info data interface from @link{GenreItemContentFragment}
+     * AddGenreItemのクリックイベント
      */
-    override fun loadData() {
-        infoTableAdapter.open()
-        val list = infoTableAdapter.select("parent_id=${mItem.id}")
-        infoTableAdapter.close()
-        mItem.infoList.clear()
-        mItem.infoList.addAll(list)
+    private inner class OnClickAddGenreItemFab : View.OnClickListener {
+        override fun onClick(v: View) {
+            val genre = mGenre
+            val intent = Intent(this@GenreItemActivity, AddGenreItemActivity::class.java)
+            intent.putExtra("item",  GenreItem(name = "", parentId= genre.id!!))
+            intent.putExtra("type", EditType.CREATE)
+            startActivityForResult(intent, CREATE_ITEM_REQ_CODE)
+        }
     }
 }

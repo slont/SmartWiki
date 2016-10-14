@@ -5,7 +5,7 @@
 
     <data>
         <import type="android.view.View.OnClickListener" />
-        <variable name="onClickAddGenreItemFab" type="OnClickListener" />
+        <variable name="onClickAddGenreFab" type="OnClickListener" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -30,41 +30,16 @@
 
         <include layout="@layout/content_genre" />
 
+
         <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_genre_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
             android:layout_margin="@dimen/fab_margin"
             android:src="@android:drawable/ic_input_add"
-            android:onClick="@{onClickAddGenreItemFab}"
+            android:onClick="@{onClickAddGenreFab}"
             app:backgroundTint="@color/blue" />
-
-        <!--<com.getbase.floatingactionbutton.FloatingActionsMenu-->
-            <!--android:id="@+id/add_genre_fam"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="bottom|end"-->
-            <!--android:layout_margin="@dimen/fab_margin"-->
-            <!--app:backgroundTint="@color/blue">-->
-
-            <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
-                <!--android:id="@+id/add_layered_fab"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="bottom|end"-->
-                <!--android:layout_margin="@dimen/fab_margin"-->
-                <!--android:src="@android:drawable/ic_input_add"-->
-                <!--app:backgroundTint="@color/blue" />-->
-
-            <!--<com.getbase.floatingactionbutton.FloatingActionButton-->
-                <!--android:id="@+id/add_content_fab"-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="bottom|end"-->
-                <!--android:layout_margin="@dimen/fab_margin"-->
-                <!--android:src="@android:drawable/ic_menu_agenda"-->
-                <!--app:backgroundTint="@color/blue" />-->
-        <!--</com.getbase.floatingactionbutton.FloatingActionsMenu>-->
 
     </android.support.design.widget.CoordinatorLayout>
 </layout>

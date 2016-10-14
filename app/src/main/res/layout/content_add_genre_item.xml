@@ -11,8 +11,7 @@
         tools:context="net.maytry.www.smartwiki.AddGenreItemActivity"
         tools:showIn="@layout/activity_add_genre_item">
 
-        <include
-            android:id="@+id/menu_add_genre_item_info"
-            layout="@layout/menu_add_genre_item_info"/>
+        <include layout="@layout/menu_add_genre_item_info"
+                 android:id="@+id/menu_add_genre_item_info"/>
     </RelativeLayout>
 </layout>
