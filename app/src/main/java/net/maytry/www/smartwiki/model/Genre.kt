@@ -1,44 +1,55 @@
 package net.maytry.www.smartwiki.model
 
-import java.io.Serializable
-import java.util.Date
+import java.util.*
 
 /**
  * Created by slont on 8/6/16.
  */
-class Genre(name: String, isFavorite: Boolean) : Serializable {
+class Genre(
 
-    /**
-     * ジャンルの名前
-     */
-    var name: String
+        /**
+         * ID
+         */
+        id: Long? = null,
 
-    /**
-     * お気に入り
-     */
-    var favorite: Boolean
+        /**
+         * 名前
+         */
+        var name: String = "",
 
-    /**
-     * アイテム情報
-     */
-    val itemMap: MutableMap<String, GenreItem> = mutableMapOf()
+        /**
+         * 説明
+         */
+        val description: String = "",
 
-    /**
-     * 作成日時
-     */
-    val createdDatetime: Date
+        /**
+         * 画像
+         */
+        val image: String = "",
 
-    /**
-     * 変更日時
-     */
-    var modifiedDatetime: Date
+        /**
+         * アイテム一覧
+         */
+        val itemList: MutableList<GenreItem> = mutableListOf(),
 
-    init {
-        this.name = name
-        this.favorite = isFavorite
-        this.createdDatetime = Date()
-        this.modifiedDatetime = Date()
-    }
+        /**
+         * お気に入り
+         */
+        var favorite: Boolean = false,
 
-    constructor(name: String) : this(name, false)
-}
+        /**
+         * 作成者
+         */
+        val createdUser: String = "",
+
+        /**
+         * 作成日時
+         */
+        val created: Date = Date(),
+
+        /**
+         * 変更日時
+         */
+        var updated: Date = Date()
+
+) : AbstractModel(id)

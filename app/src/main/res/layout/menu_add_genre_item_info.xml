@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View" />
+        <import type="android.view.View.OnClickListener" />
+        <variable name="onClickInfoMenuBtn" type="OnClickListener" />
+        <variable name="isVisibleShowBtn" type="Boolean" />
+    </data>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/show_info_menu_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:text="追加"
+            android:textColor="@color/white"
+            android:background="@color/navy"
+            android:visibility="@{null == isVisibleShowBtn || isVisibleShowBtn ? View.VISIBLE : View.GONE}"
+            android:elevation="0dp" />
+
+        <net.maytry.www.smartwiki.view.AnimatingRelativeLayout
+            android:id="@+id/menu_btn_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:drawableTint="@color/black"
+            android:elevation="10dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="500px">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="TEXT"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="TAG"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="PHOTO"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="MOVIE"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="TIME"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="MAP"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="RADIO_BTN"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="SEEK_BAR"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="RATING_BAR"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+
+
+                    <Button
+                        android:layout_width="0dip"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="ORIGINAL"
+                        android:textColor="@color/white"
+                        android:background="@color/navy"
+                        android:onClick="@{onClickInfoMenuBtn}"/>
+                </TableRow>
+
+                <Button
+                    android:id="@+id/hide_info_menu_btn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight=".5"
+                    android:text="閉じる"
+                    android:textColor="@color/white"
+                    android:background="@color/navy" />
+            </TableLayout>
+
+        </net.maytry.www.smartwiki.view.AnimatingRelativeLayout>
+    </RelativeLayout>
+</layout>

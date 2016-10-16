@@ -72,4 +72,18 @@
     <string name="genre_name">GenreName</string>
     <string name="item_name">ItemName</string>
     <string name="type_name">TypeName</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="genre_item_info_type_text">1</string>
+    <string name="genre_item_info_type_tag">2</string>
+    <string name="genre_item_info_type_photo">3</string>
+    <string name="genre_item_info_type_movie">4</string>
+    <string name="genre_item_info_type_time">5</string>
+    <string name="genre_item_info_type_map">6</string>
+    <string name="genre_item_info_type_radio_btn">7</string>
+    <string name="genre_item_info_type_seek_bar">8</string>
+    <string name="genre_item_info_type_rating_bar">9</string>
+    <string name="genre_item_info_type_original">10</string>
+
 </resources>

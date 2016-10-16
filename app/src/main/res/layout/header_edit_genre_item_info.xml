@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <import type="net.maytry.www.smartwiki.model.GenreItem" />
+        <variable name="item" type="GenreItem" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:paddingTop="20dp"
+        android:background="@color/navy"
+        tools:context="net.maytry.www.smartwiki.EditGenreItemInfoActivity"
+        tools:showIn="@layout/activity_edit_genre_item_info">
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentTop="true"
+            android:src="@android:drawable/sym_def_app_icon" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/image"
+            android:text="@{item.name}"
+            android:textColor="@color/white"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+        <Button
+            android:id="@+id/close_btn"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
+            android:text="Close"
+            android:textColor="@color/white"
+            android:background="@color/transparent"/>
+
+        <Button
+            android:id="@+id/add_btn"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:text="Add"
+            android:textColor="@color/white"
+            android:background="@color/transparent"/>
+
+        <Button
+            android:id="@+id/delete_btn"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/name"
+            android:text="Delete"
+            android:textColor="@color/gray"
+            android:background="@color/transparent"/>
+
+        <Button
+            android:id="@+id/save_btn"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:text="Save"
+            android:textColor="@color/white"
+            android:background="@color/transparent"/>
+
+    </RelativeLayout>
+</layout>
