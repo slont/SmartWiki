@@ -23,6 +23,17 @@ import net.maytry.www.smartwiki.viewmodel.GenreItemInfoAdapter
  */
 class AddGenreItemFragment : Fragment() {
 
+    companion object {
+        private const val LAYOUT_RES = R.layout.fragment_add_genre_item
+        private const val ITEM = "item"
+
+        fun newInstance(item: GenreItem): AddGenreItemFragment {
+            return AddGenreItemFragment().apply {
+                arguments = Bundle().apply { putSerializable(ITEM, item) }
+            }
+        }
+    }
+
     private lateinit var mItem: GenreItem
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -31,13 +42,11 @@ class AddGenreItemFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mItem = arguments.getSerializable(ITEM) as GenreItem
-        }
+        arguments?.run { mItem = getSerializable(ITEM) as GenreItem }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_add_genre_item, container, false)
+        return inflater!!.inflate(LAYOUT_RES, container, false)
     }
 
     override fun onAttach(context: Context?) {
@@ -51,9 +60,10 @@ class AddGenreItemFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        mBinding = FragmentAddGenreItemBinding.bind(view)
-        mBinding.item = mItem
-        mBinding.infoListView.setOnItemClickListener { parent, view, position, id -> mListener?.onClickGenreItem(parent, position) }
+        mBinding = FragmentAddGenreItemBinding.bind(view).apply {
+            item = mItem
+            infoListView.setOnItemClickListener { parent, view, position, id -> mListener?.onClickGenreItem(parent, position) }
+        }
     }
 
     override fun onDetach() {
@@ -76,17 +86,5 @@ class AddGenreItemFragment : Fragment() {
      */
     interface OnFragmentInteractionListener {
         fun onClickGenreItem(parent: AdapterView<*>?, position: Int)
-    }
-
-    companion object {
-        private val ITEM = "item"
-
-        fun newInstance(item: GenreItem): AddGenreItemFragment {
-            val fragment = AddGenreItemFragment()
-            val args = Bundle()
-            args.putSerializable(ITEM, item)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

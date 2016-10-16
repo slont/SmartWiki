@@ -27,40 +27,34 @@ import java.io.Serializable
 class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener, GenreFragment.OnFragmentInteractionListener {
 
     companion object {
-        private val ADD_GENRE_REQ_CODE = 100
-        private val LAYERED_REQ_CODE = 200
+        private const val ADD_GENRE_REQ_CODE = 100
+        private const val LAYERED_REQ_CODE = 200
+        private const val LAYOUT_RES = R.layout.activity_genre
     }
 
-    private val mGenreList: MutableList<Genre> = mutableListOf()
+    private val mGenreList = mutableListOf<Genre>()
     val genreList: List<Genre> = mGenreList
 
-    private val mGenreTableAdapter: GenreTableAdapter
+    private val mGenreTableAdapter = GenreTableAdapter(this)
 
-    private val mFragment: GenreFragment
-
-    init {
-        mGenreTableAdapter = GenreTableAdapter(this)
-        mFragment = GenreFragment.newInstance(genreList)
-    }
+    private val mFragment = GenreFragment.newInstance(genreList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val binding = DataBindingUtil.setContentView<ActivityGenreBinding>(this@GenreActivity, R.layout.activity_genre)
+        DataBindingUtil.setContentView<ActivityGenreBinding>(this, LAYOUT_RES).run {
+            val toolbar = appBarGenre.toolbar
+            setSupportActionBar(toolbar)
 
-        val toolbar = binding.appBarGenre.toolbar
-        setSupportActionBar(toolbar)
+            appBarGenre.onClickAddGenreFab = OnClickAddGenreFab()
+            val drawer = drawerLayout
+            val toggle = ActionBarDrawerToggle(
+                    this@GenreActivity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+            drawer.setDrawerListener(toggle)
+            toggle.syncState()
 
-        binding.appBarGenre.onClickAddGenreFab = OnClickAddGenreFab()
-
-        val drawer = binding.drawerLayout
-        val toggle = ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        drawer.setDrawerListener(toggle)
-        toggle.syncState()
-
-        binding.navView.setNavigationItemSelectedListener(this)
-
+            navView.setNavigationItemSelectedListener(this@GenreActivity)
+        }
         supportFragmentManager.beginTransaction().add(R.id.content_genre, mFragment).commit()
     }
 
@@ -70,11 +64,12 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun onBackPressed() {
-        val drawer = findViewById(R.id.drawer_layout) as DrawerLayout
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START)
-        } else {
-            super.onBackPressed()
+        (findViewById(R.id.drawer_layout) as DrawerLayout).run {
+            if (isDrawerOpen(GravityCompat.START)) {
+                closeDrawer(GravityCompat.START)
+            } else {
+                super.onBackPressed()
+            }
         }
     }
 
@@ -118,8 +113,9 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun onClickGenre(parent: AdapterView<*>?, position: Int) {
-        val intent = Intent(this@GenreActivity, GenreItemActivity::class.java)
-        intent.putExtra("genre", parent!!.getItemAtPosition(position) as Genre)
+        val intent = Intent(this, GenreItemActivity::class.java).apply {
+            putExtra("genre", parent!!.getItemAtPosition(position) as Genre)
+        }
         startActivity(intent)
     }
 
@@ -156,11 +152,13 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     override fun loadData() {
-        mGenreTableAdapter.open()
-        val list = mGenreTableAdapter.findAll()
-        mGenreTableAdapter.close()
-        mGenreList.clear()
-        mGenreList.addAll(list)
+        mGenreTableAdapter.run {
+            open()
+            val list = findAll()
+            close()
+            mGenreList.clear()
+            mGenreList.addAll(list)
+        }
     }
 
     private inner class OnClickAddGenreFab : View.OnClickListener {

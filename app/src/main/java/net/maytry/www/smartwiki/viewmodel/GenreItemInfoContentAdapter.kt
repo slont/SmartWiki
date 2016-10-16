@@ -21,13 +21,17 @@ import net.maytry.www.smartwiki.databinding.GenreItemInfoContentBinding
 class GenreItemInfoContentAdapter(context: Context, items: List<String>, val textViewResourceId: Int = R.layout.genre_item_info_content) :
         ArrayAdapter<String>(context, textViewResourceId, items) {
 
+    object CustomSetter {
+        @JvmStatic
+        @BindingAdapter("contentList")
+        fun setContentList(listView: ListView, contentList: List<String>) {
+            listView.adapter = GenreItemInfoContentAdapter(listView.context, contentList)
+        }
+    }
+
     private val mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-    private val mItems = mutableListOf<String>()
-
-    init {
-        this.mItems.addAll(items)
-    }
+    private val mItems = mutableListOf<String>().apply { addAll(items) }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view: View
@@ -41,15 +45,17 @@ class GenreItemInfoContentAdapter(context: Context, items: List<String>, val tex
             binding = convertView.tag as GenreItemInfoContentBinding
             view = convertView
         }
-        binding.position = position.toString()
-        binding.content = getItem(position)
-        binding.addButton.setOnClickListener { v ->
-            mItems.add(position + 1, "")
-            reload()
-        }
-        binding.removeButton.setOnClickListener { v ->
-            mItems.removeAt(position)
-            reload()
+        binding.run {
+            this.position = position.toString()
+            content = getItem(position)
+            addBtn.setOnClickListener { v ->
+                mItems.add(position + 1, "")
+                reload()
+            }
+            deleteBtn.setOnClickListener { v ->
+                mItems.removeAt(position)
+                reload()
+            }
         }
         return view
     }
@@ -63,9 +69,8 @@ class GenreItemInfoContentAdapter(context: Context, items: List<String>, val tex
      * 画面遷移時に呼び出す
      */
     fun safeSave() {
-        val tmpItems = mItems.filter(String::isNotEmpty)
         clear()
-        addAll(tmpItems)
+        addAll(mItems.filter(String::isNotEmpty))
         notifyDataSetChanged()
     }
 
@@ -83,14 +88,5 @@ class GenreItemInfoContentAdapter(context: Context, items: List<String>, val tex
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
-    }
-
-    object CustomSetter {
-        @JvmStatic
-        @BindingAdapter("contentList")
-        fun setContentList(listView: ListView, contentList: List<String>) {
-            val adapter = GenreItemInfoContentAdapter(listView.context, contentList)
-            listView.adapter = adapter
-        }
     }
 }

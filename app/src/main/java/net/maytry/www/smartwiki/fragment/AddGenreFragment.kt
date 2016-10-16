@@ -14,6 +14,14 @@ import net.maytry.www.smartwiki.databinding.FragmentAddGenreBinding
  */
 class AddGenreFragment : Fragment() {
 
+    companion object {
+        private const val LAYOUT_RES = R.layout.fragment_add_genre
+
+        fun newInstance(): AddGenreFragment {
+            return AddGenreFragment()
+        }
+    }
+
     private var mListener: OnFragmentInteractionListener? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,15 +29,16 @@ class AddGenreFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_add_genre, container, false)
+        return inflater!!.inflate(LAYOUT_RES, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        val binding = FragmentAddGenreBinding.bind(view)
-        binding.cancelBtn.setOnClickListener { mListener?.onClickCancelBtn() }
-        binding.createBtn.setOnClickListener { mListener?.onClickCreateBtn() }
+        FragmentAddGenreBinding.bind(view).run {
+            cancelBtn.setOnClickListener { mListener?.onClickCancelBtn() }
+            createBtn.setOnClickListener { mListener?.onClickCreateBtn() }
+        }
     }
 
     override fun onAttach(context: Context?) {
@@ -58,11 +67,5 @@ class AddGenreFragment : Fragment() {
     interface OnFragmentInteractionListener {
         fun onClickCancelBtn()
         fun onClickCreateBtn()
-    }
-
-    companion object {
-        fun newInstance(): AddGenreFragment {
-            return AddGenreFragment()
-        }
     }
 }

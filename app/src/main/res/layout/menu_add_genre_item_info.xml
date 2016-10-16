@@ -22,7 +22,8 @@
             android:text="追加"
             android:textColor="@color/white"
             android:background="@color/navy"
-            android:visibility="@{null == isVisibleShowBtn || isVisibleShowBtn ? View.VISIBLE : View.GONE}"/>
+            android:visibility="@{null == isVisibleShowBtn || isVisibleShowBtn ? View.VISIBLE : View.GONE}"
+            android:elevation="0dp" />
 
         <net.maytry.www.smartwiki.view.AnimatingRelativeLayout
             android:id="@+id/menu_btn_layout"
@@ -30,6 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:drawableTint="@color/black"
+            android:elevation="10dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <TableLayout

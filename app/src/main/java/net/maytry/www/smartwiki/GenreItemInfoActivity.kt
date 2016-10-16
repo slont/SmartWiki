@@ -7,9 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.AdapterView
-import android.widget.Button
 import net.maytry.www.smartwiki.databinding.ActivityGenreItemInfoBinding
 import net.maytry.www.smartwiki.db.GenreItemInfoTableAdapter
 import net.maytry.www.smartwiki.enums.GenreItemInfoType
@@ -26,37 +24,34 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
 class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoFragment.OnFragmentInteractionListener, EditGenreItemInfoDialogFragment.OnFragmentInteractionListener {
 
     companion object {
-        private val EDIT_ITEM_REQ_CODE = 100
-        private val LAYERED_REQ_CODE = 200
-        private val MENU_RES = R.menu.genre_item_info
+        private const val EDIT_ITEM_REQ_CODE = 100
+        private const val LAYERED_REQ_CODE = 200
+        private const val MENU_RES = R.menu.genre_item_info
+        private val LAYOUT_RES = R.layout.activity_genre_item_info
     }
 
     private lateinit var mItem: GenreItem
     lateinit var infoList: List<GenreItemInfo>
 
-    private val mInfoTableAdapter: GenreItemInfoTableAdapter
+    private val mInfoTableAdapter = GenreItemInfoTableAdapter(this)
 
     private lateinit var mFragment: GenreItemInfoFragment
     private lateinit var mDialog: EditGenreItemInfoDialogFragment
 
-    init {
-        mInfoTableAdapter = GenreItemInfoTableAdapter(this)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityGenreItemInfoBinding>(this@GenreItemInfoActivity, R.layout.activity_genre_item_info)
-        val contentBinding = binding.contentGenreItemInfo
-
         mItem = intent.getSerializableExtra("item") as GenreItem
         title = mItem.name
-
-        contentBinding.headerGenreItemInfo.item = mItem
-        contentBinding.headerGenreItemInfo.backBtn.setOnClickListener { onBackPressed() }
-        contentBinding.headerGenreItemInfo.editBtn.setOnClickListener {
-            val intent = Intent(this@GenreItemInfoActivity, EditGenreItemInfoActivity::class.java)
-            intent.putExtra("item",  mItem)
-            startActivityForResult(intent, EDIT_ITEM_REQ_CODE)
+        DataBindingUtil.setContentView<ActivityGenreItemInfoBinding>(this, LAYOUT_RES).run {
+            contentGenreItemInfo.headerGenreItemInfo.run {
+                item = mItem
+                backBtn.setOnClickListener { onBackPressed() }
+                editBtn.setOnClickListener {
+                    val intent = Intent(this@GenreItemInfoActivity, EditGenreItemInfoActivity::class.java)
+                    intent.putExtra("item",  mItem)
+                    startActivityForResult(intent, EDIT_ITEM_REQ_CODE)
+                }
+            }
         }
 
         mFragment = GenreItemInfoFragment.newInstance(mItem.infoList)
@@ -78,19 +73,23 @@ class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoFragment.OnFragm
 
     override fun onClickUpdateInfoBtn(info: GenreItemInfo) {
         if (GenreItemInfoType.TAG == info.type) {
-            mDialog.notifyDataSetChanged()
-        }
-        mInfoTableAdapter.open()
-        val id = mInfoTableAdapter.update(info)
-        if (-1 != id) {
-            val list = mInfoTableAdapter.find("parent_id=${mItem.id}")
-            mItem.infoList.clear()
-            mItem.infoList.addAll(list)
-            mFragment.notifyDataSetChanged()
+            mDialog.safeSaveForMulti()
         } else {
-            Log.d(this.toString(), "failed update")
+            mDialog.safeSaveForSingle()
         }
-        mInfoTableAdapter.close()
+        mInfoTableAdapter.run {
+            open()
+            val id = update(info)
+            if (-1 != id) {
+                val list = find("parent_id=${mItem.id}")
+                mItem.infoList.clear()
+                mItem.infoList.addAll(list)
+                mFragment.notifyDataSetChanged()
+            } else {
+                Log.d(this.toString(), "failed update")
+            }
+            close()
+        }
     }
 
     override fun onBackPressed() {
@@ -110,7 +109,7 @@ class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoFragment.OnFragm
         val id = item.itemId
 
         if (id == R.id.action_edit) {
-            val intent = Intent(this@GenreItemInfoActivity, EditGenreItemInfoActivity::class.java)
+            val intent = Intent(this, EditGenreItemInfoActivity::class.java)
             intent.putExtra("item",  mItem)
             startActivityForResult(intent, EDIT_ITEM_REQ_CODE)
             return true
@@ -119,20 +118,20 @@ class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoFragment.OnFragm
         return super.onOptionsItemSelected(item)
     }
 
-    /**
-     * GenreInfoの追加アクションリスナー
-     */
-    private inner class OnClickInfoMenuBtn() : View.OnClickListener {
-        override fun onClick(v: View) {
-            val type = GenreItemInfoType.strToEnum((v as Button).text.toString())
-            if (null != type) {
-                val info = GenreItemInfo(name = type.name, type = type)
-                mItem.infoList.add(info)
-                mFragment.notifyDataSetChanged()
-                mInfoTableAdapter.open()
-                mInfoTableAdapter.insert(info)
-                mInfoTableAdapter.close()
+    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        when (requestCode) {
+            EDIT_ITEM_REQ_CODE -> {
+                when (resultCode) {
+                    RESULT_OK -> {
+                        loadData()
+                        mFragment.notifyDataSetChanged()
+                    }
+                    RESULT_CANCELED -> {}
+                }
             }
+            else -> {}
         }
     }
 
@@ -140,10 +139,12 @@ class GenreItemInfoActivity : AppCompatActivity(), GenreItemInfoFragment.OnFragm
      * Load info data interface from @link{GenreItemInfoFragment}
      */
     override fun loadData() {
-        mInfoTableAdapter.open()
-        val list = mInfoTableAdapter.find("parent_id=${mItem.id}")
-        mInfoTableAdapter.close()
-        mItem.infoList.clear()
-        mItem.infoList.addAll(list)
+        mInfoTableAdapter.run {
+            open()
+            val list = find("parent_id=${mItem.id}")
+            close()
+            mItem.infoList.clear()
+            mItem.infoList.addAll(list)
+        }
     }
 }

@@ -19,7 +19,7 @@
             android:text="@{position}" />
 
         <EditText
-            android:id="@+id/contentEdit"
+            android:id="@+id/content_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -28,13 +28,13 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <Button
-            android:id="@+id/addButton"
+            android:id="@+id/add_btn"
             android:layout_width="100px"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@+id/removeButton"
+            android:layout_toLeftOf="@+id/delete_btn"
             android:text="+"/>
         <Button
-            android:id="@+id/removeButton"
+            android:id="@+id/delete_btn"
             android:layout_width="100px"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

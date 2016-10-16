@@ -26,37 +26,34 @@ import net.maytry.www.smartwiki.viewmodel.GenreItemAdapter
 class GenreItemActivity : AppCompatActivity(), GenreItemFragment.OnFragmentInteractionListener {
 
     companion object {
-        private val CREATE_ITEM_REQ_CODE = 100
-        private val UPDATE_ITEM_REQ_CODE = 200
+        private const val CREATE_ITEM_REQ_CODE = 100
+        private const val UPDATE_ITEM_REQ_CODE = 200
+        private const val LAYOUT_RES = R.layout.activity_genre_item
     }
 
     private lateinit var mGenre: Genre
-    private val mItemList: MutableList<GenreItem> = mutableListOf()
+    private val mItemList = mutableListOf<GenreItem>()
     val itemList: List<GenreItem> = mItemList
 
-    private val mItemTableAdapter: GenreItemTableAdapter
+    private val mItemTableAdapter = GenreItemTableAdapter(this)
 
-    private val mFragment: GenreItemFragment
-
-    init {
-        mItemTableAdapter = GenreItemTableAdapter(this)
-        mFragment = GenreItemFragment.newInstance(itemList)
-    }
+    private val mFragment = GenreItemFragment.newInstance(itemList)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityGenreItemBinding>(this@GenreItemActivity, R.layout.activity_genre_item)
 
         mGenre = intent.getSerializableExtra("genre") as Genre
         title = mGenre.name
         mItemList.addAll(mGenre.itemList)
+        DataBindingUtil.setContentView<ActivityGenreItemBinding>(this, LAYOUT_RES).apply {
+            contentGenreItem.headerGenreItem.genre = mGenre
+            onClickAddGenreItemFab = OnClickAddGenreItemFab()
+        }
 
 //        val toolbar = binding.toolbar
 //        setSupportActionBar(toolbar)
 //        toolbar.setNavigationIcon(R.drawable.ic_menu_back)
 //        toolbar.setNavigationOnClickListener { onBackPressed() }
-        binding.contentGenreItem.headerGenreItem.genre = mGenre
-        binding.onClickAddGenreItemFab = OnClickAddGenreItemFab()
 
         supportFragmentManager.beginTransaction().add(R.id.fragment_genre_item, mFragment).commit()
     }
@@ -86,8 +83,9 @@ class GenreItemActivity : AppCompatActivity(), GenreItemFragment.OnFragmentInter
      * ItemContentが設定されていれば、ページを表示する
      */
     override fun onClickItem(parent: AdapterView<*>?, position: Int) {
-        val intent = Intent(this@GenreItemActivity, GenreItemInfoActivity::class.java)
-        intent.putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
+        val intent = Intent(this, GenreItemInfoActivity::class.java).apply {
+            putExtra("item", parent!!.getItemAtPosition(position) as GenreItem)
+        }
         startActivity(intent)
     }
 
@@ -125,11 +123,13 @@ class GenreItemActivity : AppCompatActivity(), GenreItemFragment.OnFragmentInter
     }
 
     override fun loadData() {
-        mItemTableAdapter.open()
-        val list = mItemTableAdapter.find("parent_id=${mGenre.id}")
-        mItemTableAdapter.close()
-        mItemList.clear()
-        mItemList.addAll(list)
+        mItemTableAdapter.run {
+            open()
+            val list = find("parent_id=${mGenre.id}")
+            close()
+            mItemList.clear()
+            mItemList.addAll(list)
+        }
     }
 
     /**
@@ -137,10 +137,10 @@ class GenreItemActivity : AppCompatActivity(), GenreItemFragment.OnFragmentInter
      */
     private inner class OnClickAddGenreItemFab : View.OnClickListener {
         override fun onClick(v: View) {
-            val genre = mGenre
-            val intent = Intent(this@GenreItemActivity, AddGenreItemActivity::class.java)
-            intent.putExtra("item",  GenreItem(name = "", parentId= genre.id!!))
-            intent.putExtra("type", EditType.CREATE)
+            val intent = Intent(this@GenreItemActivity, AddGenreItemActivity::class.java).apply {
+                putExtra("item",  GenreItem(name = "", parentId= mGenre.id!!))
+                putExtra("type", EditType.CREATE)
+            }
             startActivityForResult(intent, CREATE_ITEM_REQ_CODE)
         }
     }

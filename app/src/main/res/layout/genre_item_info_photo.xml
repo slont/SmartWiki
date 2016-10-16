@@ -2,30 +2,60 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View" />
         <import type="net.maytry.www.smartwiki.model.GenreItemInfo" />
         <variable name="info" type="GenreItemInfo" />
+        <variable name="isEditable" type="Boolean" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:descendantFocusability="blocksDescendants"
-        android:orientation="vertical">
+        android:padding="5dp"
+        android:descendantFocusability="blocksDescendants">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@{info.name}"
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-
-        <TextView
+        <CheckBox
+            android:id="@+id/checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:padding="3dp"
-            android:text="@{info.contentList[0]}"
-            android:background="@drawable/item_tag"
-            android:textAppearance="?android:attr/textAppearanceMedium"/>
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:visibility="@{isEditable ? View.VISIBLE : View.GONE}"/>
 
-    </LinearLayout>
+        <RelativeLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/checkbox">
+
+            <TextView
+                android:id="@+id/name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@{info.name}"
+                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+            <TextView
+                android:id="@+id/text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:layout_below="@id/name"
+                android:padding="5dp"
+                android:text="@{info.contentList[0]}"
+                android:background="@drawable/item_tag"
+                android:textAppearance="?android:attr/textAppearanceMedium"/>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/delete_btn"
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="×"
+            android:textColor="@color/red"
+            android:background="@color/transparent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="@{isEditable ? View.VISIBLE : View.GONE}"/>
+    </RelativeLayout>
 </layout>

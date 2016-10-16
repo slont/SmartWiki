@@ -21,6 +21,14 @@ import net.maytry.www.smartwiki.model.Genre
 class GenreAdapter(context: Context, items: List<Genre>, val textViewResourceId: Int = R.layout.genre) :
         ArrayAdapter<Genre>(context, textViewResourceId, items) {
 
+    object CustomSetter {
+        @JvmStatic
+        @BindingAdapter("genreList")
+        fun setGenreList(listView: ListView, genreList: List<Genre>) {
+            listView.adapter = GenreAdapter(listView.context, genreList)
+        }
+    }
+
     private val mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -38,14 +46,5 @@ class GenreAdapter(context: Context, items: List<Genre>, val textViewResourceId:
         binding.genre = genre
         binding.favoriteToggle.setOnClickListener { v -> genre.favorite = (v as ToggleButton).isChecked }
         return view
-    }
-
-    object CustomSetter {
-        @JvmStatic
-        @BindingAdapter("genreList")
-        fun setGenreList(listView: ListView, genreList: List<Genre>) {
-            val adapter: GenreAdapter = GenreAdapter(listView.context, genreList)
-            listView.adapter = adapter
-        }
     }
 }

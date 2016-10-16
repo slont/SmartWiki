@@ -28,6 +28,10 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
  */
 class AddGenreItemActivity : AppCompatActivity(), AddGenreItemFragment.OnFragmentInteractionListener {
 
+    companion object {
+        private const val LAYOUT_RES = R.layout.activity_add_genre_item
+    }
+
     private lateinit var mItem: GenreItem
 
     private lateinit var mFragment: AddGenreItemFragment
@@ -39,19 +43,20 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemFragment.OnFragmen
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        mBinding = DataBindingUtil.setContentView<ActivityAddGenreItemBinding>(this@AddGenreItemActivity, R.layout.activity_add_genre_item)
-
         mItem = intent.getSerializableExtra("item") as GenreItem
 
-        val toolbar = mBinding.toolbar
-        setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_menu_back)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
+        mBinding = DataBindingUtil.setContentView<ActivityAddGenreItemBinding>(this, LAYOUT_RES).apply {
+            setSupportActionBar(toolbar)
+            toolbar.setNavigationIcon(R.drawable.ic_menu_back)
+            toolbar.setNavigationOnClickListener { onBackPressed() }
 
-        val animatingLayout: AnimatingRelativeLayout = mBinding.contentAddGenreItem.menuAddGenreItemInfo.menuBtnLayout
-        mBinding.contentAddGenreItem.menuAddGenreItemInfo.showInfoMenuBtn.setOnClickListener { animatingLayout.show() }
-        mBinding.contentAddGenreItem.menuAddGenreItemInfo.hideInfoMenuBtn.setOnClickListener { animatingLayout.hide() }
-        mBinding.contentAddGenreItem.menuAddGenreItemInfo.onClickInfoMenuBtn = OnClickInfoMenuBtn()
+            contentAddGenreItem.menuAddGenreItemInfo.run {
+                val animatingLayout: AnimatingRelativeLayout = menuBtnLayout
+                showInfoMenuBtn.setOnClickListener { animatingLayout.show() }
+                hideInfoMenuBtn.setOnClickListener { animatingLayout.hide() }
+                onClickInfoMenuBtn = OnClickInfoMenuBtn()
+            }
+        }
 
         mFragment = AddGenreItemFragment.newInstance(mItem)
         supportFragmentManager.beginTransaction().add(R.id.content_add_genre_item, mFragment).commit()
@@ -84,10 +89,7 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemFragment.OnFragmen
                         .create().show()
             } else {
                 val id = addGenreItem(name)
-                addGenreItemInfo()
-                val intent = Intent()
-                intent.putExtra("_id", id)
-                setResult(RESULT_OK, intent)
+                setResult(RESULT_OK, Intent().apply { putExtra("_id", id) })
                 finish()
                 return true
             }
@@ -114,32 +116,34 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemFragment.OnFragmen
     }
 
     private fun addGenreItem(name: String): Long {
-        val item = mItem
-        item.name = name
-        mItemTableAdapter.open()
-        val id = mItemTableAdapter.insert(item)
-        mItemTableAdapter.close()
-        item.id = id
-        return id
+        mItemTableAdapter.run {
+            mItem.name = name
+            open()
+            val id = insert(mItem)
+            close()
+            mItem.id = id
+            addGenreItemInfo()
+            return id
+        }
     }
 
     /**
      * TODO
      */
     private fun addGenreItemInfo() {
-        val item = mItem
-        mInfoTableAdapter.open()
-        item.infoList.forEach { info ->
-            info.parentId = item.id!!
-            mInfoTableAdapter.insert(info)
+        mInfoTableAdapter.run {
+            open()
+            mItem.infoList.forEach { info ->
+                info.parentId = mItem.id!!
+                insert(info)
+            }
+            close()
         }
-        mInfoTableAdapter.close()
     }
 
     private inner class OnClickInfoMenuBtn() : View.OnClickListener {
         override fun onClick(v: View) {
-            val type = GenreItemInfoType.strToEnum((v as Button).text.toString())
-            if (null != type) {
+            GenreItemInfoType.strToEnum((v as Button).text.toString())?.let { type ->
                 mItem.infoList.add(GenreItemInfo(name = type.name, type = type))
                 mFragment.notifyDataSetChanged()
             }

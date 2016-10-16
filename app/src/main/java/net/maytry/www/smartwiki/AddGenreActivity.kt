@@ -16,17 +16,17 @@ import net.maytry.www.smartwiki.model.Genre
  */
 class AddGenreActivity : AppCompatActivity(), AddGenreFragment.OnFragmentInteractionListener {
 
-    private val mGenreTableAdapter: GenreTableAdapter
-
-    init {
-        mGenreTableAdapter = GenreTableAdapter(this)
+    companion object {
+        private const val LAYOUT_RES = R.layout.activity_add_genre
     }
+
+    private val mGenreTableAdapter = GenreTableAdapter(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding = DataBindingUtil.setContentView<ActivityAddGenreBinding>(this@AddGenreActivity, R.layout.activity_add_genre)
-
-        setSupportActionBar(binding.toolbar)
+        DataBindingUtil.setContentView<ActivityAddGenreBinding>(this, LAYOUT_RES).run {
+            setSupportActionBar(toolbar)
+        }
 
         val fragment = AddGenreFragment.newInstance()
         supportFragmentManager.beginTransaction().add(R.id.content_add_genre, fragment).commit()
@@ -48,18 +48,17 @@ class AddGenreActivity : AppCompatActivity(), AddGenreFragment.OnFragmentInterac
                     .create().show()
         } else {
             val id = addGenre(name)
-            val intent = Intent()
-            intent.putExtra("_id", id)
-            setResult(RESULT_OK, intent)
+            setResult(RESULT_OK, Intent().apply { putExtra("_id", id) })
             finish()
         }
     }
 
     private fun addGenre(name: String): Long {
-        mGenreTableAdapter.open()
-        val genre = Genre(name = name)
-        val id = mGenreTableAdapter.insert(genre)
-        mGenreTableAdapter.close()
-        return id
+        return mGenreTableAdapter.run {
+            open()
+            val id = insert(Genre(name = name))
+            close()
+            id
+        }
     }
 }

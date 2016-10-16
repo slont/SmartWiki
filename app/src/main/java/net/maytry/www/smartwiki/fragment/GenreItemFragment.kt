@@ -1,7 +1,6 @@
 package net.maytry.www.smartwiki.fragment
 
 import android.content.Context
-import android.databinding.BindingAdapter
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -25,6 +24,17 @@ import java.io.Serializable
  */
 class GenreItemFragment : Fragment() {
 
+    companion object {
+        private const val LAYOUT_RES = R.layout.fragment_genre_item
+        private const val ITEM_LIST = "item_list"
+
+        fun newInstance(itemList: List<GenreItem>): GenreItemFragment {
+            return GenreItemFragment().apply {
+                arguments = Bundle().apply { putSerializable(ITEM_LIST, itemList as Serializable) }
+            }
+        }
+    }
+
     private lateinit var mItemList: List<GenreItem>
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -40,15 +50,16 @@ class GenreItemFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_genre_item, container, false)
+        return inflater!!.inflate(LAYOUT_RES, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mBinding = FragmentGenreItemBinding.bind(view)
-        mBinding.itemList = mItemList
-        mBinding.itemListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickItem(parent, i) }
+        mBinding = FragmentGenreItemBinding.bind(view).apply {
+            itemList = mItemList
+            itemListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickItem(parent, i) }
+        }
         mListener?.loadData()
     }
 
@@ -82,17 +93,5 @@ class GenreItemFragment : Fragment() {
     interface OnFragmentInteractionListener {
         fun onClickItem(parent: AdapterView<*>?, position: Int)
         fun loadData()
-    }
-
-    companion object {
-        private val ITEM_LIST = "item_list"
-
-        fun newInstance(itemList: List<GenreItem>): GenreItemFragment {
-            val fragment = GenreItemFragment()
-            val args = Bundle()
-            args.putSerializable(ITEM_LIST, itemList as Serializable)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

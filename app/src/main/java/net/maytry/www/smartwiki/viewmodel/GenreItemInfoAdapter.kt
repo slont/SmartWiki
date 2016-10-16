@@ -24,6 +24,14 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
 class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>, var isEditable: Boolean = false) :
         ArrayAdapter<GenreItemInfo>(context, 0, items) {
 
+    object CustomSetter {
+        @JvmStatic
+        @BindingAdapter("infoList")
+        fun setInfoList(listView: ListView, infoList: List<GenreItemInfo>) {
+            listView.adapter = GenreItemInfoAdapter(listView.context, infoList)
+        }
+    }
+
     private val mInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     var maxDisplayWidth = wm.defaultDisplay.width
@@ -42,60 +50,148 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>, var isE
             view = convertView
         }
         when (info.type) {
-            GenreItemInfoType.TEXT -> (binding as GenreItemInfoTextBinding).info = info
-            GenreItemInfoType.TAG -> {
-                val b: GenreItemInfoTagBinding = binding as GenreItemInfoTagBinding
-                b.info = info
-                b.isEditable = isEditable
-                b.tagLayout.removeAllViews()
-                val displayWidth = maxDisplayWidth - (if (isEditable) 100 else 0)
-                var totalSize = 0
-                var preId = -1
-                info.contentList.forEachIndexed { i, s ->
-                    val tagBinding: ItemTagBinding = DataBindingUtil.inflate(mInflater, R.layout.item_tag, parent, false)
-                    val textView = tagBinding.root as TextView
-                    textView.id = textView.id + i
-                    textView.text = s
-                    textView.measure(0, 0)
-                    val thisSize = textView.measuredWidth + 5 * 2
-                    val params = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-                    params.setMargins(5, 5, 5, 5)
-                    if (i == 0) {
-                        params.addRule(RelativeLayout.ALIGN_LEFT, RelativeLayout.TRUE)
-                    } else if (displayWidth < totalSize + thisSize) {
-                        // add to next line
-                        totalSize = 0
-                        params.addRule(RelativeLayout.BELOW, preId)
-                        params.addRule(RelativeLayout.ALIGN_LEFT, RelativeLayout.TRUE)
-                    } else {
-                        // add to right
-                        params.addRule(RelativeLayout.ALIGN_TOP, preId)
-                        params.addRule(RelativeLayout.RIGHT_OF, preId)
-                        params.setMargins(5, 0, 5, 0) // override
+            GenreItemInfoType.TEXT -> {
+                (binding as GenreItemInfoTextBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
                     }
-                    totalSize += thisSize
-                    preId = textView.id
-                    b.tagLayout.addView(textView, params)
                 }
             }
-            GenreItemInfoType.PHOTO -> (binding as GenreItemInfoPhotoBinding).info = info
-            GenreItemInfoType.MOVIE -> (binding as GenreItemInfoMovieBinding).info = info
-            GenreItemInfoType.TIME -> (binding as GenreItemInfoTimeBinding).info = info
-            GenreItemInfoType.MAP -> (binding as GenreItemInfoMapBinding).info = info
-            GenreItemInfoType.RADIO_BTN -> (binding as GenreItemInfoRadioBtnBinding).info = info
-            GenreItemInfoType.SEEK_BAR -> (binding as GenreItemInfoSeekBarBinding).info = info
-            GenreItemInfoType.RATING_BAR -> (binding as GenreItemInfoRatingBarBinding).info = info
-            GenreItemInfoType.ORIGINAL -> (binding as GenreItemInfoOriginalBinding).info = info
-            else -> (binding as GenreItemInfoCommonBinding).info = info
+
+            GenreItemInfoType.TAG -> {
+                (binding as GenreItemInfoTagBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                    tagLayout.removeAllViews()
+                    val displayWidth = maxDisplayWidth - (if (this@GenreItemInfoAdapter.isEditable) 100 else 0)
+                    var totalSize = 0
+                    var preId = -1
+                    info.contentList.forEachIndexed { i, s ->
+                        val tagBinding: ItemTagBinding = DataBindingUtil.inflate(mInflater, R.layout.item_tag, parent, false)
+                        val textView = (tagBinding.root as TextView).apply {
+                            id += i
+                            text = s
+                            measure(0, 0)
+                        }
+                        val thisSize = textView.measuredWidth + 5 * 2
+                        val params = RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
+                            setMargins(5, 5, 5, 5)
+                            if (i == 0) {
+                                addRule(RelativeLayout.ALIGN_LEFT, RelativeLayout.TRUE)
+                            } else if (displayWidth < totalSize + thisSize) {
+                                // add to next line
+                                totalSize = 0
+                                addRule(RelativeLayout.BELOW, preId)
+                                addRule(RelativeLayout.ALIGN_LEFT, RelativeLayout.TRUE)
+                            } else {
+                                // add to right
+                                addRule(RelativeLayout.ALIGN_TOP, preId)
+                                addRule(RelativeLayout.RIGHT_OF, preId)
+                                setMargins(5, 0, 5, 0) // override
+                            }
+                        }
+                        totalSize += thisSize
+                        preId = textView.id
+                        tagLayout.addView(textView, params)
+                    }
+                }
+            }
+
+            GenreItemInfoType.PHOTO -> {
+                (binding as GenreItemInfoPhotoBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
+
+            GenreItemInfoType.MOVIE -> {
+                (binding as GenreItemInfoMovieBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
+
+            GenreItemInfoType.TIME -> {
+                (binding as GenreItemInfoTimeBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
+
+            GenreItemInfoType.MAP -> {
+                (binding as GenreItemInfoMapBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
+
+            GenreItemInfoType.RADIO_BTN -> {
+                (binding as GenreItemInfoRadioBtnBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
+
+            GenreItemInfoType.SEEK_BAR -> {
+                (binding as GenreItemInfoSeekBarBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
+
+            GenreItemInfoType.RATING_BAR -> {
+                (binding as GenreItemInfoRatingBarBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
+
+            GenreItemInfoType.ORIGINAL -> {
+                (binding as GenreItemInfoOriginalBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
+
+            else -> {
+                (binding as GenreItemInfoCommonBinding).run {
+                    this.info = info
+                    isEditable = this@GenreItemInfoAdapter.isEditable
+                    deleteBtn.setOnClickListener {
+                        // TODO
+                    }
+                }
+            }
         }
         return view
-    }
-
-    object CustomSetter {
-        @JvmStatic
-        @BindingAdapter("infoList")
-        fun setInfoList(listView: ListView, infoList: List<GenreItemInfo>) {
-            listView.adapter = GenreItemInfoAdapter(listView.context, infoList)
-        }
     }
 }

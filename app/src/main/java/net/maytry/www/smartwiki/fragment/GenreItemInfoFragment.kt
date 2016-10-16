@@ -26,6 +26,17 @@ import java.io.Serializable
  */
 class GenreItemInfoFragment : Fragment() {
 
+    companion object {
+        private const val LAYOUT_RES = R.layout.fragment_genre_item_info
+        private const val INFO_LIST = "info_list"
+
+        fun newInstance(infoList: List<GenreItemInfo>): GenreItemInfoFragment {
+            return GenreItemInfoFragment().apply {
+                arguments = Bundle().apply { putSerializable(INFO_LIST, infoList as Serializable) }
+            }
+        }
+    }
+
     private lateinit var mInfoList: List<GenreItemInfo>
 
     private var mListener: OnFragmentInteractionListener? = null
@@ -34,21 +45,20 @@ class GenreItemInfoFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (arguments != null) {
-            mInfoList = arguments.getSerializable(INFO_LIST) as List<GenreItemInfo>
-        }
+        arguments?.run { mInfoList = arguments.getSerializable(INFO_LIST) as List<GenreItemInfo> }
     }
 
     override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater!!.inflate(R.layout.fragment_genre_item_info, container, false)
+        return inflater!!.inflate(LAYOUT_RES, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        mBinding = FragmentGenreItemInfoBinding.bind(view)
-        mBinding.infoList = mInfoList
-        mBinding.infoListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickInfo(parent, i) }
+        mBinding = FragmentGenreItemInfoBinding.bind(view).apply {
+            infoList = mInfoList
+            infoListView.setOnItemClickListener { parent, view, i, l -> mListener?.onClickInfo(parent, i) }
+        }
         mListener!!.loadData()
     }
 
@@ -73,17 +83,5 @@ class GenreItemInfoFragment : Fragment() {
     interface OnFragmentInteractionListener {
         fun onClickInfo(parent: AdapterView<*>?, position: Int)
         fun loadData()
-    }
-
-    companion object {
-        private val INFO_LIST = "info_list"
-
-        fun newInstance(infoList: List<GenreItemInfo>): GenreItemInfoFragment {
-            val fragment = GenreItemInfoFragment()
-            val args = Bundle()
-            args.putSerializable(INFO_LIST, infoList as Serializable)
-            fragment.arguments = args
-            return fragment
-        }
     }
 }

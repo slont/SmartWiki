@@ -20,6 +20,14 @@ import net.maytry.www.smartwiki.model.GenreItem
 class GenreItemAdapter(context: Context, items: List<GenreItem>, val textViewResourceId: Int = R.layout.genre_item) :
         ArrayAdapter<GenreItem>(context, textViewResourceId, items) {
 
+    object CustomSetter {
+        @JvmStatic
+        @BindingAdapter("itemList")
+        fun setItemList(listView: ListView, itemList: List<GenreItem>) {
+            listView.adapter = GenreItemAdapter(listView.context, itemList)
+        }
+    }
+
     private val mInflater: LayoutInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
@@ -35,14 +43,5 @@ class GenreItemAdapter(context: Context, items: List<GenreItem>, val textViewRes
         }
         binding.item = getItem(position)
         return view
-    }
-
-    object CustomSetter {
-        @JvmStatic
-        @BindingAdapter("itemList")
-        fun setItemList(listView: ListView, itemList: List<GenreItem>) {
-            val adapter = GenreItemAdapter(listView.context, itemList)
-            listView.adapter = adapter
-        }
     }
 }

@@ -41,37 +41,38 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
     )
 
     override fun cursorToModel(cursor: Cursor): GenreItemInfo {
-        val contentList = mutableListOf<String>()
-        val str = cursor.getString(cursor.getColumnIndex(COL_CONTENT_LIST))
-        val list = str.split(",")
-        contentList.addAll(list)
-        val item = GenreItemInfo(
-                id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
-                name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                parentId = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
-                description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
-                image = cursor.getString(cursor.getColumnIndex(COL_IMAGE)),
-                type = GenreItemInfoType.strToEnum(cursor.getString(cursor.getColumnIndex(COL_TYPE)))!!,
-                contentList = contentList,
-                favorite = cursor.getInt(cursor.getColumnIndex(COL_FAVORITE)) == 1,
-                created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_CREATED))),
-                updated = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_UPDATED)))
-        )
-        return item
+        with(cursor) {
+            val contentList = mutableListOf<String>().apply {
+                val str = getString(getColumnIndex(COL_CONTENT_LIST))
+                addAll(str.split(","))
+            }
+            return GenreItemInfo(
+                    id = getLong(getColumnIndex(COL_ID)),
+                    name = getString(getColumnIndex(COL_NAME)),
+                    parentId = getLong(getColumnIndex(COL_PARENT_ID)),
+                    description = getString(getColumnIndex(COL_DESCRIPTION)),
+                    image = getString(getColumnIndex(COL_IMAGE)),
+                    type = GenreItemInfoType.strToEnum(getString(getColumnIndex(COL_TYPE)))!!,
+                    contentList = contentList,
+                    favorite = getInt(getColumnIndex(COL_FAVORITE)) == 1,
+                    created = DateUtil.stringToDate(getString(getColumnIndex(COL_CREATED))),
+                    updated = DateUtil.stringToDate(getString(getColumnIndex(COL_UPDATED)))
+            )
+        }
     }
 
     override fun contentValues(info: GenreItemInfo): ContentValues {
-        val values = ContentValues()
-        values.put(COL_ID, info.id)
-        values.put(COL_NAME, info.name)
-        values.put(COL_PARENT_ID, info.parentId)
-        values.put(COL_DESCRIPTION, info.description)
-        values.put(COL_IMAGE, info.image)
-        values.put(COL_TYPE, info.type.toString())
-        values.put(COL_CONTENT_LIST, info.contentList.reduce { s1, s2 -> "$s1,$s2" })
-        values.put(COL_FAVORITE, info.favorite)
-        values.put(COL_CREATED, DateUtil.dateToString(info.created))
-        values.put(COL_UPDATED, DateUtil.dateToString(info.updated))
-        return values
+        return ContentValues().apply {
+            put(COL_ID, info.id)
+            put(COL_NAME, info.name)
+            put(COL_PARENT_ID, info.parentId)
+            put(COL_DESCRIPTION, info.description)
+            put(COL_IMAGE, info.image)
+            put(COL_TYPE, info.type.toString())
+            put(COL_CONTENT_LIST, info.contentList.reduce { s1, s2 -> "$s1,$s2" })
+            put(COL_FAVORITE, info.favorite)
+            put(COL_CREATED, DateUtil.dateToString(info.created))
+            put(COL_UPDATED, DateUtil.dateToString(info.updated))
+        }
     }
 }

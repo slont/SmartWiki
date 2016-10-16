@@ -36,29 +36,30 @@ class GenreItemTableAdapter(context: Context) : DBAdapter<GenreItem>(context) {
     )
 
     override fun cursorToModel(cursor: Cursor): GenreItem {
-        val item = GenreItem(
-                id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
-                name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
-                parentId = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
-                description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
-                image = cursor.getString(cursor.getColumnIndex(COL_IMAGE)),
-                favorite = cursor.getInt(cursor.getColumnIndex(COL_FAVORITE)) == 1,
-                created = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_CREATED))),
-                updated = DateUtil.stringToDate(cursor.getString(cursor.getColumnIndex(COL_UPDATED)))
-        )
-        return item
+        with(cursor) {
+            return GenreItem(
+                    id = getLong(getColumnIndex(COL_ID)),
+                    name = getString(getColumnIndex(COL_NAME)),
+                    parentId = getLong(getColumnIndex(COL_PARENT_ID)),
+                    description = getString(getColumnIndex(COL_DESCRIPTION)),
+                    image = getString(getColumnIndex(COL_IMAGE)),
+                    favorite = getInt(getColumnIndex(COL_FAVORITE)) == 1,
+                    created = DateUtil.stringToDate(getString(getColumnIndex(COL_CREATED))),
+                    updated = DateUtil.stringToDate(getString(getColumnIndex(COL_UPDATED)))
+            )
+        }
     }
 
     override fun contentValues(item: GenreItem): ContentValues {
-        val values = ContentValues()
-        values.put(COL_ID, item.id)
-        values.put(COL_NAME, item.name)
-        values.put(COL_PARENT_ID, item.parentId)
-        values.put(COL_DESCRIPTION, item.description)
-        values.put(COL_IMAGE, item.image)
-        values.put(COL_FAVORITE, item.favorite)
-        values.put(COL_CREATED, DateUtil.dateToString(item.created))
-        values.put(COL_UPDATED, DateUtil.dateToString(item.updated))
-        return values
+        return ContentValues().apply {
+            put(COL_ID, item.id)
+            put(COL_NAME, item.name)
+            put(COL_PARENT_ID, item.parentId)
+            put(COL_DESCRIPTION, item.description)
+            put(COL_IMAGE, item.image)
+            put(COL_FAVORITE, item.favorite)
+            put(COL_CREATED, DateUtil.dateToString(item.created))
+            put(COL_UPDATED, DateUtil.dateToString(item.updated))
+        }
     }
 }

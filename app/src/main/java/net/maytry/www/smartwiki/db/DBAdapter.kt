@@ -35,31 +35,29 @@ abstract class DBAdapter<T : AbstractModel>(private val context: Context) {
          * DBが存在しない場合に一度だけ呼ばれるため、ここで各テーブルを初期化するような処理を書く
          */
         override fun onCreate(db: SQLiteDatabase) {
-            val genreTableAdapter = GenreTableAdapter(context)
-            db.execSQL("CREATE TABLE ${genreTableAdapter.tableName} (" +
-                    genreTableAdapter.cols.map { p -> "${p.first} ${p.second}" }
-                            .reduce { s1, s2 -> "$s1, $s2" } + ");")
+            GenreTableAdapter(context).run {
+                db.execSQL("CREATE TABLE $tableName (" +
+                        cols.map { p -> "${p.first} ${p.second}" }
+                                .reduce { s1, s2 -> "$s1, $s2" } + ");")
+            }
 
-            val itemTableAdapter = GenreItemTableAdapter(context)
-            db.execSQL("CREATE TABLE ${itemTableAdapter.tableName} (" +
-                    itemTableAdapter.cols.map { p -> "${p.first} ${p.second}" }
-                            .reduce { s1, s2 -> "$s1, $s2" } + ");")
+            GenreItemTableAdapter(context).run {
+                db.execSQL("CREATE TABLE $tableName (" +
+                        cols.map { p -> "${p.first} ${p.second}" }
+                                .reduce { s1, s2 -> "$s1, $s2" } + ");")
+            }
 
-            val infoTableAdapter = GenreItemInfoTableAdapter(context)
-            db.execSQL("CREATE TABLE ${infoTableAdapter.tableName} (" +
-                    infoTableAdapter.cols.map { p -> "${p.first} ${p.second}" }
-                            .reduce { s1, s2 -> "$s1, $s2" } + ");")
+            GenreItemInfoTableAdapter(context).run {
+                db.execSQL("CREATE TABLE $tableName (" +
+                        cols.map { p -> "${p.first} ${p.second}" }
+                                .reduce { s1, s2 -> "$s1, $s2" } + ");")
+            }
         }
 
         override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
-            val genreTableAdapter = GenreTableAdapter(context)
-            db.execSQL("DROP TABLE IF EXISTS ${genreTableAdapter.tableName};")
-
-            val itemTableAdapter = GenreItemTableAdapter(context)
-            db.execSQL("DROP TABLE IF EXISTS ${itemTableAdapter.tableName};")
-
-            val infoTableAdapter = GenreItemInfoTableAdapter(context)
-            db.execSQL("DROP TABLE IF EXISTS ${infoTableAdapter.tableName};")
+            db.execSQL("DROP TABLE IF EXISTS ${GenreTableAdapter(context).tableName};")
+            db.execSQL("DROP TABLE IF EXISTS ${GenreItemTableAdapter(context).tableName};")
+            db.execSQL("DROP TABLE IF EXISTS ${GenreItemInfoTableAdapter(context).tableName};")
             onCreate(db)
         }
     }
