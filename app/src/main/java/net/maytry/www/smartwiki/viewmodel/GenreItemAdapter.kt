@@ -1,11 +1,13 @@
 package net.maytry.www.smartwiki.viewmodel
 
 import android.content.Context
+import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import net.maytry.www.smartwiki.R
 import net.maytry.www.smartwiki.databinding.GenreItemBinding
 import net.maytry.www.smartwiki.model.GenreItem
@@ -33,5 +35,14 @@ class GenreItemAdapter(context: Context, items: List<GenreItem>, val textViewRes
         }
         binding.item = getItem(position)
         return view
+    }
+
+    object CustomSetter {
+        @JvmStatic
+        @BindingAdapter("itemList")
+        fun setItemList(listView: ListView, itemList: List<GenreItem>) {
+            val adapter = GenreItemAdapter(listView.context, itemList)
+            listView.adapter = adapter
+        }
     }
 }

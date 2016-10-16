@@ -14,21 +14,25 @@ import net.maytry.www.smartwiki.utils.DateUtil
 class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(context) {
 
     companion object {
-        val COL_NAME = "name"
-        val COL_PARENT_ID = "parent_id"
-        val COL_TYPE = "type"
-        val COL_CONTENT_LIST = "content_list"
-        val COL_FAVORITE = "favorite"
-        val COL_CREATED = "created"
-        val COL_UPDATED = "updated"
+        const val COL_NAME = "name"
+        const val COL_PARENT_ID = "parent_id"
+        const val COL_DESCRIPTION = "description"
+        const val COL_IMAGE = "image"
+        const val COL_TYPE = "type"
+        const val COL_CONTENT_LIST = "content_list"
+        const val COL_FAVORITE = "favorite"
+        const val COL_CREATED = "created"
+        const val COL_UPDATED = "updated"
     }
 
     override val tableName = "genre_item_info"
 
     override val cols = mutableListOf(
             Pair(COL_ID, "INTEGER PRIMARY KEY AUTOINCREMENT"),
-            Pair(COL_NAME, "TEXT"),
+            Pair(COL_NAME, "TEXT UNIQUE"),
             Pair(COL_PARENT_ID, "INTEGER"),
+            Pair(COL_DESCRIPTION, "TEXT"),
+            Pair(COL_IMAGE, "TEXT"),
             Pair(COL_TYPE, "TYPE"),
             Pair(COL_CONTENT_LIST, "TEXT"),
             Pair(COL_FAVORITE, "INTEGER"),
@@ -45,6 +49,8 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
                 id = cursor.getLong(cursor.getColumnIndex(COL_ID)),
                 name = cursor.getString(cursor.getColumnIndex(COL_NAME)),
                 parentId = cursor.getLong(cursor.getColumnIndex(COL_PARENT_ID)),
+                description = cursor.getString(cursor.getColumnIndex(COL_DESCRIPTION)),
+                image = cursor.getString(cursor.getColumnIndex(COL_IMAGE)),
                 type = GenreItemInfoType.strToEnum(cursor.getString(cursor.getColumnIndex(COL_TYPE)))!!,
                 contentList = contentList,
                 favorite = cursor.getInt(cursor.getColumnIndex(COL_FAVORITE)) == 1,
@@ -59,6 +65,8 @@ class GenreItemInfoTableAdapter(context: Context) : DBAdapter<GenreItemInfo>(con
         values.put(COL_ID, info.id)
         values.put(COL_NAME, info.name)
         values.put(COL_PARENT_ID, info.parentId)
+        values.put(COL_DESCRIPTION, info.description)
+        values.put(COL_IMAGE, info.image)
         values.put(COL_TYPE, info.type.toString())
         values.put(COL_CONTENT_LIST, info.contentList.reduce { s1, s2 -> "$s1,$s2" })
         values.put(COL_FAVORITE, info.favorite)

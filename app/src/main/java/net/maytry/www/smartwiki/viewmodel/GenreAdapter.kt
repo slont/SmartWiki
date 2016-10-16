@@ -1,11 +1,13 @@
 package net.maytry.www.smartwiki.viewmodel
 
 import android.content.Context
+import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import android.widget.ToggleButton
 import net.maytry.www.smartwiki.R
 import net.maytry.www.smartwiki.databinding.GenreBinding
@@ -36,5 +38,14 @@ class GenreAdapter(context: Context, items: List<Genre>, val textViewResourceId:
         binding.genre = genre
         binding.favoriteToggle.setOnClickListener { v -> genre.favorite = (v as ToggleButton).isChecked }
         return view
+    }
+
+    object CustomSetter {
+        @JvmStatic
+        @BindingAdapter("genreList")
+        fun setGenreList(listView: ListView, genreList: List<Genre>) {
+            val adapter: GenreAdapter = GenreAdapter(listView.context, genreList)
+            listView.adapter = adapter
+        }
     }
 }

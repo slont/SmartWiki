@@ -51,7 +51,7 @@ class AddGenreItemActivity : AppCompatActivity(), AddGenreItemFragment.OnFragmen
         val animatingLayout: AnimatingRelativeLayout = mBinding.contentAddGenreItem.menuAddGenreItemInfo.menuBtnLayout
         mBinding.contentAddGenreItem.menuAddGenreItemInfo.showInfoMenuBtn.setOnClickListener { animatingLayout.show() }
         mBinding.contentAddGenreItem.menuAddGenreItemInfo.hideInfoMenuBtn.setOnClickListener { animatingLayout.hide() }
-        mBinding.contentAddGenreItem.menuAddGenreItemInfo.onClickInfoMenuButton = OnClickInfoMenuBtn()
+        mBinding.contentAddGenreItem.menuAddGenreItemInfo.onClickInfoMenuBtn = OnClickInfoMenuBtn()
 
         mFragment = AddGenreItemFragment.newInstance(mItem)
         supportFragmentManager.beginTransaction().add(R.id.content_add_genre_item, mFragment).commit()

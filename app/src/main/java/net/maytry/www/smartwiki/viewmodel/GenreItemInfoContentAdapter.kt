@@ -1,6 +1,7 @@
 package net.maytry.www.smartwiki.viewmodel
 
 import android.content.Context
+import android.databinding.BindingAdapter
 import android.databinding.DataBindingUtil
 import android.text.Editable
 import android.text.TextWatcher
@@ -8,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.ListView
 import net.maytry.www.smartwiki.R
 import net.maytry.www.smartwiki.databinding.GenreItemInfoContentBinding
 
@@ -81,5 +83,14 @@ class GenreItemInfoContentAdapter(context: Context, items: List<String>, val tex
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+    }
+
+    object CustomSetter {
+        @JvmStatic
+        @BindingAdapter("contentList")
+        fun setContentList(listView: ListView, contentList: List<String>) {
+            val adapter = GenreItemInfoContentAdapter(listView.context, contentList)
+            listView.adapter = adapter
+        }
     }
 }

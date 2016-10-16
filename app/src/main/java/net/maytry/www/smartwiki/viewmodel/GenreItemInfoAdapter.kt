@@ -21,17 +21,12 @@ import net.maytry.www.smartwiki.model.GenreItemInfo
  *
  * Created by slont on 8/29/16.
  */
-class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
+class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>, var isEditable: Boolean = false) :
         ArrayAdapter<GenreItemInfo>(context, 0, items) {
 
     private val mInflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
     var wm = context.getSystemService(Context.WINDOW_SERVICE) as WindowManager
     var maxDisplayWidth = wm.defaultDisplay.width
-    var isEditable = false
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View? {
         val view: View
@@ -94,5 +89,13 @@ class GenreItemInfoAdapter(context: Context, items: List<GenreItemInfo>) :
             else -> (binding as GenreItemInfoCommonBinding).info = info
         }
         return view
+    }
+
+    object CustomSetter {
+        @JvmStatic
+        @BindingAdapter("infoList")
+        fun setInfoList(listView: ListView, infoList: List<GenreItemInfo>) {
+            listView.adapter = GenreItemInfoAdapter(listView.context, infoList)
+        }
     }
 }

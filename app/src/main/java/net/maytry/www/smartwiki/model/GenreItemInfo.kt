@@ -11,7 +11,9 @@ import java.util.*
 class GenreItemInfo(
         id: Long? = null,
         name: String,
-        parentId: Long = -1,
+        parentId: Long = -1L,
+        description: String = "",
+        image: String = "",
         type: GenreItemInfoType,
         contentList: MutableList<String> = mutableListOf(""),
         favorite: Boolean = false,
@@ -32,6 +34,16 @@ class GenreItemInfo(
      * 親GenreID
      */
     var parentId: Long = parentId
+
+    /**
+     * 説明
+     */
+    val description: String = description
+
+    /**
+     * 画像
+     */
+    val image: String = image
 
     /**
      * 情報種別

@@ -1,9 +1,5 @@
 package net.maytry.www.smartwiki.model
 
-import android.content.ContentValues
-import net.maytry.www.smartwiki.db.DBAdapter
-import net.maytry.www.smartwiki.db.GenreItemTableAdapter
-import net.maytry.www.smartwiki.utils.DateUtil
 import java.util.*
 
 /**
@@ -27,7 +23,17 @@ class GenreItem(
         var parentId: Long = -1,
 
         /**
-         * アイテム情報
+         * 説明
+         */
+        val description: String = "",
+
+        /**
+         * 画像
+         */
+        val image: String = "",
+
+        /**
+         * 情報一覧
          */
         val infoList: MutableList<GenreItemInfo> = mutableListOf(),
 

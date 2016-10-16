@@ -1,22 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
 
     <RelativeLayout
-        android:id="@+id/content_genre_item_info"
+        android:id="@+id/content_edit_genre_item_info"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:context="net.maytry.www.smartwiki.GenreItemInfoActivity"
+        tools:context="net.maytry.www.smartwiki.EditGenreItemInfoActivity"
         tools:showIn="@layout/activity_edit_genre_item_info">
 
+        <include layout="@layout/header_edit_genre_item_info"
+                 android:id="@+id/header_edit_genre_item_info"/>
+
+        <RelativeLayout
+            android:id="@+id/fragment_edit_genre_item_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_edit_genre_item_info"
+            android:layout_above="@+id/delete_btn"/>
+
         <Button
-            android:id="@+id/delete_btn"
+            android:id="@+id/delete_selected_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:text="削除" />
+            android:textColor="@color/white"
+            android:background="@color/red"
+            android:text="選択したアイテムを削除" />
+
+        <include layout="@layout/menu_add_genre_item_info"
+                 android:id="@+id/menu_add_genre_item_info" />
 
     </RelativeLayout>
 </layout>

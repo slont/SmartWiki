@@ -51,14 +51,14 @@ class GenreItemActivity : AppCompatActivity(), GenreItemFragment.OnFragmentInter
         title = mGenre.name
         mItemList.addAll(mGenre.itemList)
 
-        val toolbar = binding.toolbar
-        setSupportActionBar(toolbar)
-        toolbar.setNavigationIcon(R.drawable.ic_menu_back)
-        toolbar.setNavigationOnClickListener { onBackPressed() }
-
+//        val toolbar = binding.toolbar
+//        setSupportActionBar(toolbar)
+//        toolbar.setNavigationIcon(R.drawable.ic_menu_back)
+//        toolbar.setNavigationOnClickListener { onBackPressed() }
+        binding.contentGenreItem.headerGenreItem.genre = mGenre
         binding.onClickAddGenreItemFab = OnClickAddGenreItemFab()
 
-        supportFragmentManager.beginTransaction().add(R.id.content_genre_item, mFragment).commit()
+        supportFragmentManager.beginTransaction().add(R.id.fragment_genre_item, mFragment).commit()
     }
 
     override fun onBackPressed() {
@@ -109,7 +109,7 @@ class GenreItemActivity : AppCompatActivity(), GenreItemFragment.OnFragmentInter
                     RESULT_OK -> {
                         val id = data.getLongExtra("_id", -1)
                         mItemTableAdapter.open()
-                        val item = mItemTableAdapter.selectByID(id)
+                        val item = mItemTableAdapter.findOne(id)
                         mItemTableAdapter.close()
                         if (null != item) {
                             mItemList.add(item)
@@ -126,7 +126,7 @@ class GenreItemActivity : AppCompatActivity(), GenreItemFragment.OnFragmentInter
 
     override fun loadData() {
         mItemTableAdapter.open()
-        val list = mItemTableAdapter.select("parent_id=${mGenre.id}")
+        val list = mItemTableAdapter.find("parent_id=${mGenre.id}")
         mItemTableAdapter.close()
         mItemList.clear()
         mItemList.addAll(list)

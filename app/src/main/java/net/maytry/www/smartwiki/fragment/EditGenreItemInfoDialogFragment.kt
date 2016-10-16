@@ -95,13 +95,4 @@ class EditGenreItemInfoDialogFragment : DialogFragment() {
             return fragment
         }
     }
-
-    object CustomSetter {
-        @JvmStatic
-        @BindingAdapter("contentList")
-        fun setContentList(listView: ListView, contentList: List<String>) {
-            val adapter = GenreItemInfoContentAdapter(listView.context, contentList)
-            listView.adapter = adapter
-        }
-    }
 }

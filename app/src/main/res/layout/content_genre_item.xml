@@ -11,5 +11,13 @@
         tools:context="net.maytry.www.smartwiki.GenreItemActivity"
         tools:showIn="@layout/app_bar_genre_item">
 
+        <include layout="@layout/header_genre_item"
+                 android:id="@+id/header_genre_item"/>
+
+        <RelativeLayout
+            android:id="@+id/fragment_genre_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/header_genre_item"/>
     </RelativeLayout>
 </layout>

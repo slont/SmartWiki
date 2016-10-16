@@ -104,13 +104,4 @@ class GenreFragment : Fragment() {
             return fragment
         }
     }
-
-    object CustomSetter {
-        @JvmStatic
-        @BindingAdapter("genreList")
-        fun setGenreList(listView: ListView, genreList: List<Genre>) {
-            val adapter: GenreAdapter = GenreAdapter(listView.context, genreList)
-            listView.adapter = adapter
-        }
-    }
 }

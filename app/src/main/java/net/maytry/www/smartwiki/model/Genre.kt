@@ -1,9 +1,5 @@
 package net.maytry.www.smartwiki.model
 
-import android.content.ContentValues
-import net.maytry.www.smartwiki.db.DBAdapter
-import net.maytry.www.smartwiki.db.GenreTableAdapter
-import net.maytry.www.smartwiki.utils.DateUtil
 import java.util.*
 
 /**
@@ -22,7 +18,17 @@ class Genre(
         var name: String = "",
 
         /**
-         * アイテム情報
+         * 説明
+         */
+        val description: String = "",
+
+        /**
+         * 画像
+         */
+        val image: String = "",
+
+        /**
+         * アイテム一覧
          */
         val itemList: MutableList<GenreItem> = mutableListOf(),
 
@@ -30,6 +36,11 @@ class Genre(
          * お気に入り
          */
         var favorite: Boolean = false,
+
+        /**
+         * 作成者
+         */
+        val createdUser: String = "",
 
         /**
          * 作成日時

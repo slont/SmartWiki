@@ -7,7 +7,6 @@ import android.database.Cursor
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
 import net.maytry.www.smartwiki.model.AbstractModel
-import net.maytry.www.smartwiki.utils.DateUtil
 
 /**
  * Created by slont on 9/14/16.
@@ -78,6 +77,14 @@ abstract class DBAdapter<T : AbstractModel>(private val context: Context) {
         return db.insert(tableName, null, contentValues(obj))
     }
 
+    fun insertAll(list: List<T>): Long {
+        var result = -1L
+        list.forEach { obj ->
+            result = insert(obj)
+        }
+        return result
+    }
+
     fun update(obj: T): Int {
         return db.update(tableName, contentValues(obj), "_id=${obj.id}", null)
     }
@@ -90,7 +97,7 @@ abstract class DBAdapter<T : AbstractModel>(private val context: Context) {
         return db.delete(tableName, COL_ID + "=" + id, null) > 0
     }
 
-    fun select(where: String): List<T> {
+    fun find(where: String): List<T> {
         val objList: MutableList<T> = mutableListOf()
         val cursor = db.rawQuery("SELECT * FROM $tableName WHERE $where", arrayOf())
         try {
@@ -103,7 +110,7 @@ abstract class DBAdapter<T : AbstractModel>(private val context: Context) {
         return objList
     }
 
-    fun selectByID(id: Long): T? {
+    fun findOne(id: Long): T? {
         var obj: T? = null
         val cursor = db.rawQuery("SELECT * FROM $tableName WHERE ${DBAdapter.COL_ID}=?", arrayOf(id.toString()))
         try {
@@ -116,7 +123,7 @@ abstract class DBAdapter<T : AbstractModel>(private val context: Context) {
         return obj
     }
 
-    fun selectAll(): List<T> {
+    fun findAll(): List<T> {
         val objList: MutableList<T> = mutableListOf()
         val cursor = db.rawQuery("SELECT * FROM $tableName", arrayOf())
         try {

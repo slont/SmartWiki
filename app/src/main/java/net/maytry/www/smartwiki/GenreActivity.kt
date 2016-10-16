@@ -132,7 +132,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                     RESULT_OK -> {
                         val id = data.getLongExtra("_id", -1)
                         mGenreTableAdapter.open()
-                        val genre = mGenreTableAdapter.selectByID(id)
+                        val genre = mGenreTableAdapter.findOne(id)
                         mGenreTableAdapter.close()
                         if (null != genre) {
                             mGenreList.add(genre)
@@ -157,7 +157,7 @@ class GenreActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
     override fun loadData() {
         mGenreTableAdapter.open()
-        val list = mGenreTableAdapter.selectAll()
+        val list = mGenreTableAdapter.findAll()
         mGenreTableAdapter.close()
         mGenreList.clear()
         mGenreList.addAll(list)
